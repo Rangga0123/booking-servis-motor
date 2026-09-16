@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
-            $table->id();
-            // Sesuaikan kolom-kolom di bawah ini dengan form booking kamu
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relasi ke tabel user
-            $table->string('nama_motor');
-            $table->string('plat_nomor');
+        Schema::create('booking_servis', function (Blueprint $table) {
+            $table->id('id_booking');
+            // Relasi ke tabel pelanggan dan kendaraan
+            $table->foreignId('id_pelanggan')->references('id_pelanggan')->on('pelanggans')->onDelete('cascade');
+            $table->foreignId('id_kendaraan')->references('id_kendaraan')->on('kendaraans')->onDelete('cascade');
+            
+            $table->string('jenis_servis');
+            $table->date('tanggal_booking');
+            $table->time('jam_booking');
             $table->text('keluhan');
-            $table->string('status')->default('menunggu'); // Kolom status yang kita butuhkan
-            $table->decimal('harga', 10, 2)->default(0); // Kolom harga untuk total pendapatan
+            $table->text('catatan')->nullable();
+            $table->enum('status_booking', ['Menunggu', 'Diproses', 'Selesai', 'Batal'])->default('Menunggu');
             $table->timestamps();
         });
     }
