@@ -9,8 +9,17 @@ class Booking extends Model
 {
     use HasFactory;
 
-    // Kolom yang boleh diisi dari form booking
-    protected $fillable = ['user_id', 'service_id', 'tanggal_booking', 'keluhan', 'status'];
+    // Kolom yang boleh diisi secara mass assignment dari Controller/Form
+    protected $fillable = [
+        'user_id',
+        'service_id',
+        'nama_motor',
+        'plat_nomor',
+        'tanggal_booking',
+        'keluhan',
+        'harga',
+        'status',
+    ];
 
     // Relasi: 1 data booking ini milik 1 orang user (belongsTo)
     public function user()

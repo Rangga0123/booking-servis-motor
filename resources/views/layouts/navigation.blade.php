@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo & Nama Bengkel -->
                 <div class="shrink-0 flex items-center">
-                    <a href="/admin/dashboard" class="flex items-center gap-2 font-bold text-lg tracking-wider">
+                    <a href="{{ Auth::user()->role === 'admin' ? '/admin/dashboard' : '/dashboard' }}" class="flex items-center gap-2 font-bold text-lg tracking-wider">
                         <span class="text-xl">🔧</span> 
                         <span class="text-white font-extrabold">BENGKEL <span class="text-red-500">ROYAL MOTOR</span></span>
                     </a>
@@ -13,29 +13,36 @@
 
                 <!-- Navigation Links (Tampilan Desktop) -->
                 <div class="hidden space-x-2 sm:-my-px sm:ms-10 sm:flex sm:items-center">
-                    <a href="/admin/dashboard" class="px-3 py-2 rounded-md text-sm font-semibold bg-red-600 text-white transition">
+                    <a href="{{ Auth::user()->role === 'admin' ? '/admin/dashboard' : '/dashboard' }}" 
+                       class="px-3 py-2 rounded-md text-sm font-semibold {{ request()->is('admin/dashboard') || request()->is('dashboard') ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition">
                         Dashboard
                     </a>
 
-                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                        Pelanggan
-                    </a>
+                    @if(Auth::user()->role === 'admin')
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                            Pelanggan
+                        </a>
 
-                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                        Kendaraan
-                    </a>
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                            Kendaraan
+                        </a>
 
-                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                        Booking Servis
-                    </a>
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                            Booking Servis
+                        </a>
 
-                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                        Mekanik
-                    </a>
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                            Mekanik
+                        </a>
 
-                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                        Pembayaran
-                    </a>
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                            Pembayaran
+                        </a>
+                    @else
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                            Booking Saya
+                        </a>
+                    @endif
                 </div>
             </div>
 
@@ -44,7 +51,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-slate-600 text-sm leading-4 font-medium rounded-md text-slate-200 bg-slate-800 hover:text-white hover:bg-slate-700 focus:outline-none transition duration-150 ease-in-out">
-                            <div>{{ Auth::user()->name }} (Admin)</div>
+                            <div>{{ Auth::user()->name }} ({{ Auth::user()->role === 'admin' ? 'Admin' : 'Pelanggan' }})</div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -88,35 +95,41 @@
     <!-- Responsive Navigation Menu (Tampilan Mobile/HP) -->
     <div :class="{'block': open, 'hidden': ! open}" style="background-color: #1e293b;" class="hidden sm:hidden border-t border-slate-700">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="/admin/dashboard" :active="request()->is('admin/dashboard')" class="text-white">
+            <x-responsive-nav-link :href="Auth::user()->role === 'admin' ? '/admin/dashboard' : '/dashboard'" :active="request()->is('admin/dashboard') || request()->is('dashboard')" class="text-white">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="#" class="text-slate-300">
-                {{ __('Pelanggan') }}
-            </x-responsive-nav-link>
+            @if(Auth::user()->role === 'admin')
+                <x-responsive-nav-link href="#" class="text-slate-300">
+                    {{ __('Pelanggan') }}
+                </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="#" class="text-slate-300">
-                {{ __('Kendaraan') }}
-            </x-responsive-nav-link>
+                <x-responsive-nav-link href="#" class="text-slate-300">
+                    {{ __('Kendaraan') }}
+                </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="#" class="text-slate-300">
-                {{ __('Booking Servis') }}
-            </x-responsive-nav-link>
+                <x-responsive-nav-link href="#" class="text-slate-300">
+                    {{ __('Booking Servis') }}
+                </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="#" class="text-slate-300">
-                {{ __('Mekanik') }}
-            </x-responsive-nav-link>
+                <x-responsive-nav-link href="#" class="text-slate-300">
+                    {{ __('Mekanik') }}
+                </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="#" class="text-slate-300">
-                {{ __('Pembayaran') }}
-            </x-responsive-nav-link>
+                <x-responsive-nav-link href="#" class="text-slate-300">
+                    {{ __('Pembayaran') }}
+                </x-responsive-nav-link>
+            @else
+                <x-responsive-nav-link href="#" class="text-slate-300">
+                    {{ __('Booking Saya') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-slate-700">
             <div class="px-4">
-                <div class="font-medium text-base text-white">{{ Auth::user()->name }} (Admin)</div>
+                <div class="font-medium text-base text-white">{{ Auth::user()->name }} ({{ Auth::user()->role === 'admin' ? 'Admin' : 'Pelanggan' }})</div>
                 <div class="font-medium text-sm text-slate-400">{{ Auth::user()->email }}</div>
             </div>
 

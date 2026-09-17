@@ -9,8 +9,31 @@ class BookingController extends Controller
 {
     public function index()
     {
-        // Mengambil data booking milik user yang sedang login
         $bookings = Booking::where('user_id', auth()->id())->latest()->get();
-        return view('home', compact('bookings'));
+        return view('dashboard', compact('bookings'));
+    }
+
+    public function create()
+    {
+        return view('booking.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_motor' => 'required|string|max:255',
+            'plat_nomor' => 'required|string|max:20',
+            'keluhan'    => 'required|string',
+        ]);
+
+        Booking::create([
+            'user_id'    => auth()->id(),
+            'nama_motor' => $request->nama_motor,
+            'plat_nomor' => $request->plat_nomor,
+            'keluhan'    => $request->keluhan,
+            'status'     => 'pending', // Status awal saat pertama kali dibooking
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Booking berhasil dibuat!');
     }
 }
