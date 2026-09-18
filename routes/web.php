@@ -4,10 +4,19 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // Redirect halaman depan langsung ke dashboard
 Route::get('/', function () {
     return redirect()->route('dashboard');
+});
+
+// Rute Logout Aman (Solusi Error 419 Page Expired)
+Route::get('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
 });
 
 // 1. Rute Pelanggan (Dashboard & Booking)

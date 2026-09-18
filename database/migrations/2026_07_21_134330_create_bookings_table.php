@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booking_servis', function (Blueprint $table) {
-            $table->id('id_booking');
-            // Relasi ke tabel pelanggan dan kendaraan
-            $table->foreignId('id_pelanggan')->references('id_pelanggan')->on('pelanggans')->onDelete('cascade');
-            $table->foreignId('id_kendaraan')->references('id_kendaraan')->on('kendaraans')->onDelete('cascade');
-            
-            $table->string('jenis_servis');
-            $table->date('tanggal_booking');
-            $table->time('jam_booking');
-            $table->text('keluhan');
-            $table->text('catatan')->nullable();
-            $table->enum('status_booking', ['Menunggu', 'Diproses', 'Selesai', 'Batal'])->default('Menunggu');
-            $table->timestamps();
-        });
+        Schema::create('bookings', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->string('nama_motor');
+        $table->string('plat_nomor');
+        $table->string('jenis_servis')->nullable();
+        $table->dateTime('tanggal_booking')->nullable();
+        $table->text('keluhan');
+        $table->string('metode_pembayaran')->nullable();
+        $table->string('status')->default('menunggu');
+        $table->timestamps();
+    });
     }
 
     /**
