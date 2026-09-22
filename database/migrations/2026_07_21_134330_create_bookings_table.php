@@ -12,17 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->string('nama_motor');
-        $table->string('plat_nomor');
-        $table->string('jenis_servis')->nullable();
-        $table->dateTime('tanggal_booking')->nullable();
-        $table->text('keluhan');
-        $table->string('metode_pembayaran')->nullable();
-        $table->string('status')->default('menunggu');
-        $table->timestamps();
-    });
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nama_motor');
+            $table->string('plat_nomor');
+            $table->string('jenis_servis')->nullable();
+            $table->date('tanggal_booking')->nullable(); // Diubah jadi date
+            $table->string('jam_booking')->nullable();    // Kolom jam dipisah di sini
+            $table->text('keluhan');
+            $table->bigInteger('harga')->nullable()->default(0);
+            $table->string('metode_pembayaran')->nullable();
+            $table->string('status')->default('menunggu');
+            $table->timestamps();
+        });
     }
 
     /**

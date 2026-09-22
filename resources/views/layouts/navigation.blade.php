@@ -39,8 +39,9 @@
                             Pembayaran
                         </a>
                     @else
-                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                            Booking Saya
+                        <!-- DIPERBAIKI: Mengarah ke route('booking.create') -->
+                        <a href="{{ route('booking.create') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('booking.create') ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition">
+                            Booking Servis
                         </a>
                     @endif
                 </div>
@@ -66,15 +67,12 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        <!-- Authentication -->
+                        <!-- Authentication Logout Desktop -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm leading-5 text-rose-600 font-bold hover:bg-slate-100 focus:outline-none transition duration-150 ease-in-out">
+                                🚪 {{ __('Log Out') }}
+                            </button>
                         </form>
                     </x-slot>
                 </x-dropdown>
@@ -120,7 +118,8 @@
                     {{ __('Pembayaran') }}
                 </x-responsive-nav-link>
             @else
-                <x-responsive-nav-link href="#" class="text-slate-300">
+                <!-- DIPERBAIKI: Mengarah ke route('booking.create') -->
+                <x-responsive-nav-link :href="route('booking.create')" :active="request()->routeIs('booking.create')" class="text-slate-300">
                     {{ __('Booking Saya') }}
                 </x-responsive-nav-link>
             @endif
@@ -138,16 +137,12 @@
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
-                <!-- Authentication -->
+                <!-- Authentication Logout Mobile -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();"
-                            class="text-slate-300">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <button type="submit" class="block w-full text-left ps-3 pe-4 py-2 border-l-4 border-transparent text-base font-medium text-rose-400 hover:text-rose-300 hover:bg-slate-800 transition duration-150 ease-in-out">
+                        🚪 {{ __('Log Out') }}
+                    </button>
                 </form>
             </div>
         </div>

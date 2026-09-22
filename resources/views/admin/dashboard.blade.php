@@ -109,7 +109,6 @@
                                         Belum ada data booking servis.
                                     </td>
                                 </tr>
-                            @empty
                             @endforelse
                         </tbody>
                     </table>

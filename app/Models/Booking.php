@@ -12,13 +12,14 @@ class Booking extends Model
     // Kolom yang boleh diisi secara mass assignment dari Controller/Form
     protected $fillable = [
         'user_id',
-        'service_id',
         'nama_motor',
         'plat_nomor',
+        'jenis_servis',
         'tanggal_booking',
+        'jam_booking',       // <-- Tambahkan kolom ini
         'keluhan',
-        'harga',
-        'status',
+        'metode_pembayaran',
+        'status'
     ];
 
     // Relasi: 1 data booking ini milik 1 orang user (belongsTo)

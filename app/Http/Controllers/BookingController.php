@@ -36,7 +36,7 @@ class BookingController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        // Validasi input lengkap sesuai form ERD
+        // Validasi input lengkap sesuai form
         $request->validate([
             'nama_motor'        => 'required|string|max:255',
             'plat_nomor'        => 'required|string|max:20',
@@ -47,15 +47,14 @@ class BookingController extends Controller
             'metode_pembayaran' => 'required|string',
         ]);
 
-        // Gabungkan tanggal dan jam menjadi format datetime
-        $waktuBooking = $request->tanggal_booking . ' ' . $request->jam_booking;
-
+        // Simpan data secara terpisah sesuai kolom di Model & Database
         Booking::create([
             'user_id'           => auth()->id(),
             'nama_motor'        => $request->nama_motor,
             'plat_nomor'        => $request->plat_nomor,
             'jenis_servis'      => $request->jenis_servis,
-            'tanggal_booking'   => $waktuBooking,
+            'tanggal_booking'   => $request->tanggal_booking,
+            'jam_booking'       => $request->jam_booking,
             'keluhan'           => $request->keluhan,
             'metode_pembayaran' => $request->metode_pembayaran,
             'status'            => 'menunggu', // Menunggu persetujuan Admin
