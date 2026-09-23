@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,13 +13,15 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-// Rute Logout Aman (Solusi Error 419 Page Expired)
-Route::get('/logout', function () {
+// ---------------------------------------------------------------------
+// RUTE LOGOUT (Mendukung GET & POST agar Bebas Error 419 Page Expired)
+// ---------------------------------------------------------------------
+Route::match(['get', 'post'], '/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/login');
-});
+})->name('logout');
 
 // 1. Rute Pelanggan (Dashboard & Booking)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -37,7 +41,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // 2. Rute Khusus Admin
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::patch('/booking/{id}/status', [AdminController::class, 'updateStatus'])->name('booking.status');
+    // ROUTE UPDATE UNTUK ADMIN
+    Route::put('/booking/{id}', [AdminController::class, 'updateStatus'])->name('booking.update');
 });
 
 // 3. Rute Profil User
@@ -47,4 +52,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// ---------------------------------------------------------------------
+// ROUTE AUTENTIKASI (Login & Register)
+// ---------------------------------------------------------------------
+Route::middleware('guest')->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('register', [RegisteredUserController::class, 'store']);
+
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+});

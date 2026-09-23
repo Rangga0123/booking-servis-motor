@@ -76,13 +76,21 @@
                                     <option value="Overhaul / Service Besar">Overhaul / Service Besar</option>
                                 </select>
                             </div>
+
                             <div>
                                 <label for="tanggal_booking" class="block text-xs font-bold text-slate-800 mb-1">Tanggal Servis <span class="text-rose-500">*</span></label>
                                 <input type="date" name="tanggal_booking" id="tanggal_booking" required min="{{ date('Y-m-d') }}" class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3">
                             </div>
+
+                            <!-- INPUT JAM MANUAL (RAPI DENGAN KETERANGAN WAKTU DI BAWAH) -->
                             <div>
                                 <label for="jam_booking" class="block text-xs font-bold text-slate-800 mb-1">Jam Booking <span class="text-rose-500">*</span></label>
-                                <input type="time" name="jam_booking" id="jam_booking" required class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3">
+                                <input type="text" name="jam_booking" id="jam_booking" placeholder="Contoh: 20.21 WIB" required
+                                       class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3 font-semibold text-slate-800">
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-[10px] text-slate-600">Ketik bebas (misal: 14.30 WIB / 20.21 WIB)</span>
+                                    <span id="ket_waktu" class="text-[10px] font-extrabold text-emerald-800"></span>
+                                </div>
                             </div>
                         </div>
 
@@ -139,4 +147,27 @@
 
         </div>
     </div>
+
+    <!-- JAVASCRIPT UNTUK DETEKSI OTOMATIS WAKTU -->
+    <script>
+        document.getElementById('jam_booking').addEventListener('input', function(e) {
+            let val = e.target.value.replace(':', '.');
+            let hour = parseInt(val.split('.')[0]);
+            let ket = document.getElementById('ket_waktu');
+
+            if (!isNaN(hour)) {
+                if (hour >= 0 && hour < 11) {
+                    ket.innerText = "☀️ (Pagi)";
+                } else if (hour >= 11 && hour < 15) {
+                    ket.innerText = "🌤️ (Siang)";
+                } else if (hour >= 15 && hour < 18) {
+                    ket.innerText = "🌥️ (Sore)";
+                } else if (hour >= 18 && hour <= 23) {
+                    ket.innerText = "🌙 (Malam)";
+                }
+            } else {
+                ket.innerText = "";
+            }
+        });
+    </script>
 </x-app-layout>

@@ -32,30 +32,37 @@
 
             <!-- Cards Status -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Kartu 1: Total Booking -->
                 <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="p-5 rounded-2xl shadow-sm">
                     <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Total Booking Saya</p>
                     <h3 class="text-3xl font-black text-slate-900 mt-1">{{ $bookings->count() }}</h3>
                     <p class="text-xs text-slate-700 mt-0.5">Semua riwayat pengajuan</p>
                 </div>
 
+                <!-- Kartu 2: Status Diproses -->
                 <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="p-5 rounded-2xl shadow-sm">
                     <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Status Diproses</p>
                     <h3 class="text-3xl font-black text-amber-800 mt-1">
-                        {{ $bookings->whereIn('status', ['pending', 'proses', 'menunggu', 'sedang dikerjakan'])->count() }}
+                        {{ $bookings->filter(function($b) {
+                            return in_array(strtolower($b->status ?? ''), ['proses', 'diproses', 'sedang dikerjakan', 'dikerjakan', 'disetujui']);
+                        })->count() }}
                     </h3>
                     <p class="text-xs text-slate-700 mt-0.5">Sedang dalam pengerjaan</p>
                 </div>
 
+                <!-- Kartu 3: Servis Selesai -->
                 <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="p-5 rounded-2xl shadow-sm">
                     <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Servis Selesai</p>
                     <h3 class="text-3xl font-black text-emerald-900 mt-1">
-                        {{ $bookings->where('status', 'selesai')->count() }}
+                        {{ $bookings->filter(function($b) {
+                            return strtolower($b->status ?? '') === 'selesai';
+                        })->count() }}
                     </h3>
                     <p class="text-xs text-slate-700 mt-0.5">Motor siap diambil</p>
                 </div>
             </div>
 
-            <!-- Tabel Riwayat Booking dengan Konsep Floating Row Card -->
+            <!-- Tabel Riwayat Booking -->
             <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="rounded-2xl shadow-sm overflow-hidden p-4">
                 <div style="background-color: #1b4332;" class="px-6 py-4 text-white flex justify-between items-center rounded-xl mb-4">
                     <h3 class="font-bold text-sm tracking-wide">
@@ -67,53 +74,72 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <!-- Spasi terpisah antar baris data (border-separate & border-spacing) -->
                     <table class="w-full text-sm text-left text-slate-800 border-separate" style="border-spacing: 0 10px;">
                         <thead>
                             <tr class="text-xs uppercase text-slate-900 font-black">
-                                <th class="px-5 py-2 text-center">NO</th>
-                                <th class="px-5 py-2">NAMA MOTOR</th>
-                                <th class="px-5 py-2">PLAT NOMOR</th>
-                                <th class="px-5 py-2 text-center">JAM BOOKING</th>
-                                <th class="px-5 py-2">KELUHAN</th>
-                                <th class="px-5 py-2 text-center">PEMBAYARAN</th>
-                                <th class="px-5 py-2 text-center">STATUS</th>
-                                <th class="px-5 py-2 text-center">PILIHAN</th>
+                                <th class="px-4 py-2 text-center">NO</th>
+                                <th class="px-4 py-2">NAMA MOTOR & PLAT</th>
+                                <th class="px-4 py-2 text-center">JADWAL PENGERJAAN</th>
+                                <th class="px-4 py-2">MEKANIK</th>
+                                <th class="px-4 py-2">KELUHAN</th>
+                                <th class="px-4 py-2 text-center">PEMBAYARAN</th>
+                                <th class="px-4 py-2 text-center">STATUS</th>
+                                <th class="px-4 py-2 text-center">PILIHAN</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($bookings as $index =>$booking)
-                                <!-- Floating Row Card dengan warna background putih & shadow -->
                                 <tr style="background-color: #ffffff;" class="shadow-sm hover:shadow-md transition-all rounded-xl">
-                                    <td class="px-5 py-4 font-bold text-center text-slate-700 rounded-l-xl border-y border-l border-teal-200">
+                                    <td class="px-4 py-4 font-bold text-center text-slate-700 rounded-l-xl border-y border-l border-teal-200">
                                         {{ $index + 1 }}
                                     </td>
                                     
-                                    <td class="px-5 py-4 font-extrabold text-slate-900 capitalize border-y border-teal-200">
-                                        {{ $booking->nama_motor }}
-                                    </td>
-                                    
-                                    <!-- Plat Nomor Teks Polos -->
-                                    <td class="px-5 py-4 font-bold text-slate-900 uppercase border-y border-teal-200">
-                                        {{ $booking->plat_nomor }}
+                                    <!-- NAMA MOTOR & PLAT -->
+                                    <td class="px-4 py-4 border-y border-teal-200">
+                                        <div class="font-extrabold text-slate-900 capitalize">{{ $booking->nama_motor }}</div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">{{ $booking->plat_nomor }}</div>
                                     </td>
 
-                                    <!-- Jam Booking -->
-                                    <td class="px-5 py-4 text-center font-extrabold text-slate-900 whitespace-nowrap border-y border-teal-200">
-                                        {{ \Carbon\Carbon::parse($booking->jam_booking ?? $booking->created_at)->format('H:i') }} WIB
+                                    <!-- JADWAL PENGERJAAN -->
+                                    <td class="px-4 py-4 text-center border-y border-teal-200 whitespace-nowrap">
+                                        @if($booking->tanggal_booking)
+                                            <div class="font-bold text-slate-900">
+                                                {{ \Carbon\Carbon::parse($booking->tanggal_booking)->format('d M Y') }}
+                                            </div>
+                                            <div class="text-xs text-emerald-700 font-extrabold">
+                                                {{ \Carbon\Carbon::parse($booking->tanggal_booking)->format('H:i') }} WIB
+                                            </div>
+                                        @else
+                                            <span class="text-xs text-slate-400 italic">Belum ditentukan</span>
+                                        @endif
                                     </td>
 
-                                    <td class="px-5 py-4 font-medium text-slate-800 max-w-xs truncate border-y border-teal-200">
+                                    <!-- MEKANIK -->
+                                    <td class="px-4 py-4 border-y border-teal-200 whitespace-nowrap">
+                                        @if($booking->mechanic)
+                                            <div class="font-bold text-slate-900 flex items-center gap-1">
+                                                👨‍🔧 {{ $booking->mechanic->nama_mekanik }}
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 font-medium">
+                                                {{ $booking->mechanic->spesialisasi ?? 'Mekanik Umum' }}
+                                            </div>
+                                        @else
+                                            <span class="text-xs text-slate-400 italic">Belum ditunjuk</span>
+                                        @endif
+                                    </td>
+
+                                    <!-- KELUHAN -->
+                                    <td class="px-4 py-4 font-medium text-slate-800 max-w-xs truncate border-y border-teal-200">
                                         {{ $booking->keluhan }}
                                     </td>
 
-                                    <!-- Pembayaran Teks Polos -->
-                                    <td class="px-5 py-4 text-center font-bold text-slate-900 uppercase whitespace-nowrap border-y border-teal-200">
-                                        {{ $booking->metode_pembayaran ?? $booking->pembayaran ?? 'BAYAR DI KASIR (CASH)' }}
+                                    <!-- PEMBAYARAN -->
+                                    <td class="px-4 py-4 text-center font-bold text-slate-900 uppercase whitespace-nowrap border-y border-teal-200">
+                                        {{ $booking->metode_pembayaran ?? $booking->pembayaran ?? 'CASH (KASIR)' }}
                                     </td>
 
-                                    <!-- Status Otomatis Mengikuti Input Admin -->
-                                    <td class="px-5 py-4 text-center whitespace-nowrap border-y border-teal-200">
+                                    <!-- STATUS -->
+                                    <td class="px-4 py-4 text-center whitespace-nowrap border-y border-teal-200">
                                         @php $st = strtolower($booking->status ?? 'menunggu'); @endphp
 
                                         @if(in_array($st, ['selesai', 'lunas']))
@@ -139,16 +165,16 @@
                                         @endif
                                     </td>
 
-                                    <!-- Tombol Edit Warna Matching & Ukuran Nyaman Diklik -->
-                                    <td class="px-5 py-4 text-center rounded-r-xl border-y border-r border-teal-200">
+                                    <!-- TOMBOL EDIT -->
+                                    <td class="px-4 py-4 text-center rounded-r-xl border-y border-r border-teal-200">
                                         @if(in_array(strtolower($booking->status ?? 'pending'), ['pending', 'menunggu']))
                                             <a href="{{ route('booking.edit', $booking->id) }}" 
                                                style="background-color: #ccfbf1; color: #115e59; border: 1px solid #2dd4bf;" 
-                                               class="font-black text-xs px-5 py-2 rounded-lg shadow-sm transition inline-block hover:bg-teal-200">
+                                               class="font-black text-xs px-4 py-2 rounded-lg shadow-sm transition inline-block hover:bg-teal-200">
                                                 Edit
                                             </a>
                                         @else
-                                            <span class="text-slate-500 text-xs font-semibold italic">Terkunci</span>
+                                            <span class="text-slate-400 text-xs font-semibold italic">Terkunci</span>
                                         @endif
                                     </td>
                                 </tr>

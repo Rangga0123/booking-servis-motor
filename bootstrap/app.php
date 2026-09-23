@@ -11,9 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Tambahkan baris alias ini di dalam sini
+        // Alias Middleware
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+
+        // Kecualikan rute logout dari pengecekan CSRF (Bebas error 419)
+        $middleware->validateCsrfTokens(except: [
+            'logout',
+            '/logout',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

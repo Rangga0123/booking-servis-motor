@@ -15,8 +15,31 @@ class BookingController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        $bookings = Booking::where('user_id', auth()->id())->latest()->get();
-        return view('dashboard', compact('bookings'));
+        $userId = auth()->id();
+
+        // Ambil semua data booking milik pelanggan ini
+        $bookings = Booking::where('user_id', $userId)->latest()->get();
+
+        // -------------------------------------------------------------
+        // PERBAIKAN LOGIKA HITUNG STATISTIK DASHBOARD
+        // -------------------------------------------------------------
+        
+        // 1. Total Seluruh Booking
+        $totalBooking = $bookings->count();
+
+        // 2. Hanya hitung status yang BENAR-BENAR sedang dikerjakan/proses/disetujui
+        // (Status 'menunggu' TIDAK terhitung di sini agar angka jadi 0)
+        $statusDiproses = $bookings->filter(function ($item) {
+            return in_array(strtolower($item->status), ['proses', 'diproses', 'sedang dikerjakan', 'dikerjakan', 'disetujui']);
+        })->count();
+
+        // 3. Hanya hitung status yang SELESAI
+        $servisSelesai = $bookings->filter(function ($item) {
+            return strtolower($item->status) === 'selesai';
+        })->count();
+
+        // Kirim $bookings beserta variabel statistik ke view dashboard
+        return view('dashboard', compact('bookings', 'totalBooking', 'statusDiproses', 'servisSelesai'));
     }
 
     // 2. Form Booking Khusus Pelanggan

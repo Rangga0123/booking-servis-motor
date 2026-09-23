@@ -1,119 +1,173 @@
 <x-app-layout>
-    <div style="background-color: #f0fdfa;" class="py-8 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-            <!-- Header Halaman Admin -->
-            <div class="bg-white rounded-2xl border border-teal-100 shadow-sm p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-800">Halaman Admin</h2>
-                    <p class="text-xs text-slate-500 mt-1">Kelola persetujuan, tentukan jadwal pengerjaan, dan atur status booking pelanggan.</p>
-                </div>
+            <!-- HEADER PAGE -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-slate-800">Halaman Admin Bengkel</h2>
+                <p class="text-sm text-slate-500 mt-1">Kelola persetujuan, tentukan mekanik, dan atur jadwal pengerjaan servis pelanggan.</p>
             </div>
 
-            <!-- Notifikasi Sukses -->
-            @if(session('success'))
-                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-sm font-semibold shadow-sm flex items-center justify-between">
-                    <span>{{ session('success') }}</span>
-                </div>
-            @endif
-
-            <!-- Kartu Statistik Ringkasan -->
+            <!-- CARDS STATISTIK -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Total Booking -->
-                <div class="bg-white rounded-2xl border border-teal-100 p-6 shadow-sm">
-                    <div class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Booking</div>
-                    <div class="text-3xl font-extrabold text-slate-800 mt-2">{{ $totalBooking }}</div>
+                <!-- CARD 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">TOTAL BOOKING</div>
+                    <div class="text-4xl font-extrabold text-slate-800 mt-2">
+                        {{ $bookings->count() }}
+                    </div>
                 </div>
 
-                <!-- Booking Menunggu -->
-                <div class="bg-white rounded-2xl border border-teal-100 p-6 shadow-sm">
-                    <div class="text-slate-500 text-xs font-bold uppercase tracking-wider">Booking Menunggu</div>
-                    <div class="text-3xl font-extrabold text-amber-600 mt-2">{{ $bookingMenunggu }}</div>
+                <!-- CARD 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">BOOKING MENUNGGU</div>
+                    <div class="text-4xl font-extrabold text-amber-600 mt-2">
+                        {{ $bookings->whereIn('status', ['menunggu', 'Menunggu', 'pending'])->count() }}
+                    </div>
                 </div>
 
-                <!-- Total Pendapatan -->
-                <div class="bg-white rounded-2xl border border-teal-100 p-6 shadow-sm">
-                    <div class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Pendapatan (Selesai)</div>
-                    <div class="text-3xl font-extrabold text-emerald-600 mt-2">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
+                <!-- CARD 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">SERVIS SELESAI</div>
+                    <div class="text-4xl font-extrabold text-emerald-600 mt-2">
+                        {{ $bookings->whereIn('status', ['selesai', 'Selesai'])->count() }}
+                    </div>
                 </div>
             </div>
 
-            <!-- Tabel Daftar Booking -->
-            <div class="bg-white rounded-2xl border border-teal-100 shadow-sm p-6">
-                <div class="border-b border-slate-100 pb-4 mb-5">
-                    <h3 class="text-lg font-extrabold text-slate-800">Daftar Pesanan Servis Masuk</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Atur jadwal dan konfirmasi pesanan pelanggan.</p>
+            <!-- TABEL DAFTAR PESANAN SERVIS MASUK -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">Daftar Pesanan Servis Masuk</h3>
+                    <p class="text-xs text-slate-500">Atur jadwal, pilih mekanik, dan konfirmasi pesanan pelanggan.</p>
                 </div>
-                
+
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-slate-700">
-                        <thead class="bg-teal-50/80 text-xs uppercase font-extrabold text-slate-700 tracking-wider border-b border-teal-100">
-                            <tr>
-                                <th class="px-4 py-3.5">No</th>
-                                <th class="px-4 py-3.5">Nama Motor & Plat</th>
-                                <th class="px-4 py-3.5">Keluhan</th>
-                                <th class="px-4 py-3.5">Jadwal Pengerjaan</th>
-                                <th class="px-4 py-3.5 text-center">Status</th>
-                                <th class="px-4 py-3.5 text-center">Tentukan Waktu & Aksi</th>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 text-xs font-bold uppercase text-slate-500">
+                                <th class="py-3 px-2 text-center">NO</th>
+                                <th class="py-3 px-3">NAMA MOTOR & PLAT</th>
+                                <th class="py-3 px-3">KELUHAN</th>
+                                <th class="py-3 px-3">JADWAL PENGERJAAN</th>
+                                <th class="py-3 px-3 text-center">STATUS</th>
+                                <th class="py-3 px-3 text-center">TENTUKAN WAKTU, MEKANIK & AKSI</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            @forelse($bookings as $index => $booking)
-                                <tr class="hover:bg-teal-50/30 transition">
-                                    <td class="px-4 py-4 font-bold text-slate-500">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-4">
-                                        <div class="font-extrabold text-slate-900">{{ $booking->nama_motor }}</div>
-                                        <div class="text-xs font-mono font-bold text-slate-500">{{ $booking->plat_nomor }}</div>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                            @forelse ($bookings as $index => $item)
+                                @php
+                                    $status = strtolower($item->status);
+                                @endphp
+                                <tr class="hover:bg-slate-50/50 transition">
+                                    <td class="py-4 px-2 text-center font-bold text-slate-700">{{ $index + 1 }}</td>
+                                    
+                                    <!-- NAMA MOTOR & PLAT -->
+                                    <td class="py-4 px-3">
+                                        <div class="font-bold text-slate-800">{{ $item->nama_motor }}</div>
+                                        <div class="text-xs text-slate-400 font-mono uppercase">{{ $item->plat_nomor }}</div>
                                     </td>
-                                    <td class="px-4 py-4 text-slate-600">{{ $booking->keluhan }}</td>
-                                    <td class="px-4 py-4 text-slate-700 font-semibold">
-                                        {{ $booking->tanggal_booking ? \Carbon\Carbon::parse($booking->tanggal_booking)->format('d M Y - H:i') . ' WIB' : 'Belum diatur' }}
+
+                                    <!-- KELUHAN -->
+                                    <td class="py-4 px-3 text-slate-700">
+                                        {{ $item->keluhan }}
                                     </td>
-                                    <td class="px-4 py-4 text-center whitespace-nowrap">
-                                        <span class="px-3 py-1 text-xs font-extrabold rounded-full border 
-                                            @if($booking->status == 'menunggu' || $booking->status == 'pending') bg-amber-100 text-amber-800 border-amber-200 
-                                            @elseif($booking->status == 'disetujui' || $booking->status == 'proses') bg-blue-100 text-blue-800 border-blue-200 
-                                            @elseif($booking->status == 'selesai') bg-emerald-100 text-emerald-800 border-emerald-200 
-                                            @else bg-rose-100 text-rose-800 border-rose-200 @endif">
-                                            {{ ucfirst($booking->status) }}
-                                        </span>
+
+                                    <!-- JADWAL PENGERJAAN & MEKANIK -->
+                                    <td class="py-4 px-3 font-semibold text-slate-800">
+                                        @if($item->tanggal_booking)
+                                            <div class="flex items-center gap-1.5">
+                                                <span>🗓️ {{ \Carbon\Carbon::parse($item->tanggal_booking)->format('d M Y - H:i') }} WIB</span>
+                                            </div>
+                                            @if($item->mechanic)
+                                                <div class="text-xs text-emerald-600 font-bold mt-1 flex items-center gap-1">
+                                                    👨‍🔧 Mekanik: {{ $item->mechanic->nama_mekanik }}
+                                                </div>
+                                            @endif
+                                        @else
+                                            <span class="text-slate-400 italic font-normal">Belum diatur</span>
+                                        @endif
                                     </td>
-                                    <td class="px-4 py-4 text-center whitespace-nowrap">
-                                        <form action="{{ route('admin.booking.status', $booking->id) }}" method="POST" class="inline-flex items-center gap-2">
-                                            @csrf
-                                            @method('PATCH')
-                                            
-                                            @if($booking->status == 'menunggu' || $booking->status == 'pending')
-                                                <!-- Pilih tanggal & jam sebelum disetujui -->
-                                                <input type="datetime-local" name="tanggal_booking" value="{{ $booking->tanggal_booking }}" required class="text-xs rounded-lg border-slate-300 py-1.5 px-2 focus:ring-teal-500 focus:border-teal-500">
+
+                                    <!-- STATUS BADGE -->
+                                    <td class="py-4 px-3 text-center">
+                                        @if($status == 'menunggu' || $status == 'pending')
+                                            <span class="bg-amber-50 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full border border-amber-200/60">
+                                                Menunggu
+                                            </span>
+                                        @elseif($status == 'disetujui')
+                                            <span class="bg-sky-50 text-sky-700 text-xs font-semibold px-3 py-1 rounded-full border border-sky-200/60">
+                                                Disetujui
+                                            </span>
+                                        @elseif($status == 'selesai')
+                                            <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-200/60">
+                                                Selesai
+                                            </span>
+                                        @else
+                                            <span class="bg-rose-50 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full border border-rose-200/60">
+                                                {{ ucfirst($item->status) }}
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <!-- TENTUKAN WAKTU, MEKANIK & AKSI -->
+                                    <td class="py-4 px-3 text-center whitespace-nowrap">
+                                        @if($status == 'menunggu' || $status == 'pending')
+                                            <form action="{{ route('admin.booking.update', $item->id) }}" method="POST" class="inline-flex items-center gap-2">
+                                                @csrf
+                                                @method('PUT')
                                                 
-                                                <button type="submit" name="status" value="disetujui" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm">
+                                                <!-- INPUT DATETIME LOCAL (24 JAM) -->
+                                                <input type="datetime-local" name="tanggal_booking" 
+                                                       value="{{ $item->tanggal_booking ? \Carbon\Carbon::parse($item->tanggal_booking)->format('Y-m-d\TH:i') : '' }}" 
+                                                       required 
+                                                       class="text-xs px-2.5 py-1.5 border border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-slate-700">
+
+                                                <!-- DROPDOWN MEKANIK -->
+                                                <select name="mechanic_id" required class="text-xs px-2.5 py-1.5 border border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-slate-700">
+                                                    <option value="">-- Pilih Mekanik --</option>
+                                                    @foreach($mechanics as $mechanic)
+                                                        <option value="{{ $mechanic->id }}" {{ $item->mechanic_id == $mechanic->id ? 'selected' : '' }}>
+                                                            {{ $mechanic->nama_mekanik }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                <!-- TOMBOL SETUJUI -->
+                                                <button type="submit" name="status" value="Disetujui" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm transition">
                                                     Setujui
                                                 </button>
-                                                <button type="submit" name="status" value="ditolak" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" formnovalidate>
+
+                                                <!-- TOMBOL TOLAK -->
+                                                <button type="submit" name="status" value="Ditolak" class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm transition">
                                                     Tolak
                                                 </button>
-                                            @elseif($booking->status == 'disetujui' || $booking->status == 'proses')
-                                                <button type="submit" name="status" value="selesai" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm">
-                                                    Tandai Selesai
-                                                </button>
-                                            @else
-                                                <span class="text-xs text-slate-400 font-semibold">-</span>
-                                            @endif
-                                        </form>
+                                            </form>
+
+                                        @elseif($status == 'disetujui')
+                                            <div class="flex items-center justify-center gap-2">
+                                                <form action="{{ route('admin.booking.update', $item->id) }}" method="POST" class="inline-block">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" name="status" value="Selesai" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-4 py-1.5 rounded-xl shadow-sm transition">
+                                                        Tandai Selesai
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                        @else
+                                            <span class="text-xs text-slate-400 font-medium bg-slate-100 px-3 py-1 rounded-full">- Terkunci -</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-slate-500 font-semibold">
-                                        Belum ada data booking servis.
-                                    </td>
+                                    <td colspan="6" class="text-center py-8 text-slate-400 text-xs">Belum ada pesanan servis masuk.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
         </div>
