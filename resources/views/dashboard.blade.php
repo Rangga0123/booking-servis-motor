@@ -30,34 +30,39 @@
                 </div>
             </div>
 
+            @php
+                $totalBooking = count($bookings);$totalProses = 0;
+                $totalSelesai = 0;
+
+                foreach ($bookings as$b) {
+                    $st = strtolower($b->status ?? '');
+                    if (in_array($st, ['proses', 'diproses', 'sedang dikerjakan', 'dikerjakan', 'disetujui'])) {$totalProses++;
+                    }
+                    if ($st === 'selesai') {$totalSelesai++;
+                    }
+                }
+            @endphp
+
             <!-- Cards Status -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <!-- Kartu 1: Total Booking -->
                 <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="p-5 rounded-2xl shadow-sm">
                     <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Total Booking Saya</p>
-                    <h3 class="text-3xl font-black text-slate-900 mt-1">{{ $bookings->count() }}</h3>
+                    <h3 class="text-3xl font-black text-slate-900 mt-1">{{ $totalBooking }}</h3>
                     <p class="text-xs text-slate-700 mt-0.5">Semua riwayat pengajuan</p>
                 </div>
 
                 <!-- Kartu 2: Status Diproses -->
                 <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="p-5 rounded-2xl shadow-sm">
                     <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Status Diproses</p>
-                    <h3 class="text-3xl font-black text-amber-800 mt-1">
-                        {{ $bookings->filter(function($b) {
-                            return in_array(strtolower($b->status ?? ''), ['proses', 'diproses', 'sedang dikerjakan', 'dikerjakan', 'disetujui']);
-                        })->count() }}
-                    </h3>
+                    <h3 class="text-3xl font-black text-amber-800 mt-1">{{ $totalProses }}</h3>
                     <p class="text-xs text-slate-700 mt-0.5">Sedang dalam pengerjaan</p>
                 </div>
 
                 <!-- Kartu 3: Servis Selesai -->
                 <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="p-5 rounded-2xl shadow-sm">
                     <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Servis Selesai</p>
-                    <h3 class="text-3xl font-black text-emerald-900 mt-1">
-                        {{ $bookings->filter(function($b) {
-                            return strtolower($b->status ?? '') === 'selesai';
-                        })->count() }}
-                    </h3>
+                    <h3 class="text-3xl font-black text-emerald-900 mt-1">{{ $totalSelesai }}</h3>
                     <p class="text-xs text-slate-700 mt-0.5">Motor siap diambil</p>
                 </div>
             </div>
@@ -104,10 +109,17 @@
                                     <td class="px-4 py-4 text-center border-y border-teal-200 whitespace-nowrap">
                                         @if($booking->tanggal_booking)
                                             <div class="font-bold text-slate-900">
-                                                {{ \Carbon\Carbon::parse($booking->tanggal_booking)->format('d M Y') }}
+                                                {{ date('d M Y', strtotime($booking->tanggal_booking)) }}
                                             </div>
                                             <div class="text-xs text-emerald-700 font-extrabold">
-                                                {{ \Carbon\Carbon::parse($booking->tanggal_booking)->format('H:i') }} WIB
+                                                @if(!empty($booking->jam_booking))
+                                                    @php
+                                                        $formattedJam = str_replace([',', '.'], ':', trim($booking->jam_booking));
+                                                    @endphp
+                                                    {{ $formattedJam }} WIB
+                                                @else
+                                                    Jam Sesuai Antrean
+                                                @endif
                                             </div>
                                         @else
                                             <span class="text-xs text-slate-400 italic">Belum ditentukan</span>
@@ -118,10 +130,10 @@
                                     <td class="px-4 py-4 border-y border-teal-200 whitespace-nowrap">
                                         @if($booking->mechanic)
                                             <div class="font-bold text-slate-900 flex items-center gap-1">
-                                                👨‍🔧 {{ $booking->mechanic->nama_mekanik }}
+                                                👨‍🔧 {{ $booking->mechanic->nama_mekanik ?? $booking->mechanic->name }}
                                             </div>
                                             <div class="text-[11px] text-slate-500 font-medium">
-                                                {{ $booking->mechanic->spesialisasi ?? 'Mekanik Umum' }}
+                                                {{ $booking->mechanic->spesialisasi ?? $booking->mechanic->specialization ?? 'Mekanik Umum' }}
                                             </div>
                                         @else
                                             <span class="text-xs text-slate-400 italic">Belum ditunjuk</span>
@@ -165,14 +177,26 @@
                                         @endif
                                     </td>
 
-                                    <!-- TOMBOL EDIT -->
+                                    <!-- TOMBOL PILIHAN (DIPERBAIKI) -->
                                     <td class="px-4 py-4 text-center rounded-r-xl border-y border-r border-teal-200">
                                         @if(in_array(strtolower($booking->status ?? 'pending'), ['pending', 'menunggu']))
-                                            <a href="{{ route('booking.edit', $booking->id) }}" 
-                                               style="background-color: #ccfbf1; color: #115e59; border: 1px solid #2dd4bf;" 
-                                               class="font-black text-xs px-4 py-2 rounded-lg shadow-sm transition inline-block hover:bg-teal-200">
-                                                Edit
-                                            </a>
+                                            <div class="flex items-center justify-center gap-2">
+                                                <a href="{{ route('booking.edit', $booking->id) }}" 
+                                                   style="background-color: #ccfbf1; color: #115e59; border: 1px solid #2dd4bf;" 
+                                                   class="font-black text-xs px-3 py-2 rounded-lg shadow-sm transition inline-block hover:bg-teal-200">
+                                                    Edit
+                                                </a>
+
+                                                <form action="{{ route('booking.cancel', $booking->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')" class="inline-block">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" 
+                                                            style="background-color: #fef2f2; color: #991b1b; border: 1px solid #fca5a5;" 
+                                                            class="font-black text-xs px-3 py-2 rounded-lg shadow-sm transition hover:bg-red-200">
+                                                        Batalkan
+                                                    </button>
+                                                </form>
+                                            </div>
                                         @else
                                             <span class="text-slate-400 text-xs font-semibold italic">Terkunci</span>
                                         @endif
