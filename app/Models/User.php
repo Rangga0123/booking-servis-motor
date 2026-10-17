@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo',
     ];
 
     /**
@@ -57,5 +58,15 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * URL foto profil (null kalau belum ada foto)
+     */
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        return $this->profile_photo
+            ? asset('storage/' . $this->profile_photo)
+            : null;
     }
 }

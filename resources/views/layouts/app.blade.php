@@ -1,37 +1,74 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Royal Motor') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <!-- Background Utama: Soft Cyan-Teal -->
-        <div style="background: linear-gradient(135deg, #cff4fc 0%, #e0f2fe 50%, #d1fae5 100%);" class="min-h-screen">
-            @include('layouts.navigation')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-            <!-- Page Heading (Jika Ada) -->
-            @if (isset($header))
-                <header style="background-color: #d8f3dc; border-bottom: 1px solid #b7e4c7;" class="shadow-sm">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+        body {
+            font-family: 'Figtree', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .page-content {
+            min-height: calc(100vh - 64px);
+            animation: pageFadeIn .35s ease-out;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .page-content {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased">
+    <div class="min-h-screen bg-slate-50">
+
+        @include('layouts.navigation')
+
+        @if (isset($header))
+            <header class="border-b border-slate-200 bg-white shadow-sm">
+                <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
+        @endif
+
+        <main class="page-content">
+            {{ $slot }}
+        </main>
+
+    </div>
+</body>
 </html>

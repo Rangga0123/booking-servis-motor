@@ -1,147 +1,182 @@
-<nav x-data="{ open: false }" style="background-color: #1e293b;" class="border-b border-slate-700 text-white">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+<nav x-data="{ open: false }" class="border-b border-slate-700 bg-slate-800 text-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+
+            {{-- Logo Bengkel --}}
             <div class="flex">
-                <!-- Logo & Nama Bengkel -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ Auth::user()->role === 'admin' ? '/admin/dashboard' : '/dashboard' }}" class="flex items-center gap-2 font-bold text-lg tracking-wider">
-                        <span class="text-xl">🔧</span> 
-                        <span class="text-white font-extrabold">BENGKEL <span class="text-red-500">ROYAL MOTOR</span></span>
+                <div class="flex shrink-0 items-center">
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
+                       class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 font-bold text-white">
+                            RM
+                        </div>
+
+                        <div class="leading-tight">
+                            <div class="text-sm font-bold tracking-wide text-white">
+                                BENGKEL ROYAL MOTOR
+                            </div>
+                            <div class="mt-1 text-xs text-slate-400">
+                                Sistem Booking Servis
+                            </div>
+                        </div>
                     </a>
                 </div>
 
-                <!-- Navigation Links (Tampilan Desktop) -->
-                <div class="hidden space-x-2 sm:-my-px sm:ms-10 sm:flex sm:items-center">
-                    <a href="{{ Auth::user()->role === 'admin' ? '/admin/dashboard' : '/dashboard' }}" 
-                       class="px-3 py-2 rounded-md text-sm font-semibold {{ request()->is('admin/dashboard') || request()->is('dashboard') ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition">
+                {{-- Menu Desktop --}}
+                <div class="hidden items-center space-x-1 sm:ms-8 sm:flex">
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
+                       class="rounded-lg px-4 py-2 text-sm font-medium transition
+                       {{ request()->routeIs('dashboard', 'home', 'admin.dashboard') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                         Dashboard
                     </a>
 
-                    @if(Auth::user()->role === 'admin')
-                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                    @if (Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.pelanggan-pesanan') }}"
+                           class="rounded-lg px-4 py-2 text-sm font-medium transition
+                           {{ request()->routeIs('admin.pelanggan-pesanan') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                             Pelanggan
                         </a>
 
-                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                            Kendaraan
-                        </a>
-
-                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                        <a href="{{ route('admin.dashboard') }}"
+                           class="rounded-lg px-4 py-2 text-sm font-medium transition
+                           {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                             Booking Servis
                         </a>
 
-                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                        <a href="{{ route('admin.mekanik.index') }}"
+                           class="rounded-lg px-4 py-2 text-sm font-medium transition
+                           {{ request()->routeIs('admin.mekanik.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                             Mekanik
                         </a>
-
-                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                            Pembayaran
-                        </a>
                     @else
-                        <!-- DIPERBAIKI: Mengarah ke route('booking.create') -->
-                        <a href="{{ route('booking.create') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('booking.create') ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition">
+                        <a href="{{ route('booking.index') }}"
+                           class="rounded-lg px-4 py-2 text-sm font-medium transition
+                           {{ request()->routeIs('booking.index', 'booking.edit') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                             Booking Servis
+                        </a>
+
+                        <a href="{{ route('booking.create') }}"
+                           class="rounded-lg px-4 py-2 text-sm font-medium transition
+                           {{ request()->routeIs('booking.create') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                            Buat Booking
                         </a>
                     @endif
                 </div>
             </div>
 
-            <!-- Settings Dropdown (Tampilan Desktop) -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            {{-- Profil Desktop --}}
+            <div class="hidden items-center sm:flex">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-slate-600 text-sm leading-4 font-medium rounded-md text-slate-200 bg-slate-800 hover:text-white hover:bg-slate-700 focus:outline-none transition duration-150 ease-in-out">
-                            <div>{{ Auth::user()->name }} ({{ Auth::user()->role === 'admin' ? 'Admin' : 'Pelanggan' }})</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                        <button type="button"
+                                class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-600">
+                            <span>{{ Auth::user()->name }}</span>
+                            <span class="rounded bg-slate-600 px-2 py-0.5 text-xs text-slate-200">
+                                {{ Auth::user()->role === 'admin' ? 'Admin' : 'Pelanggan' }}
+                            </span>
+                            <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
                         </button>
                     </x-slot>
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            Profil Saya
                         </x-dropdown-link>
 
-                        <!-- Authentication Logout Desktop -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm leading-5 text-rose-600 font-bold hover:bg-slate-100 focus:outline-none transition duration-150 ease-in-out">
-                                🚪 {{ __('Log Out') }}
+                            <button type="submit"
+                                    class="block w-full px-4 py-2 text-left text-sm text-red-600 transition hover:bg-slate-100">
+                                Keluar
                             </button>
                         </form>
                     </x-slot>
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger Button (Tampilan Mobile/HP) -->
+            {{-- Tombol Menu HP --}}
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none transition duration-150 ease-in-out">
+                <button @click="open = !open"
+                        type="button"
+                        class="inline-flex items-center justify-center rounded-lg p-2 text-slate-300 transition hover:bg-slate-700 hover:text-white">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path :class="{ 'hidden': open, 'inline-flex': !open }"
+                              class="inline-flex"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                        <path :class="{ 'hidden': !open, 'inline-flex': open }"
+                              class="hidden"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu (Tampilan Mobile/HP) -->
-    <div :class="{'block': open, 'hidden': ! open}" style="background-color: #1e293b;" class="hidden sm:hidden border-t border-slate-700">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="Auth::user()->role === 'admin' ? '/admin/dashboard' : '/dashboard'" :active="request()->is('admin/dashboard') || request()->is('dashboard')" class="text-white">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+    {{-- Menu HP --}}
+    <div x-show="open"
+         x-transition
+         class="border-t border-slate-700 bg-slate-800 sm:hidden">
 
-            @if(Auth::user()->role === 'admin')
-                <x-responsive-nav-link href="#" class="text-slate-300">
-                    {{ __('Pelanggan') }}
-                </x-responsive-nav-link>
+        <div class="space-y-1 px-3 py-3">
+            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
+               class="block rounded-lg px-3 py-2 text-sm font-medium transition
+               {{ request()->routeIs('dashboard', 'home', 'admin.dashboard') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                Dashboard
+            </a>
 
-                <x-responsive-nav-link href="#" class="text-slate-300">
-                    {{ __('Kendaraan') }}
-                </x-responsive-nav-link>
+            @if (Auth::user()->role === 'admin')
+                <a href="{{ route('admin.pelanggan-pesanan') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium transition
+                   {{ request()->routeIs('admin.pelanggan-pesanan') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    Pelanggan
+                </a>
 
-                <x-responsive-nav-link href="#" class="text-slate-300">
-                    {{ __('Booking Servis') }}
-                </x-responsive-nav-link>
+                <a href="{{ route('admin.dashboard') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium transition
+                   {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    Booking Servis
+                </a>
 
-                <x-responsive-nav-link href="#" class="text-slate-300">
-                    {{ __('Mekanik') }}
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link href="#" class="text-slate-300">
-                    {{ __('Pembayaran') }}
-                </x-responsive-nav-link>
+                <a href="{{ route('admin.mekanik.index') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium transition
+                   {{ request()->routeIs('admin.mekanik.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    Mekanik
+                </a>
             @else
-                <!-- DIPERBAIKI: Mengarah ke route('booking.create') -->
-                <x-responsive-nav-link :href="route('booking.create')" :active="request()->routeIs('booking.create')" class="text-slate-300">
-                    {{ __('Booking Saya') }}
-                </x-responsive-nav-link>
+                <a href="{{ route('booking.index') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium transition
+                   {{ request()->routeIs('booking.index', 'booking.edit') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    Booking Servis
+                </a>
+
+                <a href="{{ route('booking.create') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium transition
+                   {{ request()->routeIs('booking.create') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    Buat Booking
+                </a>
             @endif
         </div>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-slate-700">
-            <div class="px-4">
-                <div class="font-medium text-base text-white">{{ Auth::user()->name }} ({{ Auth::user()->role === 'admin' ? 'Admin' : 'Pelanggan' }})</div>
-                <div class="font-medium text-sm text-slate-400">{{ Auth::user()->email }}</div>
-            </div>
+        {{-- Akun HP --}}
+        <div class="border-t border-slate-700 px-4 py-4">
+            <div class="font-medium text-white">{{ Auth::user()->name }}</div>
+            <div class="mt-1 text-sm text-slate-400">{{ Auth::user()->email }}</div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="text-slate-300">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+                <a href="{{ route('profile.edit') }}"
+                   class="block rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-700 hover:text-white">
+                    Profil Saya
+                </a>
 
-                <!-- Authentication Logout Mobile -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="block w-full text-left ps-3 pe-4 py-2 border-l-4 border-transparent text-base font-medium text-rose-400 hover:text-rose-300 hover:bg-slate-800 transition duration-150 ease-in-out">
-                        🚪 {{ __('Log Out') }}
+                    <button type="submit"
+                            class="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-red-400 transition hover:bg-slate-700 hover:text-red-300">
+                        Keluar
                     </button>
                 </form>
             </div>

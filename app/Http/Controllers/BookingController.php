@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Mechanic;
+use App\Models\InformasiBengkel;
+use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    // =========================
     // DASHBOARD PELANGGAN
-    // =========================
     public function dashboard()
     {
         if (auth()->user()->role === 'admin') {
@@ -38,7 +38,100 @@ class BookingController extends Controller
             return strtolower($item->status ?? '') === 'selesai';
         })->count();
 
+        // INFORMASI BENGKEL DARI DATABASE
+        $informasiBengkel = InformasiBengkel::first();
+
+        $namaBengkel = $informasiBengkel?->nama_bengkel
+            ?? 'Bengkel Royal Motor';
+
+        $jamOperasional = $informasiBengkel
+            ? substr($informasiBengkel->jam_buka, 0, 5)
+                . ' - '
+                . substr($informasiBengkel->jam_tutup, 0, 5)
+                . ' WIB'
+            : '13.00 - 22.00 WIB';
+
+        // PENGUMUMAN AKTIF
+        $pengumuman = Pengumuman::where('aktif', true)
+            ->latest()
+            ->get();
+
+        // STATUS OPERASIONAL BENGKEL
+        $statusOperasional = 'belum diatur';
+
+        if ($informasiBengkel) {
+            $statusPengaturan = strtolower(
+                $informasiBengkel->status_operasional ?? 'otomatis'
+            );
+
+            if (in_array($statusPengaturan, ['buka', 'tutup', 'libur'])) {
+                $statusOperasional = $statusPengaturan;
+            } else {
+                $hariSekarang = strtolower(now()->locale('id')->dayName);
+
+                $daftarHariBuka = array_map(
+                    fn ($hari) => strtolower(trim($hari)),
+                    explode(',', $informasiBengkel->hari_operasional ?? '')
+                );
+
+                $jamSekarang = now()->format('H:i:s');
+
+                $hariSesuai = in_array(
+                    $hariSekarang,
+                    $daftarHariBuka
+                );
+
+                $dalamJam = $informasiBengkel->jam_buka <= $jamSekarang
+                    && $jamSekarang < $informasiBengkel->jam_tutup;
+
+                $statusOperasional = ($hariSesuai && $dalamJam)
+                    ? 'buka'
+                    : 'tutup';
+            }
+        }
+
         return view('dashboard', compact(
+            'bookings',
+            'totalBooking',
+            'statusDiproses',
+            'servisSelesai',
+            'informasiBengkel',
+            'namaBengkel',
+            'jamOperasional',
+            'statusOperasional',
+            'pengumuman'
+        ));
+    }
+
+    // DAFTAR BOOKING PELANGGAN
+    public function index()
+    {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $bookings = Booking::with('mechanic')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        $totalBooking = $bookings->count();
+
+        $statusDiproses = $bookings->filter(function ($item) {
+            return in_array(strtolower($item->status ?? ''), [
+                'proses',
+                'diproses',
+                'sedang dikerjakan',
+                'dikerjakan',
+                'disetujui',
+            ]);
+        })->count();
+
+        $servisSelesai = $bookings->filter(function ($item) {
+            return strtolower($item->status ?? '') === 'selesai';
+        })->count();
+
+        return view('booking.index', compact(
             'bookings',
             'totalBooking',
             'statusDiproses',
@@ -46,10 +139,7 @@ class BookingController extends Controller
         ));
     }
 
-
-    // =========================
     // FORM BOOKING PELANGGAN
-    // =========================
     public function create()
     {
         if (auth()->user()->role === 'admin') {
@@ -59,10 +149,7 @@ class BookingController extends Controller
         return view('booking.create');
     }
 
-
-    // =========================
     // SIMPAN BOOKING
-    // =========================
     public function store(Request $request)
     {
         if (auth()->user()->role === 'admin') {
@@ -102,17 +189,11 @@ class BookingController extends Controller
         ]);
 
         return redirect()
-            ->route('dashboard')
-            ->with(
-                'success',
-                'Booking berhasil dibuat! Menunggu persetujuan Admin.'
-            );
+            ->route('booking.index')
+            ->with('success', 'Booking berhasil dibuat! Menunggu persetujuan Admin.');
     }
 
-
-    // =========================
     // EDIT BOOKING
-    // =========================
     public function edit($id)
     {
         if (auth()->user()->role === 'admin') {
@@ -125,10 +206,7 @@ class BookingController extends Controller
         return view('booking.edit', compact('booking'));
     }
 
-
-    // =========================
     // UPDATE BOOKING
-    // =========================
     public function update(Request $request, $id)
     {
         if (auth()->user()->role === 'admin') {
@@ -151,17 +229,11 @@ class BookingController extends Controller
         ]);
 
         return redirect()
-            ->route('dashboard')
-            ->with(
-                'success',
-                'Data booking berhasil diperbarui!'
-            );
+            ->route('booking.index')
+            ->with('success', 'Data booking berhasil diperbarui!');
     }
 
-
-    // =========================
-    // HAPUS / BATALKAN BOOKING
-    // =========================
+    // HAPUS BOOKING
     public function destroy($id)
     {
         if (auth()->user()->role === 'admin') {
@@ -174,26 +246,17 @@ class BookingController extends Controller
         $booking->delete();
 
         return redirect()
-            ->route('dashboard')
-            ->with(
-                'success',
-                'Booking berhasil dibatalkan!'
-            );
+            ->route('booking.index')
+            ->with('success', 'Booking berhasil dibatalkan!');
     }
 
-
-    // =========================
     // BATALKAN BOOKING
-    // =========================
     public function cancel($id)
     {
         return $this->destroy($id);
     }
 
-
-    // =========================
     // DASHBOARD ADMIN
-    // =========================
     public function indexAdmin()
     {
         $bookings = Booking::with('mechanic')
@@ -205,17 +268,11 @@ class BookingController extends Controller
 
         return view(
             'admin.dashboard',
-            compact(
-                'bookings',
-                'mechanics'
-            )
+            compact('bookings', 'mechanics')
         );
     }
 
-
-    // =========================
     // UPDATE BOOKING DARI ADMIN
-    // =========================
     public function updateStatus(Request $request, $id)
     {
         if ($request->filled('jam_booking')) {
@@ -229,10 +286,10 @@ class BookingController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|string',
-            'mechanic_id' => 'nullable|exists:mechanics,id',
+            'status'          => 'required|string',
+            'mechanic_id'     => 'nullable|exists:mechanics,id',
             'tanggal_booking' => 'nullable|date',
-            'jam_booking' => 'nullable|date_format:H:i',
+            'jam_booking'     => 'nullable|date_format:H:i',
         ]);
 
         $booking = Booking::findOrFail($id);
@@ -255,16 +312,10 @@ class BookingController extends Controller
 
         return redirect()
             ->route('admin.dashboard')
-            ->with(
-                'success',
-                'Pesanan berhasil diperbarui!'
-            );
+            ->with('success', 'Pesanan berhasil diperbarui!');
     }
 
-
-    // =========================
     // AKSI ADMIN LAMA
-    // =========================
     public function adminUpdate(Request $request, $id)
     {
         return $this->updateStatus($request, $id);

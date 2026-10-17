@@ -1,173 +1,385 @@
+
 <x-app-layout>
-    <!-- Background Soft Cyan-Teal -->
-    <div style="background: linear-gradient(135deg, #cff4fc 0%, #e0f2fe 50%, #d1fae5 100%);" class="py-8 min-h-screen">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <!-- Card Utama Form -->
-            <div style="background-color: #d8f3dc; border: 1px solid #b7e4c7;" class="rounded-3xl shadow-lg overflow-hidden">
-                
-                <!-- Header Form (Warna Hijau Gelap / Mint Senada) -->
-                <div style="background-color: #1b4332;" class="p-6 text-white">
-                    <div class="flex items-center gap-3">
-                        <span class="text-3xl">📝</span>
-                        <div>
-                            <h2 class="text-xl font-extrabold tracking-wide">Formulir Booking Servis Motor</h2>
-                            <p class="text-xs text-emerald-200 mt-1">Lengkapi data kendaraan, jadwal pengerjaan, dan metode pembayaran Anda.</p>
-                        </div>
-                    </div>
+    <div class="booking-page min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+        <div class="booking-enter mx-auto max-w-4xl">
+
+            <div class="mb-7">
+                <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-700">
+                    Royal Motor
+                </p>
+
+                <h1 class="text-3xl font-bold tracking-tight text-slate-900">
+                    Booking Servis Motor
+                </h1>
+
+                <p class="mt-2 text-sm leading-6 text-slate-500">
+                    Lengkapi informasi kendaraan dan pilih jadwal servis yang kamu inginkan.
+                </p>
+            </div>
+
+            @if ($errors->any())
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    <p class="font-semibold">Ada data yang perlu diperbaiki.</p>
+
+                    <ul class="mt-2 list-inside list-disc">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                <div class="border-b border-slate-200 bg-white px-6 py-5 sm:px-8">
+                    <h2 class="text-lg font-bold text-slate-900">
+                        Formulir Pemesanan
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Kolom bertanda * wajib diisi.
+                    </p>
                 </div>
 
-                <form action="{{ route('booking.store') }}" method="POST" class="p-6 sm:p-8 space-y-8">
+                <form action="{{ route('booking.store') }}" method="POST" class="space-y-8 p-6 sm:p-8">
                     @csrf
 
-                    <!-- SECTION 1: DATA PELANGGAN -->
-                    <div>
-                        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <span>👤</span> Data Pelanggan
+                    <section>
+                        <h3 class="mb-4 border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">
+                            Data Pelanggan
                         </h3>
-                        <div style="background-color: #b7e4c7; border: 1px solid #74c69d;" class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-2xl">
+
+                        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <div>
-                                <label class="block text-xs font-bold text-slate-800 mb-1">Nama Pemesan</label>
-                                <input type="text" value="{{ Auth::user()->name }}" readonly class="w-full bg-slate-100/80 border-slate-300 text-slate-700 text-sm rounded-xl py-2 px-3 font-semibold cursor-not-allowed">
+                                <label for="nama_pelanggan" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Nama Pemesan
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="nama_pelanggan"
+                                    value="{{ Auth::user()->name }}"
+                                    readonly
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600 outline-none"
+                                >
+
+                                <p class="mt-1 text-xs text-slate-400">
+                                    Nama mengikuti akun yang sedang login.
+                                </p>
                             </div>
+
                             <div>
-                                <label class="block text-xs font-bold text-slate-800 mb-1">Email Pelanggan</label>
-                                <input type="email" value="{{ Auth::user()->email }}" readonly class="w-full bg-slate-100/80 border-slate-300 text-slate-700 text-sm rounded-xl py-2 px-3 font-semibold cursor-not-allowed">
+                                <label for="email_pelanggan" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Email Pelanggan
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email_pelanggan"
+                                    value="{{ Auth::user()->email }}"
+                                    readonly
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600 outline-none"
+                                >
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- SECTION 2: DATA KENDARAAN -->
-                    <div>
-                        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <span>🛵</span> Data Kendaraan
+                    <section>
+                        <h3 class="mb-4 border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">
+                            Data Kendaraan
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <div>
-                                <label for="nama_motor" class="block text-xs font-bold text-slate-800 mb-1">Merk / Tipe Motor <span class="text-rose-500">*</span></label>
-                                <input type="text" name="nama_motor" id="nama_motor" placeholder="Contoh: Honda Vario 160 / Yamaha NMAX" required class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3">
+                                <label for="nama_motor" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Merek / Tipe Motor *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="nama_motor"
+                                    id="nama_motor"
+                                    value="{{ old('nama_motor') }}"
+                                    placeholder="Contoh: Honda Vario 160"
+                                    maxlength="255"
+                                    required
+                                    class="booking-input w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none"
+                                >
+
+                                @error('nama_motor')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
+
                             <div>
-                                <label for="plat_nomor" class="block text-xs font-bold text-slate-800 mb-1">Plat Nomor / No. Polisi <span class="text-rose-500">*</span></label>
-                                <input type="text" name="plat_nomor" id="plat_nomor" placeholder="Contoh: B 1234 ABC" required class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3 uppercase font-mono font-bold">
+                                <label for="plat_nomor" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Nomor Polisi *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="plat_nomor"
+                                    id="plat_nomor"
+                                    value="{{ old('plat_nomor') }}"
+                                    placeholder="Contoh: B 1234 ABC"
+                                    maxlength="20"
+                                    required
+                                    class="booking-input w-full rounded-xl border border-slate-300 px-4 py-3 text-sm uppercase text-slate-800 outline-none"
+                                >
+
+                                @error('plat_nomor')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- SECTION 3: DETAIL SERVIS & JADWAL -->
-                    <div>
-                        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <span>🛠️</span> Detail Servis & Jadwal
+                    <section>
+                        <h3 class="mb-4 border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">
+                            Detail Servis dan Jadwal
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label for="jenis_servis" class="block text-xs font-bold text-slate-800 mb-1">Jenis Servis <span class="text-rose-500">*</span></label>
-                                <select name="jenis_servis" id="jenis_servis" required class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3">
-                                    <option value="" disabled selected>-- Pilih Jenis Servis --</option>
-                                    <option value="Servis Biasa / Cek Kerusakan">Servis Biasa / Cek Kerusakan</option>
-                                    <option value="Servis Rutin / Berkala">Servis Rutin / Berkala</option>
-                                    <option value="Ganti Oli Mesin / Gardan">Ganti Oli Mesin / Gardan</option>
-                                    <option value="Ganti Aki / Baterai">Ganti Aki / Baterai</option>
-                                    <option value="Ganti Ban / Velg">Ganti Ban / Velg</option>
-                                    <option value="Ganti Kampas Rem / Cakram">Ganti Kampas Rem / Cakram</option>
-                                    <option value="Ganti Lampu / Kelistrikan">Ganti Lampu / Kelistrikan</option>
-                                    <option value="Tune Up & CVT">Tune Up & CVT</option>
-                                    <option value="Servis Rem & Kaki-kaki">Servis Rem & Kaki-kaki</option>
-                                    <option value="Overhaul / Service Besar">Overhaul / Service Besar</option>
+
+                        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                            <div class="md:col-span-2">
+                                <label for="jenis_servis" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Jenis Servis *
+                                </label>
+
+                                <select
+                                    name="jenis_servis"
+                                    id="jenis_servis"
+                                    required
+                                    class="booking-input w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none"
+                                >
+                                    <option value="">Pilih jenis servis</option>
+
+                                    @php
+                                        $jenisServis = [
+                                            'Servis Biasa / Cek Kerusakan',
+                                            'Servis Rutin / Berkala',
+                                            'Ganti Oli Mesin / Gardan',
+                                            'Ganti Aki / Baterai',
+                                            'Ganti Ban / Velg',
+                                            'Ganti Kampas Rem / Cakram',
+                                            'Ganti Lampu / Kelistrikan',
+                                            'Tune Up & CVT',
+                                            'Servis Rem & Kaki-kaki',
+                                            'Overhaul / Service Besar',
+                                        ];
+                                    @endphp
+
+                                    @foreach ($jenisServis as $jenis)
+                                        <option value="{{ $jenis }}" @selected(old('jenis_servis') === $jenis)>
+                                            {{ $jenis }}
+                                        </option>
+                                    @endforeach
                                 </select>
+
+                                @error('jenis_servis')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
-                                <label for="tanggal_booking" class="block text-xs font-bold text-slate-800 mb-1">Tanggal Servis <span class="text-rose-500">*</span></label>
-                                <input type="date" name="tanggal_booking" id="tanggal_booking" required min="{{ date('Y-m-d') }}" class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3">
+                                <label for="tanggal_booking" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Tanggal Servis *
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="tanggal_booking"
+                                    id="tanggal_booking"
+                                    value="{{ old('tanggal_booking') }}"
+                                    min="{{ date('Y-m-d') }}"
+                                    required
+                                    class="booking-input w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none"
+                                >
+
+                                @error('tanggal_booking')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- INPUT JAM MANUAL (RAPI DENGAN KETERANGAN WAKTU DI BAWAH) -->
                             <div>
-                                <label for="jam_booking" class="block text-xs font-bold text-slate-800 mb-1">Jam Booking <span class="text-rose-500">*</span></label>
-                                <input type="text" name="jam_booking" id="jam_booking" placeholder="Contoh: 20.21 WIB" required
-                                       class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 py-2.5 px-3 font-semibold text-slate-800">
-                                <div class="flex items-center justify-between mt-1">
-                                    <span class="text-[10px] text-slate-600">Ketik bebas (misal: 14.30 WIB / 20.21 WIB)</span>
-                                    <span id="ket_waktu" class="text-[10px] font-extrabold text-emerald-800"></span>
-                                </div>
+                                <label for="jam_booking" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Jam Servis *
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="jam_booking"
+                                    id="jam_booking"
+                                    value="{{ old('jam_booking') }}"
+                                    required
+                                    class="booking-input w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none"
+                                >
+
+                                <p id="ket_waktu" class="mt-2 text-xs text-slate-500"></p>
+
+                                @error('jam_booking')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="keluhan" class="mb-2 block text-sm font-medium text-slate-700">
+                                    Keluhan / Catatan Kendaraan *
+                                </label>
+
+                                <textarea
+                                    name="keluhan"
+                                    id="keluhan"
+                                    rows="4"
+                                    required
+                                    placeholder="Jelaskan kendala motor yang ingin diperiksa..."
+                                    class="booking-input w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none"
+                                >{{ old('keluhan') }}</textarea>
+
+                                @error('keluhan')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
+                    </section>
 
-                        <div>
-                            <label for="keluhan" class="block text-xs font-bold text-slate-800 mb-1">Keluhan / Catatan Kendaraan <span class="text-rose-500">*</span></label>
-                            <textarea name="keluhan" id="keluhan" rows="3" placeholder="Jelaskan kendala motor Anda (misal: mesin kasar, rem bunyi berdecit, mati saat jalan)..." required class="w-full text-sm rounded-xl border-teal-200 focus:ring-teal-500 focus:border-teal-500 p-3"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- SECTION 4: METODE PEMBAYARAN -->
-                    <div>
-                        <h3 class="text-xs font-black text-emerald-950 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <span>💳</span> Opsi Metode Pembayaran
+                    <section>
+                        <h3 class="mb-4 border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">
+                            Metode Pembayaran
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <label class="flex items-center gap-3 p-3.5 bg-white border border-teal-200 rounded-2xl cursor-pointer hover:bg-teal-50 has-[:checked]:border-emerald-700 has-[:checked]:bg-teal-100 transition shadow-sm">
-                                <input type="radio" name="metode_pembayaran" value="Bayar di Kasir (Cash)" checked class="text-teal-700 focus:ring-teal-500">
-                                <div>
-                                    <div class="text-xs font-extrabold text-slate-900">Bayar di Tempat</div>
-                                    <div class="text-[10px] text-slate-600">Tunai saat motor selesai</div>
-                                </div>
-                            </label>
 
-                            <label class="flex items-center gap-3 p-3.5 bg-white border border-teal-200 rounded-2xl cursor-pointer hover:bg-teal-50 has-[:checked]:border-emerald-700 has-[:checked]:bg-teal-100 transition shadow-sm">
-                                <input type="radio" name="metode_pembayaran" value="QRIS / E-Wallet" class="text-teal-700 focus:ring-teal-500">
-                                <div>
-                                    <div class="text-xs font-extrabold text-slate-900">QRIS / E-Wallet</div>
-                                    <div class="text-[10px] text-slate-600">Gopay, OVO, Dana, Shopee</div>
-                                </div>
-                            </label>
+                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                            @foreach ([
+                                'Bayar di Kasir (Cash)' => 'Bayar di Tempat',
+                                'QRIS / E-Wallet' => 'QRIS / E-Wallet',
+                                'Transfer Bank' => 'Transfer Bank',
+                            ] as $value => $label)
+                                <label class="payment-option flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 p-4 transition">
+                                    <input
+                                        type="radio"
+                                        name="metode_pembayaran"
+                                        value="{{ $value }}"
+                                        @checked(old('metode_pembayaran', 'Bayar di Kasir (Cash)') === $value)
+                                        required
+                                        class="border-slate-300 text-blue-700 focus:ring-blue-600"
+                                    >
 
-                            <label class="flex items-center gap-3 p-3.5 bg-white border border-teal-200 rounded-2xl cursor-pointer hover:bg-teal-50 has-[:checked]:border-emerald-700 has-[:checked]:bg-teal-100 transition shadow-sm">
-                                <input type="radio" name="metode_pembayaran" value="Transfer Bank" class="text-teal-700 focus:ring-teal-500">
-                                <div>
-                                    <div class="text-xs font-extrabold text-slate-900">Transfer Bank</div>
-                                    <div class="text-[10px] text-slate-600">BCA, Mandiri, BRI, BNI</div>
-                                </div>
-                            </label>
+                                    <span class="text-sm font-semibold text-slate-700">
+                                        {{ $label }}
+                                    </span>
+                                </label>
+                            @endforeach
                         </div>
-                    </div>
 
-                    <!-- TOMBOL AKSI -->
-                    <div class="pt-4 border-t border-teal-200 flex items-center justify-between">
-                        <a href="{{ route('dashboard') }}" class="text-xs font-extrabold text-slate-600 hover:text-slate-900 transition">
-                            ← Batal & Kembali
+                        @error('metode_pembayaran')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </section>
+
+                    <div class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                        <a
+                            href="{{ route('booking.index') }}"
+                            class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                        >
+                            Kembali
                         </a>
-                        <button type="submit" style="background-color: #1b4332;" class="hover:bg-emerald-900 text-white text-sm font-extrabold px-6 py-3 rounded-2xl shadow-md transition">
-                            🚀 Kirim Pesanan Booking
+
+                        <button
+                            type="submit"
+                            class="booking-button rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
+                        >
+                            Kirim Booking
                         </button>
                     </div>
-
                 </form>
             </div>
 
+            <p class="mt-5 text-center text-xs text-slate-400">
+                Royal Motor · Booking Servis Motor
+            </p>
         </div>
     </div>
 
-    <!-- JAVASCRIPT UNTUK DETEKSI OTOMATIS WAKTU -->
-    <script>
-        document.getElementById('jam_booking').addEventListener('input', function(e) {
-            let val = e.target.value.replace(':', '.');
-            let hour = parseInt(val.split('.')[0]);
-            let ket = document.getElementById('ket_waktu');
+    <style>
+        .booking-enter {
+            animation: bookingEnter .5s ease-out both;
+        }
 
-            if (!isNaN(hour)) {
-                if (hour >= 0 && hour < 11) {
-                    ket.innerText = "☀️ (Pagi)";
-                } else if (hour >= 11 && hour < 15) {
-                    ket.innerText = "🌤️ (Siang)";
-                } else if (hour >= 15 && hour < 18) {
-                    ket.innerText = "🌥️ (Sore)";
-                } else if (hour >= 18 && hour <= 23) {
-                    ket.innerText = "🌙 (Malam)";
-                }
-            } else {
-                ket.innerText = "";
+        .booking-input {
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .booking-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .booking-button {
+            transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+        }
+
+        .booking-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(37, 99, 235, .18);
+        }
+
+        .payment-option:has(input:checked) {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        @keyframes bookingEnter {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
             }
-        });
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .booking-enter,
+            .booking-input,
+            .booking-button,
+            .payment-option {
+                animation: none;
+                transition: none;
+            }
+        }
+    </style>
+
+    <script>
+        const jamInput = document.getElementById('jam_booking');
+        const keteranganWaktu = document.getElementById('ket_waktu');
+
+        function perbaruiKeteranganWaktu() {
+            if (!jamInput || !keteranganWaktu) {
+                return;
+            }
+
+            if (!jamInput.value) {
+                keteranganWaktu.textContent = '';
+                return;
+            }
+
+            const jam = Number(jamInput.value.split(':')[0]);
+
+            if (jam < 11) {
+                keteranganWaktu.textContent = 'Pagi';
+            } else if (jam < 15) {
+                keteranganWaktu.textContent = 'Siang';
+            } else if (jam < 18) {
+                keteranganWaktu.textContent = 'Sore';
+            } else {
+                keteranganWaktu.textContent = 'Malam';
+            }
+        }
+
+        if (jamInput) {
+            jamInput.addEventListener('input', perbaruiKeteranganWaktu);
+            perbaruiKeteranganWaktu();
+        }
     </script>
 </x-app-layout>
