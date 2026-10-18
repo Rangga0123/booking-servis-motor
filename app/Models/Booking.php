@@ -13,6 +13,9 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'mechanic_id',       // <-- Tambahkan ini untuk relasi mekanik
+        'nama_pelanggan',    // data pemesan (boleh beda dari nama akun)
+        'no_hp',
+        'email_pelanggan',
         'nama_motor',
         'plat_nomor',
         'jenis_servis',

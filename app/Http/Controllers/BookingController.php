@@ -146,7 +146,12 @@ class BookingController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return view('booking.create');
+        // Mekanik yang berstatus aktif, untuk dipilih pelanggan
+        $mechanics = Mechanic::whereRaw('LOWER(status) = ?', ['aktif'])
+            ->orderBy('nama_mekanik')
+            ->get();
+
+        return view('booking.create', compact('mechanics'));
     }
 
     // SIMPAN BOOKING
@@ -166,18 +171,33 @@ class BookingController extends Controller
             ]);
         }
 
+        // Rapikan nomor HP: buang spasi dan strip, sisakan angka dan tanda +
+        $request->merge([
+            'no_hp' => preg_replace('/[^0-9+]/', '', (string) $request->no_hp),
+        ]);
+
         $request->validate([
+            'nama_pelanggan'    => 'required|string|max:255',
+            'no_hp'             => ['required', 'regex:/^(\+62|62|0)8[0-9]{7,13}$/'],
+            'email_pelanggan'   => 'nullable|email|max:255',
             'nama_motor'        => 'required|string|max:255',
             'plat_nomor'        => 'required|string|max:20',
-            'jenis_servis'      => 'required|string',
+            'jenis_servis'      => 'required|string|max:255',
             'tanggal_booking'   => 'required|date',
             'jam_booking'       => 'required|date_format:H:i',
             'keluhan'           => 'required|string',
-            'metode_pembayaran' => 'required|string',
+            'mechanic_id'       => 'nullable|exists:mechanics,id',
+            'metode_pembayaran' => 'required|string|max:100',
+        ], [
+            'no_hp.regex' => 'Nomor HP tidak valid. Contoh: 081234567890.',
         ]);
 
         Booking::create([
             'user_id'           => auth()->id(),
+            'mechanic_id'       => $request->filled('mechanic_id') ? $request->mechanic_id : null,
+            'nama_pelanggan'    => $request->nama_pelanggan,
+            'no_hp'             => $request->no_hp,
+            'email_pelanggan'   => $request->email_pelanggan,
             'nama_motor'        => $request->nama_motor,
             'plat_nomor'        => $request->plat_nomor,
             'jenis_servis'      => $request->jenis_servis,

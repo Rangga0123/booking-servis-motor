@@ -15,6 +15,7 @@
     <style>
         html {
             scroll-behavior: smooth;
+            scrollbar-gutter: stable;
         }
 
         body {
@@ -25,28 +26,13 @@
 
         .page-content {
             min-height: calc(100vh - 64px);
-            animation: pageFadeIn .35s ease-out;
-        }
-
-        @keyframes pageFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            animation: none;
+            transform: none;
         }
 
         @media (prefers-reduced-motion: reduce) {
             html {
                 scroll-behavior: auto;
-            }
-
-            .page-content {
-                animation: none;
             }
         }
     </style>

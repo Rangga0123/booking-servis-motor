@@ -33,21 +33,28 @@ class InformasiBengkelController extends Controller
         ));
     }
 
-    // SIMPAN PERUBAHAN INFORMASI BENGKEL
+    // SIMPAN PERUBAHAN INFORMASI BENGKEL (TERMASUK UPLOAD FOTO)
     public function update(Request $request)
     {
         $request->validate([
             'nama_bengkel' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'foto_1' => 'nullable|string|max:255',
+            'foto_1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi_foto_1' => 'nullable|string',
-            'foto_2' => 'nullable|string|max:255',
+            'foto_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deskripsi_foto_2' => 'nullable|string',
             'hari_operasional' => 'required|string|max:255',
             'jam_buka' => 'required|date_format:H:i',
             'jam_tutup' => 'required|date_format:H:i',
             'status_operasional' => 'required|in:otomatis,buka,tutup,libur',
             'informasi_layanan' => 'nullable|string',
+        ], [
+            'foto_1.image' => 'Foto 1 harus berupa gambar.',
+            'foto_1.mimes' => 'Foto 1 harus berformat JPG, PNG, atau WebP.',
+            'foto_1.max' => 'Ukuran Foto 1 maksimal 2 MB.',
+            'foto_2.image' => 'Foto 2 harus berupa gambar.',
+            'foto_2.mimes' => 'Foto 2 harus berformat JPG, PNG, atau WebP.',
+            'foto_2.max' => 'Ukuran Foto 2 maksimal 2 MB.',
         ]);
 
         $informasiBengkel = InformasiBengkel::first();
@@ -56,12 +63,11 @@ class InformasiBengkelController extends Controller
             $informasiBengkel = new InformasiBengkel();
         }
 
+        // Field teks (foto diproses terpisah di bawah)
         $informasiBengkel->fill($request->only([
             'nama_bengkel',
             'deskripsi',
-            'foto_1',
             'deskripsi_foto_1',
-            'foto_2',
             'deskripsi_foto_2',
             'hari_operasional',
             'jam_buka',
@@ -69,6 +75,29 @@ class InformasiBengkelController extends Controller
             'status_operasional',
             'informasi_layanan',
         ]));
+
+        // Pastikan folder tujuan ada
+        if (!is_dir(public_path('images'))) {
+            mkdir(public_path('images'), 0775, true);
+        }
+
+        // Proses upload foto_1 dan foto_2
+        foreach (['foto_1', 'foto_2'] as $field) {
+            if ($request->hasFile($field)) {
+                // Hapus foto lama (hanya jika file-nya ada)
+                $lama = $informasiBengkel->$field;
+                if ($lama && file_exists(public_path($lama))) {
+                    @unlink(public_path($lama));
+                }
+
+                $file = $request->file($field);
+                $namaFile = $field . '-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images'), $namaFile);
+
+                $informasiBengkel->$field = 'images/' . $namaFile;
+            }
+            // Jika tidak ada file baru, foto lama dibiarkan
+        }
 
         $informasiBengkel->save();
 

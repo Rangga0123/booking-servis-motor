@@ -1,2 +1,5 @@
 *
 !.gitignore
+/This PC - Shortcut.lnk
+/resources/views/admin/dashboard_backup.blade.php
+/resources/views/auth/login_backup.blade.php

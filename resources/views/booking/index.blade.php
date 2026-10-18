@@ -1,5 +1,9 @@
-<x-app-layout>
-    <div class="booking-page min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+@extends('layouts.customer')
+
+@section('title', 'Riwayat Booking - Bengkel Royal Motor')
+
+@section('content')
+    <div class="booking-page">
         <div class="booking-enter mx-auto max-w-7xl">
 
             @if (session('success'))
@@ -25,17 +29,13 @@
                         Royal Motor
                     </p>
                     <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                        Booking Servis
+                        Halaman Riwayat setelah Booking 
                     </h1>
                     <p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-                        Buat jadwal servis dan pantau perkembangan pesanan servis motormu.
+                        Lihat status booking dan riwayat servis motor kamu di sini.
                     </p>
                 </div>
 
-                <a href="{{ route('booking.create') }}"
-                   class="booking-button inline-flex items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-800">
-                    Buat Booking Baru
-                </a>
             </div>
 
             <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -228,8 +228,14 @@
             </p>
         </div>
     </div>
+@endsection
 
+@push('styles')
     <style>
+        .booking-page {
+            padding: 8px 0;
+        }
+
         .booking-enter {
             animation: bookingEnter .55s ease-out both;
         }
@@ -276,4 +282,4 @@
             }
         }
     </style>
-</x-app-layout>
+@endpush
