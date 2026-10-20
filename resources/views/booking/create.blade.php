@@ -30,11 +30,11 @@
 
     <header class="bk-head">
         <div>
-            <span class="bk-eyebrow">Royal Motor</span>
+            <div class="breadcrumb">Pelanggan / Booking Servis</div>
             <h1>Booking Servis Motor</h1>
             <p>Isi data di bawah, kami siapkan jadwal servisnya untuk Anda.</p>
         </div>
-        <a href="{{ route('booking.index') }}" class="bk-btn bk-btn-ghost">← Riwayat Booking</a>
+        <a href="{{ route('booking.index') }}" class="bk-btn bk-btn-ghost">← Lihat Riwayat Booking Ketika Sudah Selesai</a>
     </header>
 
     @if ($errors->any())

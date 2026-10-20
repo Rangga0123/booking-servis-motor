@@ -4,575 +4,460 @@
 
 @push('styles')
 <style>
-    /* ===== DASHBOARD UTAMA ===== */
     .dashboard-content {
         width: 100%;
         max-width: 1500px;
         margin: 0 auto;
-        padding-bottom: 22px;
+        padding-bottom: 30px;
         color: #14213d;
+        box-sizing: border-box;
     }
 
-    .welcome,
-    .stat-card,
-    .info-card {
-        animation: none;
+    .dashboard-content *,
+    .dashboard-content *::before,
+    .dashboard-content *::after {
+        box-sizing: border-box;
     }
 
-    /* ===== SAMBUTAN PELANGGAN ===== */
-    .welcome {
-        min-height: 94px;
+    /* HEADER DASHBOARD */
+    .page-heading {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        padding: 16px 20px;
-        margin-bottom: 15px;
-        border: 1px solid #c9dcf8;
-        border-radius: 14px;
-        background: linear-gradient(115deg, #d8e6ff 0%, #e8f7ff 100%);
-        box-shadow: 0 3px 12px #325da40a;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
     }
 
-    .welcome-left {
-        display: flex;
-        align-items: center;
-        gap: 13px;
+    .heading-text {
+        flex: 1;
         min-width: 0;
     }
 
-    .welcome-hand {
-        width: 45px;
-        height: 45px;
-        flex: 0 0 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 12px;
-        background: #ffffffc9;
-        color: #2d5eb8;
-    }
-
-    .welcome h1 {
-        font-size: 22px;
-        font-weight: 800;
-        line-height: 1.35;
-        color: #102143;
-    }
-
-    .welcome p {
-        margin-top: 4px;
+    .breadcrumb {
+        margin-bottom: 10px;
         font-size: 12px;
-        line-height: 1.65;
-        color: #3d5790;
+        color: #7182a3;
     }
 
-    .date-box {
-        min-width: 205px;
+    .page-title {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 800;
+        color: #14213d;
+        line-height: 1.4;
+        letter-spacing: -.4px;
+    }
+
+    .page-description {
+        max-width: 620px;
+        margin: 9px 0 0;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #7182a3;
+    }
+
+    .page-description strong {
+        color: #244fae;
+        font-weight: 750;
+    }
+
+    /* JAM DIGITAL */
+    .clock-box {
+        min-width: 245px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border: 1px solid #c7daf2;
+        gap: 12px;
+        padding: 13px 16px;
+        background: #fff;
+        border: 1px solid #dce5f1;
         border-radius: 12px;
-        background: #ffffffd9;
+        box-shadow: 0 4px 12px rgba(39, 61, 99, .04);
     }
 
-    .date-icon {
-        width: 36px;
-        height: 36px;
-        flex: 0 0 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .clock-icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
         border-radius: 10px;
-        background: #e5efff;
-        color: #3b65bc;
+        background: #e7efff;
+        color: #3264d8;
     }
 
-    .date-text {
+    .clock-date {
         margin-bottom: 4px;
-        color: #526b91;
-        font-size: 11px;
+        font-size: 12px;
+        color: #7182a3;
         line-height: 1.5;
     }
 
-    .time-text {
-        color: #14213d;
-        font-size: 15px;
+    .clock-time {
+        font-size: 18px;
         font-weight: 800;
+        color: #14213d;
         font-variant-numeric: tabular-nums;
     }
 
-    /* ===== STATISTIK BOOKING ===== */
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-        margin-bottom: 22px;
+    /* JUDUL INFORMASI BENGKEL */
+    .workshop-section-heading {
+        margin: 0 0 17px;
     }
 
-    .stat-card {
-        min-width: 0;
-        min-height: 112px;
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        padding: 16px;
-        background: #fff;
-        border: 1px solid #dce5f0;
-        border-bottom: 3px solid #4285f4;
-        border-radius: 13px;
-        box-shadow: 0 3px 12px #273d6309;
-        transition: box-shadow .2s ease, border-color .2s ease;
-    }
-
-    .stat-card:hover {
-        box-shadow: 0 6px 17px #273d6312;
-    }
-
-    .stat-card.stat-orange {
-        border-bottom-color: #f7a11a;
-    }
-
-    .stat-card.stat-green {
-        border-bottom-color: #21b989;
-    }
-
-    .stat-icon {
-        width: 46px;
-        height: 46px;
-        flex: 0 0 46px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 13px;
-    }
-
-    .stat-blue .stat-icon {
-        color: #3580ff;
-        background: #e8f0ff;
-    }
-
-    .stat-orange .stat-icon {
-        color: #e98a12;
-        background: #fff1dc;
-    }
-
-    .stat-green .stat-icon {
-        color: #12a77b;
-        background: #def6ed;
-    }
-
-    .stat-title {
-        color: #4c5c77;
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 1.5;
-    }
-
-    .stat-number {
-        margin-top: 3px;
-        color: #14213d;
-        font-size: 27px;
+    .workshop-section-heading h2 {
+        margin: 0;
+        font-size: 21px;
         font-weight: 800;
-        line-height: 1.3;
-    }
-
-    .stat-description {
-        margin-top: 4px;
-        color: #7888a2;
-        font-size: 10px;
         line-height: 1.5;
-    }
-
-    /* ===== JUDUL BAGIAN ===== */
-    .section-heading {
-        margin: 0 0 13px;
-    }
-
-    .section-heading h2 {
         color: #14213d;
-        font-size: 19px;
-        font-weight: 800;
-        line-height: 1.4;
     }
 
-    .section-heading p {
-        margin-top: 3px;
+    .workshop-section-heading p {
+        max-width: 700px;
+        margin: 5px 0 0;
+        font-size: 13px;
+        line-height: 1.8;
         color: #7182a3;
-        font-size: 12px;
-        line-height: 1.6;
     }
 
-    /* ===== KARTU INFORMASI ===== */
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .info-card {
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
+    /* PANEL INFORMASI BENGKEL */
+    .dashboard-info {
         overflow: hidden;
         background: #fff;
         border: 1px solid #dce5f1;
         border-radius: 13px;
-        box-shadow: 0 3px 12px #273d6309;
+        box-shadow: 0 4px 14px rgba(39, 61, 99, .04);
     }
 
-    .info-card.full {
-        grid-column: 1 / -1;
+    /* FOTO BENGKEL */
+    .workshop-photo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        padding: 20px;
     }
 
-    .info-card-header {
-        padding: 13px 16px;
-        border-bottom: 1px solid #e8edf5;
+    .workshop-photo-card {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #e3eaf4;
+        border-radius: 10px;
         background: #fff;
     }
 
-    .info-card-header h3 {
-        color: #14213d;
-        font-size: 14px;
-        font-weight: 800;
-        line-height: 1.5;
-        overflow-wrap: anywhere;
+    .workshop-photo-frame {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: #f0f4f9;
     }
 
-    .info-card-header p {
-        margin-top: 3px;
-        color: #7182a3;
-        font-size: 11px;
-        line-height: 1.55;
-    }
-
-    .info-card-body {
-        flex: 1;
-        padding: 14px 16px;
-        color: #50617d;
-        font-size: 12px;
-        line-height: 1.8;
-        overflow-wrap: anywhere;
-    }
-
-    /* ===== GAMBAR BENGKEL DAN LAYANAN ===== */
     .workshop-photo {
         display: block;
         width: 100%;
-        height: 390px;
+        height: 100%;
         object-fit: cover;
         object-position: center;
-        border-radius: 10px;
-        background: #f1f5f9;
     }
 
-    /* Tampilan HP */
-    @media (max-width: 600px) {
-        .workshop-photo {
-            height: 145px;
-        }
-    }
-
-    .photo-caption {
-        padding: 9px 16px;
-        color: #50617d;
-        font-size: 11px;
+    .workshop-photo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+        padding: 15px;
+        color: #8190a8;
+        font-size: 13px;
         line-height: 1.7;
-        background: #fbfcfe;
-        border-bottom: 1px solid #edf1f7;
+        text-align: center;
+    }
+
+    .workshop-photo-placeholder svg {
+        width: 30px;
+        height: 30px;
+        opacity: .7;
+    }
+
+    .workshop-photo-content {
+        padding: 16px 18px 18px;
+    }
+
+    .workshop-photo-title {
+        margin: 0 0 8px;
+        font-size: 16px;
+        font-weight: 750;
+        line-height: 1.5;
+        color: #14213d;
         overflow-wrap: anywhere;
     }
 
-    /* ===== STATUS OPERASIONAL ===== */
-    .operational-status {
-        display: inline-flex;
+    .workshop-photo-description {
+        font-size: 13px;
+        line-height: 1.9;
+        color: #60708a;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    /* DETAIL INFORMASI */
+    .info-details {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-top: 1px solid #e8edf5;
+        background: #fbfcff;
+    }
+
+    .info-detail {
+        min-width: 0;
+        padding: 21px;
+    }
+
+    .info-detail + .info-detail {
+        border-left: 1px solid #e8edf5;
+    }
+
+    .info-detail-title {
+        display: flex;
         align-items: center;
-        padding: 6px 10px;
-        margin-bottom: 10px;
-        border-radius: 20px;
-        font-size: 10px;
-        font-weight: 800;
-        line-height: 1.4;
+        gap: 9px;
+        margin: 0 0 15px;
+        font-size: 15px;
+        font-weight: 750;
+        line-height: 1.5;
+        color: #14213d;
     }
 
-    .operational-status.open {
-        color: #16865f;
-        background: #def6ed;
+    .info-detail-title svg {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        color: #3568ce;
     }
 
-    .operational-status.closed {
-        color: #c52f47;
-        background: #ffe5e9;
+    .dashboard-info-desc {
+        font-size: 13px;
+        line-height: 1.9;
+        color: #60708a;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
     }
 
-    .operational-status.unknown {
-        color: #a36a00;
-        background: #fff2d7;
-    }
-
-    /* ===== DAFTAR INFORMASI ===== */
-    .info-list {
-        list-style: none;
-        padding: 0;
+    .dashboard-info-list {
+        display: grid;
+        gap: 12px;
         margin: 0;
+        padding: 0;
+        list-style: none;
     }
 
-    .info-list li {
-        padding: 9px 0;
+    .dashboard-info-list li {
+        padding-bottom: 12px;
         border-bottom: 1px solid #edf1f7;
-        line-height: 1.7;
+        font-size: 13px;
+        line-height: 1.8;
+        color: #60708a;
+        overflow-wrap: anywhere;
     }
 
-    .info-list li:first-child {
-        padding-top: 0;
-    }
-
-    .info-list li:last-child {
+    .dashboard-info-list li:last-child {
         padding-bottom: 0;
-        border-bottom: 0;
+        border-bottom: none;
     }
 
-    .info-list strong {
+    .dashboard-info-list strong {
         color: #14213d;
         font-weight: 700;
     }
 
-    /* ===== PENGUMUMAN ===== */
-    .announcement-item {
-        padding: 11px 0;
+    /* STATUS OPERASIONAL */
+    .operational-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        margin-bottom: 14px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 750;
+    }
+
+    .operational-status.open {
+        color: #0f7a4d;
+        background: #e4f7ec;
+    }
+
+    .operational-status.closed {
+        color: #c4253f;
+        background: #ffe9ec;
+    }
+
+    .operational-status.unknown {
+        color: #946200;
+        background: #fff2d7;
+    }
+
+    /* PENGUMUMAN */
+    .dashboard-announcement {
+        padding: 13px 0;
         border-bottom: 1px solid #edf1f7;
     }
 
-    .announcement-item:first-child {
+    .dashboard-announcement:first-child {
         padding-top: 0;
     }
 
-    .announcement-item:last-child {
+    .dashboard-announcement:last-child {
         padding-bottom: 0;
-        border-bottom: 0;
+        border-bottom: none;
     }
 
-    .announcement-item h4 {
-        margin-bottom: 4px;
-        color: #14213d;
-        font-size: 12px;
-        font-weight: 800;
-        line-height: 1.6;
-        overflow-wrap: anywhere;
-    }
-
-    .announcement-date {
-        margin-bottom: 5px;
-        color: #8491a8;
-        font-size: 10px;
-    }
-
-    .info-empty {
-        padding: 16px 8px;
-        color: #7182a3;
-        font-size: 12px;
-        line-height: 1.8;
-        text-align: center;
-    }
-
-    /* ===== BAGIAN BAWAH KARTU ===== */
-    .info-footer {
-        padding: 10px 16px;
-        margin-top: auto;
-        border-top: 1px solid #edf1f7;
-        color: #7184a8;
-        font-size: 10px;
+    .dashboard-announcement h4 {
+        margin: 0 0 5px;
+        font-size: 13px;
+        font-weight: 750;
         line-height: 1.7;
+        color: #14213d;
         overflow-wrap: anywhere;
     }
 
-    .info-footer strong {
-        color: #3264d8;
+    .dashboard-announcement time {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 11px;
+        color: #8491a8;
     }
 
-    .info-footer a {
-        display: inline-block;
-        text-decoration: none;
+    .dashboard-announcement p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.8;
+        color: #60708a;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
     }
 
-    .info-footer a:hover strong {
-        text-decoration: underline;
+    .dashboard-info-empty {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.8;
+        color: #8995a9;
     }
 
-    /* ===== RESPONSIVE TABLET ===== */
+    /* RESPONSIVE TABLET */
     @media (max-width: 1050px) {
-        .welcome {
-            align-items: flex-start;
+        .info-details {
+            grid-template-columns: 1fr;
         }
 
-        .date-box {
-            min-width: 185px;
+        .info-detail + .info-detail {
+            border-left: none;
+            border-top: 1px solid #e8edf5;
         }
 
-        .stats {
-            gap: 10px;
-        }
-
-        .stat-card {
-            gap: 10px;
-            padding: 13px;
-        }
-
-        .stat-icon {
-            width: 41px;
-            height: 41px;
-            flex-basis: 41px;
-        }
-
-        .stat-number {
-            font-size: 25px;
-        }
-
-        .workshop-photo {
-            height: 195px;
+        .info-detail {
+            padding: 19px 20px;
         }
     }
 
-    /* ===== RESPONSIVE HP ===== */
+    /* RESPONSIVE HP */
     @media (max-width: 700px) {
         .dashboard-content {
-            padding-bottom: 16px;
+            padding-bottom: 22px;
         }
 
-        .welcome {
-            flex-direction: column;
+        .page-heading {
             align-items: stretch;
-            gap: 13px;
-            padding: 15px;
-            margin-bottom: 13px;
+            gap: 16px;
+            margin-bottom: 25px;
         }
 
-        .welcome h1 {
+        .heading-text {
+            flex: 1 1 100%;
+        }
+
+        .breadcrumb {
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            line-height: 1.4;
+        }
+
+        .page-description {
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .clock-box {
+            width: 100%;
+            min-width: 0;
+            padding: 12px 14px;
+        }
+
+        .clock-date {
+            font-size: 12px;
+        }
+
+        .clock-time {
+            font-size: 17px;
+        }
+
+        .workshop-section-heading {
+            margin-bottom: 14px;
+        }
+
+        .workshop-section-heading h2 {
             font-size: 19px;
         }
 
-        .welcome p {
-            font-size: 11px;
+        .workshop-section-heading p {
+            font-size: 12px;
         }
 
-        .welcome-hand {
-            width: 41px;
-            height: 41px;
-            flex-basis: 41px;
-        }
-
-        .date-box {
-            width: 100%;
-            min-width: 0;
-        }
-
-        .stats {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            min-height: 100px;
-            align-items: flex-start;
-            gap: 9px;
-            padding: 12px 10px;
-        }
-
-        .stat-icon {
-            width: 35px;
-            height: 35px;
-            flex-basis: 35px;
-            border-radius: 10px;
-        }
-
-        .stat-icon svg {
-            width: 21px;
-            height: 21px;
-        }
-
-        .stat-title {
-            font-size: 11px;
-        }
-
-        .stat-number {
-            font-size: 23px;
-        }
-
-        .stat-description {
-            font-size: 9px;
-        }
-
-        .section-heading {
-            margin-bottom: 11px;
-        }
-
-        .section-heading h2 {
-            font-size: 17px;
-        }
-
-        .section-heading p {
-            font-size: 11px;
-        }
-
-        .info-grid {
+        .workshop-photo-grid {
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 14px;
+            padding: 14px;
         }
 
-        .info-card.full {
-            grid-column: auto;
+        .workshop-photo-content {
+            padding: 14px 15px 16px;
         }
 
-        .info-card-header {
-            padding: 12px 14px;
+        .workshop-photo-title {
+            font-size: 15px;
         }
 
-        .info-card-body {
-            padding: 12px 14px;
+        .workshop-photo-description {
+            font-size: 13px;
         }
 
-        .workshop-photo {
-            height: 210px;
-        }
-
-        .photo-caption {
-            padding: 9px 14px;
-        }
-
-        .info-footer {
-            padding: 10px 14px;
+        .info-detail {
+            padding: 17px;
         }
     }
 
-    @media (max-width: 390px) {
-        .welcome h1 {
-            font-size: 17px;
-        }
-
-        .welcome-left {
-            align-items: flex-start;
-        }
-
-        .stats {
-            gap: 8px;
-        }
-
-        .stat-card {
-            flex-direction: column;
-            min-height: 118px;
-            padding: 11px;
-        }
-
-        .stat-number {
+    @media (max-width: 380px) {
+        .page-title {
             font-size: 22px;
         }
 
-        .workshop-photo {
-            height: 180px;
+        .clock-icon {
+            width: 38px;
+            height: 38px;
+        }
+
+        .clock-time {
+            font-size: 16px;
+        }
+
+        .workshop-photo-grid {
+            padding: 10px;
         }
     }
 </style>
@@ -618,33 +503,41 @@
             ?? $informasiBengkel?->status_operasional
             ?? 'belum diatur';
 
+        $hariOperasional = trim(
+            (string) ($informasiBengkel?->hari_operasional ?? ''),
+            " ,"
+        );
+
+        if ($hariOperasional === '') {
+            $hariOperasional = 'Senin–Minggu';
+        }
+
         $pengumuman = $pengumuman ?? collect();
+
+        $fotoBengkel1 = $informasiBengkel?->foto_1;
+        $fotoBengkel2 = $informasiBengkel?->foto_2;
+
+        $deskripsiFoto1 = $informasiBengkel?->deskripsi_foto_1;
+        $deskripsiFoto2 = $informasiBengkel?->deskripsi_foto_2;
     @endphp
 
-    {{-- SAMBUTAN PELANGGAN --}}
-    <section class="welcome">
-        <div class="welcome-left">
-            <div class="welcome-hand" aria-hidden="true">
-                <svg width="27" height="27" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M4 19V5M4 19h16"/>
-                    <path d="m7 15 4-4 3 2 5-6"/>
-                    <path d="M16 7h3v3"/>
-                </svg>
-            </div>
+    {{-- HEADER DASHBOARD --}}
+    <section class="page-heading">
+        <div class="heading-text">
+            <div class="breadcrumb">Pelanggan / Dashboard</div>
 
-            <div>
-                <h1>Dashboard Pelanggan</h1>
-                <p>
-                    Selamat datang kembali,
-                    <strong>{{ $namaPelanggan }}</strong>!
-                    Lihat informasi bengkel dan pantau booking servis Anda.
-                </p>
-            </div>
+            <h1 class="page-title">Dashboard Pelanggan</h1>
+
+            <p class="page-description">
+                Selamat datang kembali,
+                <strong>{{ $namaPelanggan }}</strong>!
+                Pantau booking servis dan lihat informasi terbaru
+                dari Bengkel Royal Motor di sini.
+            </p>
         </div>
 
-        <div class="date-box">
-            <div class="date-icon">
+        <div class="clock-box">
+            <div class="clock-icon">
                 <svg width="21" height="21" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="4" width="18" height="17" rx="2"/>
@@ -653,237 +546,197 @@
             </div>
 
             <div>
-                <div id="liveDate" class="date-text">Memuat tanggal...</div>
-                <div id="liveTime" class="time-text">--:--:-- WIB</div>
+                <div id="liveDate" class="clock-date">
+                    Memuat tanggal...
+                </div>
+
+                <div id="liveTime" class="clock-time">
+                    --:--:-- WIB
+                </div>
             </div>
         </div>
     </section>
 
-    {{-- STATISTIK BOOKING --}}
-    <section class="stats">
-        <div class="stat-card stat-blue">
-            <div class="stat-icon">
-                <svg width="25" height="25" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="17" rx="2"/>
-                    <path d="M8 2v4M16 2v4M3 10h18"/>
-                </svg>
-            </div>
-
-            <div>
-                <div class="stat-title">Total Booking Saya</div>
-                <div class="stat-number">{{ $totalBooking }}</div>
-                <div class="stat-description">Semua pengajuan servis Anda</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-orange">
-            <div class="stat-icon">
-                <svg width="25" height="25" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M12 7v5l3 2"/>
-                </svg>
-            </div>
-
-            <div>
-                <div class="stat-title">Status Diproses</div>
-                <div class="stat-number">{{ $totalProses }}</div>
-                <div class="stat-description">Booking yang sedang ditangani</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-green">
-            <div class="stat-icon">
-                <svg width="25" height="25" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="m8 12 2.5 2.5L16 9"/>
-                </svg>
-            </div>
-
-            <div>
-                <div class="stat-title">Servis Selesai</div>
-                <div class="stat-number">{{ $totalSelesai }}</div>
-                <div class="stat-description">Pesanan yang sudah selesai</div>
-            </div>
-        </div>
-    </section>
-
-    {{-- INFORMASI BENGKEL --}}
-    <div class="section-heading">
+    {{-- JUDUL INFORMASI BENGKEL --}}
+    <section class="workshop-section-heading">
         <h2>Informasi Bengkel</h2>
         <p>
-            Kenali Bengkel Royal Motor, lihat jam operasional, dan baca
-            informasi terbaru sebelum datang untuk servis.
+            Kenali profil bengkel, layanan yang tersedia,
+            jam operasional, dan pengumuman terbaru.
         </p>
-    </div>
+    </section>
 
-    <div class="info-grid">
+    {{-- PANEL INFORMASI BENGKEL --}}
+    <div class="dashboard-info">
 
-        {{-- PROFIL BENGKEL --}}
-        <section class="info-card">
-            <div class="info-card-header">
-                <h3>{{ $namaBengkel }}</h3>
-                <p>Profil dan informasi umum bengkel</p>
-            </div>
+        {{-- FOTO PROFIL DAN LAYANAN --}}
+        <div class="workshop-photo-grid">
 
-            @if(!empty($informasiBengkel?->foto_1))
-                <img
-                    src="{{ asset($informasiBengkel->foto_1) }}"
-                    alt="Foto Bengkel Royal Motor"
-                    class="workshop-photo"
-                    loading="lazy"
-                >
-            @endif
-
-            <div class="info-card-body">
-                {{ $informasiBengkel?->deskripsi
-                    ?: 'Selamat datang di Bengkel Royal Motor. Kami menyediakan layanan servis dan perawatan sepeda motor untuk membantu menjaga kendaraan Anda tetap nyaman digunakan.' }}
-            </div>
-
-            @if(!empty($informasiBengkel?->deskripsi_foto_1))
-                <div class="photo-caption">
-                    {{ $informasiBengkel->deskripsi_foto_1 }}
+            {{-- FOTO PROFIL BENGKEL --}}
+            <article class="workshop-photo-card">
+                <div class="workshop-photo-frame">
+                    @if($fotoBengkel1)
+                        <img
+                            src="{{ asset($fotoBengkel1) }}"
+                            alt="Foto {{ $namaBengkel }}"
+                            class="workshop-photo"
+                            loading="lazy"
+                        >
+                    @else
+                        <div class="workshop-photo-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.6">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <path d="m21 15-5-5L5 21"/>
+                            </svg>
+                            Foto profil bengkel belum ditambahkan.
+                        </div>
+                    @endif
                 </div>
-            @endif
 
-            <div class="info-footer">
-                <strong>Bengkel Royal Motor</strong><br>
-                Servis Motor, Solusi Perjalananmu.
-            </div>
-        </section>
+                <div class="workshop-photo-content">
+                    <h3 class="workshop-photo-title">Profil Bengkel</h3>
 
-        {{-- JAM OPERASIONAL --}}
-        <section class="info-card">
-            <div class="info-card-header">
-                <h3>Jam Operasional</h3>
-                <p>Jadwal pelayanan Bengkel Royal Motor</p>
-            </div>
+                    <div class="workshop-photo-description">
+                        {{ $deskripsiFoto1 ?: ($informasiBengkel?->deskripsi
+                            ?: 'Informasi profil Bengkel Royal Motor belum ditambahkan.') }}
+                    </div>
+                </div>
+            </article>
 
-            <div class="info-card-body">
+            {{-- FOTO INFORMASI LAYANAN --}}
+            <article class="workshop-photo-card">
+                <div class="workshop-photo-frame">
+                    @if($fotoBengkel2)
+                        <img
+                            src="{{ asset($fotoBengkel2) }}"
+                            alt="Informasi layanan {{ $namaBengkel }}"
+                            class="workshop-photo"
+                            loading="lazy"
+                        >
+                    @else
+                        <div class="workshop-photo-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.6">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <path d="m21 15-5-5L5 21"/>
+                            </svg>
+                            Foto layanan belum ditambahkan.
+                        </div>
+                    @endif
+                </div>
+
+                <div class="workshop-photo-content">
+                    <h3 class="workshop-photo-title">Informasi Layanan</h3>
+
+                    <div class="workshop-photo-description">
+                        {{ $deskripsiFoto2 ?: ($informasiBengkel?->informasi_layanan
+                            ?: 'Informasi layanan bengkel belum ditambahkan.') }}
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        {{-- JAM OPERASIONAL, LAYANAN, PENGUMUMAN --}}
+        <div class="info-details">
+
+            {{-- JAM OPERASIONAL --}}
+            <section class="info-detail">
+                <h3 class="info-detail-title">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7v5l3 2"/>
+                    </svg>
+                    Jam Operasional
+                </h3>
+
                 @if(strtolower($statusOperasional) === 'buka')
-                    <span class="operational-status open">● SEDANG BUKA</span>
+                    <span class="operational-status open">
+                        Sedang Buka
+                    </span>
                 @elseif(strtolower($statusOperasional) === 'tutup')
-                    <span class="operational-status closed">● SEDANG TUTUP</span>
+                    <span class="operational-status closed">
+                        Sedang Tutup
+                    </span>
                 @else
-                    <span class="operational-status unknown">● BELUM DIATUR</span>
+                    <span class="operational-status unknown">
+                        Belum Diatur
+                    </span>
                 @endif
 
-                <ul class="info-list">
+                <ul class="dashboard-info-list">
                     <li>
                         <strong>Hari operasional</strong><br>
-                        {{ $informasiBengkel?->hari_operasional ?? 'Senin–Minggu' }}
+                        {{ $hariOperasional }}
                     </li>
 
                     <li>
                         <strong>Jam pelayanan</strong><br>
                         {{ $jamOperasional }}
                     </li>
-
-                    <li>
-                        <strong>Status bengkel</strong><br>
-                        {{ strtoupper($statusOperasional) }}
-                    </li>
                 </ul>
-            </div>
+            </section>
 
-            <div class="info-footer">
-                Perhatikan jadwal operasional sebelum berkunjung ke bengkel.
-            </div>
-        </section>
+            {{-- INFORMASI LAYANAN --}}
+            <section class="info-detail">
+                <h3 class="info-detail-title">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="m14.7 6.3 3 3M4 20l5.5-1.2L20 8.3 15.7 4 5.2 14.5 4 20Z"/>
+                        <path d="m13.8 5.9 4.3 4.3"/>
+                    </svg>
+                    Informasi Layanan
+                </h3>
 
-        {{-- INFORMASI LAYANAN --}}
-        <section class="info-card">
-            <div class="info-card-header">
-                <h3>Informasi Layanan</h3>
-                <p>Informasi layanan yang tersedia</p>
-            </div>
-
-            @if(!empty($informasiBengkel?->foto_2))
-                <img
-                    src="{{ asset($informasiBengkel->foto_2) }}"
-                    alt="Informasi layanan Bengkel Royal Motor"
-                    class="workshop-photo"
-                    loading="lazy"
-                >
-            @endif
-
-            <div class="info-card-body">
-                @if(!empty($informasiBengkel?->informasi_layanan))
-                    {{ $informasiBengkel->informasi_layanan }}
-                @else
-                    <ul class="info-list">
-                        <li>
-                            <strong>Servis dan perawatan</strong><br>
-                            Perawatan sepeda motor sesuai kebutuhan kendaraan.
-                        </li>
-
-                        <li>
-                            <strong>Pemeriksaan kendaraan</strong><br>
-                            Pemeriksaan kondisi kendaraan dan keluhan pelanggan.
-                        </li>
-
-                        <li>
-                            <strong>Konsultasi servis</strong><br>
-                            Sampaikan keluhan kendaraan saat melakukan booking.
-                        </li>
-                    </ul>
-                @endif
-            </div>
-
-            @if(!empty($informasiBengkel?->deskripsi_foto_2))
-                <div class="photo-caption">
-                    {{ $informasiBengkel->deskripsi_foto_2 }}
+                <div class="dashboard-info-desc">
+                    {{ $informasiBengkel?->informasi_layanan
+                        ?: 'Informasi layanan bengkel belum ditambahkan oleh admin.' }}
                 </div>
-            @endif
+            </section>
 
-            <div class="info-footer">
-                <a href="{{ route('booking.create') }}">
-                    <strong>Booking servis sekarang →</strong>
-                </a>
-            </div>
-        </section>
+            {{-- PENGUMUMAN --}}
+            <section class="info-detail">
+                <h3 class="info-detail-title">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                        <path d="M10 21h4"/>
+                    </svg>
+                    Pengumuman Terbaru
+                </h3>
 
-        {{-- PENGUMUMAN BENGKEL --}}
-        <section class="info-card">
-            <div class="info-card-header">
-                <h3>Pengumuman Bengkel</h3>
-                <p>Informasi terbaru untuk pelanggan</p>
-            </div>
-
-            <div class="info-card-body">
                 @forelse($pengumuman as $item)
-                    <div class="announcement-item">
+                    <article class="dashboard-announcement">
                         <h4>{{ $item->judul }}</h4>
 
-                        <div class="announcement-date">
+                        <time>
                             {{ $item->created_at?->format('d M Y') ?? '' }}
-                        </div>
+                        </time>
 
-                        <div>{{ $item->isi }}</div>
-                    </div>
+                        <p>{{ $item->isi }}</p>
+                    </article>
                 @empty
-                    <div class="info-empty">
+                    <p class="dashboard-info-empty">
                         Belum ada pengumuman dari bengkel.
-                    </div>
+                    </p>
                 @endforelse
-            </div>
+            </section>
 
-            <div class="info-footer">
-                Periksa bagian ini secara berkala untuk melihat pengumuman terbaru.
-            </div>
-        </section>
-
+        </div>
     </div>
-</div>
 
+</div>
 @endsection
 
 @push('scripts')
 <script>
     function updateClock() {
         const now = new Date();
+
         const dateElement = document.getElementById('liveDate');
         const timeElement = document.getElementById('liveTime');
 

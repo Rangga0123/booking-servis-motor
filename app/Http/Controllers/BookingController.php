@@ -10,6 +10,49 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
+    // Status yang masih boleh diedit atau dibatalkan pelanggan
+    private const STATUS_BISA_DIUBAH = ['menunggu', 'pending'];
+
+    private function bisaDiubah(Booking $booking): bool
+    {
+        return in_array(strtolower((string) $booking->status), self::STATUS_BISA_DIUBAH, true);
+    }
+
+    // Rapikan input jam dan nomor HP sebelum divalidasi
+    private function normalisasi(Request $request): void
+    {
+        if ($request->filled('jam_booking')) {
+            $request->merge([
+                'jam_booking' => str_replace(',', ':', trim($request->jam_booking)),
+            ]);
+        }
+
+        // Buang spasi dan strip, sisakan angka dan tanda +
+        $request->merge([
+            'no_hp' => preg_replace('/[^0-9+]/', '', (string) $request->no_hp),
+        ]);
+    }
+
+    // Aturan validasi yang sama untuk simpan dan update
+    private function validasiBooking(Request $request): array
+    {
+        return $request->validate([
+            'nama_pelanggan'    => 'required|string|max:255',
+            'no_hp'             => ['required', 'regex:/^(\+62|62|0)8[0-9]{7,13}$/'],
+            'email_pelanggan'   => 'nullable|email|max:255',
+            'nama_motor'        => 'required|string|max:255',
+            'plat_nomor'        => 'required|string|max:20',
+            'jenis_servis'      => 'required|string|max:255',
+            'tanggal_booking'   => 'required|date',
+            'jam_booking'       => 'required|date_format:H:i',
+            'keluhan'           => 'required|string',
+            'mechanic_id'       => 'nullable|exists:mechanics,id',
+            'metode_pembayaran' => 'required|string|max:100',
+        ], [
+            'no_hp.regex' => 'Nomor HP tidak valid. Contoh: 081234567890.',
+        ]);
+    }
+
     // DASHBOARD PELANGGAN
     public function dashboard()
     {
@@ -103,7 +146,7 @@ class BookingController extends Controller
         ));
     }
 
-    // DAFTAR BOOKING PELANGGAN
+    // DAFTAR BOOKING PELANGGAN (RIWAYAT)
     public function index()
     {
         if (auth()->user()->role === 'admin') {
@@ -161,36 +204,8 @@ class BookingController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        if ($request->filled('jam_booking')) {
-            $request->merge([
-                'jam_booking' => str_replace(
-                    ',',
-                    ':',
-                    trim($request->jam_booking)
-                )
-            ]);
-        }
-
-        // Rapikan nomor HP: buang spasi dan strip, sisakan angka dan tanda +
-        $request->merge([
-            'no_hp' => preg_replace('/[^0-9+]/', '', (string) $request->no_hp),
-        ]);
-
-        $request->validate([
-            'nama_pelanggan'    => 'required|string|max:255',
-            'no_hp'             => ['required', 'regex:/^(\+62|62|0)8[0-9]{7,13}$/'],
-            'email_pelanggan'   => 'nullable|email|max:255',
-            'nama_motor'        => 'required|string|max:255',
-            'plat_nomor'        => 'required|string|max:20',
-            'jenis_servis'      => 'required|string|max:255',
-            'tanggal_booking'   => 'required|date',
-            'jam_booking'       => 'required|date_format:H:i',
-            'keluhan'           => 'required|string',
-            'mechanic_id'       => 'nullable|exists:mechanics,id',
-            'metode_pembayaran' => 'required|string|max:100',
-        ], [
-            'no_hp.regex' => 'Nomor HP tidak valid. Contoh: 081234567890.',
-        ]);
+        $this->normalisasi($request);
+        $this->validasiBooking($request);
 
         Booking::create([
             'user_id'           => auth()->id(),
@@ -213,6 +228,20 @@ class BookingController extends Controller
             ->with('success', 'Booking berhasil dibuat! Menunggu persetujuan Admin.');
     }
 
+    // DETAIL BOOKING
+    public function show($id)
+    {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $booking = Booking::with('mechanic')
+            ->where('user_id', auth()->id())
+            ->findOrFail($id);
+
+        return view('booking.show', compact('booking'));
+    }
+
     // EDIT BOOKING
     public function edit($id)
     {
@@ -223,7 +252,21 @@ class BookingController extends Controller
         $booking = Booking::where('user_id', auth()->id())
             ->findOrFail($id);
 
-        return view('booking.edit', compact('booking'));
+        if (! $this->bisaDiubah($booking)) {
+            return redirect()
+                ->route('booking.show', $booking->id)
+                ->with('error', 'Booking ini sudah diproses sehingga tidak bisa diedit.');
+        }
+
+        // Mekanik aktif, ditambah mekanik yang sudah terpilih (kalau sekarang nonaktif)
+        $mechanics = Mechanic::whereRaw('LOWER(status) = ?', ['aktif'])
+            ->when($booking->mechanic_id, function ($query, $mechanicId) {
+                $query->orWhere('id', $mechanicId);
+            })
+            ->orderBy('nama_mekanik')
+            ->get();
+
+        return view('booking.edit', compact('booking', 'mechanics'));
     }
 
     // UPDATE BOOKING
@@ -236,16 +279,27 @@ class BookingController extends Controller
         $booking = Booking::where('user_id', auth()->id())
             ->findOrFail($id);
 
-        $request->validate([
-            'nama_motor' => 'required|string|max:255',
-            'plat_nomor' => 'required|string|max:20',
-            'keluhan'    => 'required|string',
-        ]);
+        if (! $this->bisaDiubah($booking)) {
+            return redirect()
+                ->route('booking.show', $booking->id)
+                ->with('error', 'Booking ini sudah diproses sehingga tidak bisa diedit.');
+        }
+
+        $this->normalisasi($request);
+        $this->validasiBooking($request);
 
         $booking->update([
-            'nama_motor' => $request->nama_motor,
-            'plat_nomor' => $request->plat_nomor,
-            'keluhan'    => $request->keluhan,
+            'mechanic_id'       => $request->filled('mechanic_id') ? $request->mechanic_id : null,
+            'nama_pelanggan'    => $request->nama_pelanggan,
+            'no_hp'             => $request->no_hp,
+            'email_pelanggan'   => $request->email_pelanggan,
+            'nama_motor'        => $request->nama_motor,
+            'plat_nomor'        => $request->plat_nomor,
+            'jenis_servis'      => $request->jenis_servis,
+            'tanggal_booking'   => $request->tanggal_booking,
+            'jam_booking'       => $request->jam_booking,
+            'keluhan'           => $request->keluhan,
+            'metode_pembayaran' => $request->metode_pembayaran,
         ]);
 
         return redirect()
@@ -253,7 +307,7 @@ class BookingController extends Controller
             ->with('success', 'Data booking berhasil diperbarui!');
     }
 
-    // HAPUS BOOKING
+    // HAPUS BOOKING (tidak dipakai tombol; disimpan untuk kompatibilitas)
     public function destroy($id)
     {
         if (auth()->user()->role === 'admin') {
@@ -267,13 +321,31 @@ class BookingController extends Controller
 
         return redirect()
             ->route('booking.index')
-            ->with('success', 'Booking berhasil dibatalkan!');
+            ->with('success', 'Booking berhasil dihapus!');
     }
 
     // BATALKAN BOOKING
+    // Booking tidak dihapus: statusnya diubah jadi "dibatalkan" supaya tetap ada di riwayat.
     public function cancel($id)
     {
-        return $this->destroy($id);
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $booking = Booking::where('user_id', auth()->id())
+            ->findOrFail($id);
+
+        if (! $this->bisaDiubah($booking)) {
+            return redirect()
+                ->route('booking.index')
+                ->with('error', 'Booking ini sudah diproses sehingga tidak bisa dibatalkan.');
+        }
+
+        $booking->update(['status' => 'dibatalkan']);
+
+        return redirect()
+            ->route('booking.index')
+            ->with('success', 'Booking berhasil dibatalkan!');
     }
 
     // DASHBOARD ADMIN

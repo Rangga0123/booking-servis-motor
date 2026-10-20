@@ -44,6 +44,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [BookingController::class, 'store'])
             ->name('store');
 
+        // Detail booking. Harus setelah /create supaya "create" tidak dianggap {id}
+        Route::get('/{id}', [BookingController::class, 'show'])
+            ->whereNumber('id')
+            ->name('show');
+
         Route::get('/{id}/edit', [BookingController::class, 'edit'])
             ->name('edit');
 

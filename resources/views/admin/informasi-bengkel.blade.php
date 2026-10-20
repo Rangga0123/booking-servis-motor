@@ -1,166 +1,186 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kelola Informasi Bengkel - Bengkel Royal Motor')
+@section('title', 'Kelola Informasi Bengkel')
 
 @push('styles')
 <style>
-    :root {
-        --info-blue: #3264d8;
-        --info-bg: #f4f7fb;
-        --info-text: #14213d;
-        --info-muted: #7182a3;
-        --info-border: #dce5f1;
-    }
+    .info-page { max-width: 960px; color: var(--text); font-size: 14px; }
 
-    .info-page { color: var(--info-text); font-size: 13px; }
+    /* Notifikasi */
+    .info-page .alert { padding: 14px 16px; margin-bottom: 18px; border-radius: 11px; font-size: 13px; line-height: 1.7; }
+    .info-page .alert.success { color: #137849; background: #e8f8ef; border: 1px solid #bcebd0; }
+    .info-page .alert.error { color: #bd263e; background: #fff0f2; border: 1px solid #ffd1d8; }
 
-    .info-page .intro {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 18px; padding: 22px 24px; margin-bottom: 23px;
-        border: 1px solid #c9defc; border-radius: 14px;
-        background: linear-gradient(110deg, #e1ecff, #e8f6ff);
-        animation: infoRise .35s ease both;
-    }
-    .info-page .intro h2 { font-size: 21px; line-height: 1.4; margin-bottom: 7px; }
-    .info-page .intro p { max-width: 700px; color: #405b83; font-size: 12px; line-height: 1.8; }
-    .info-page .intro-mark {
-        width: 48px; height: 48px; flex-shrink: 0; display: grid; place-items: center;
-        border-radius: 13px; background: #ffffffbd; color: var(--info-blue); font-size: 24px;
-    }
+    /* Judul tiap bagian */
+    .info-page .section-heading { margin: 30px 0 14px; }
+    .info-page .section-heading:first-of-type { margin-top: 0; }
+    .info-page .section-heading h3 { font-size: 18px; font-weight: 800; color: var(--text); }
+    .info-page .section-heading p { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-    .info-page .alert { padding: 13px 16px; margin-bottom: 17px; border-radius: 9px; font-size: 12px; line-height: 1.8; }
-    .info-page .alert.success { color: #17734c; background: #e7f8ef; border: 1px solid #c3ead3; }
-    .info-page .alert.error { color: #a52e3c; background: #fff0f0; border: 1px solid #f4cdd1; }
-
-    .info-page .section-heading {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 12px; margin: 24px 0 13px;
-    }
-    .info-page .section-heading h3 { font-size: 15px; font-weight: 800; }
-    .info-page .section-heading p { margin-top: 5px; color: var(--info-muted); font-size: 11px; line-height: 1.7; }
-
+    /* Kartu */
     .info-page .card,
     .info-page .announcement {
-        padding: 21px; margin-bottom: 18px; border: 1px solid var(--info-border);
-        border-radius: 13px; background: white; box-shadow: 0 3px 12px #17254108;
-        animation: infoRise .35s ease both;
+        padding: 24px;
+        margin-bottom: 18px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 5px 16px #273d630b;
     }
 
     .info-page .card-title {
-        display: flex; align-items: center; gap: 12px; padding-bottom: 16px;
-        margin-bottom: 19px; border-bottom: 1px solid #e6edf7;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 18px;
+        margin-bottom: 22px;
+        border-bottom: 1px solid #e6edf7;
     }
     .info-page .symbol {
-        width: 40px; height: 40px; display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 11px; background: #eaf2ff; color: var(--info-blue); font-size: 19px;
+        width: 44px; height: 44px;
+        display: grid; place-items: center; flex-shrink: 0;
+        border-radius: 12px;
+        background: #e7efff;
+        color: var(--blue);
+        font-size: 20px;
     }
-    .info-page .card-title h4 { font-size: 13px; font-weight: 800; }
-    .info-page .card-title p { margin-top: 5px; color: var(--info-muted); font-size: 11px; line-height: 1.6; }
+    .info-page .card-title h4 { font-size: 16px; font-weight: 800; }
+    .info-page .card-title p { margin-top: 5px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-    .info-page .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+    /* Form */
+    .info-page .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .info-page .field { min-width: 0; }
     .info-page .field.full { grid-column: 1 / -1; }
-    .info-page label { display: block; margin-bottom: 7px; font-size: 11px; font-weight: 700; }
+    .info-page label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; color: #1b2a47; }
 
-    .info-page input:not([type="checkbox"]):not([type="hidden"]),
+    .info-page input:not([type="checkbox"]):not([type="hidden"]):not([type="file"]),
     .info-page textarea,
     .info-page select {
-        width: 100%; padding: 11px 12px; border: 1px solid #d8e1ef; border-radius: 8px;
-        background: white; color: var(--info-text); font-family: inherit; font-size: 12px;
-        outline: none; transition: border-color .2s, box-shadow .2s;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d8e1ed;
+        border-radius: 10px;
+        background: #fbfcfe;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .info-page input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px dashed #b9c8de;
+        border-radius: 10px;
+        background: #f7faff;
+        font-size: 13px;
+        color: #465b7c;
+    }
+    .info-page input[type="file"]::file-selector-button {
+        margin-right: 12px;
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--blue);
+        color: white;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
     }
     .info-page input:focus,
     .info-page textarea:focus,
-    .info-page select:focus { border-color: var(--info-blue); box-shadow: 0 0 0 3px #3564cc14; }
-    .info-page textarea { min-height: 100px; resize: vertical; line-height: 1.7; }
+    .info-page select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px #3264d81a; background: white; }
+    .info-page textarea { min-height: 110px; resize: vertical; line-height: 1.7; }
 
-    .info-page .hint { display: block; margin-top: 6px; color: var(--info-muted); font-size: 10px; line-height: 1.7; }
+    .info-page .hint { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 
     .info-page .photo-preview {
-        display: block; width: 100%; max-width: 260px; height: 160px; object-fit: cover;
-        border-radius: 10px; border: 1px solid var(--info-border); margin-bottom: 10px; background: #edf2f8;
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin-bottom: 12px;
+        background: #edf2f8;
     }
 
-    .info-page .btn {
-        display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-        padding: 11px 16px; border: 0; border-radius: 8px; font-family: inherit;
-        font-size: 11px; font-weight: 750; cursor: pointer; transition: background .2s, transform .2s;
-    }
+    /* Tombol (menimpa ukuran .btn bawaan layout agar sesuai halaman ini) */
+    .info-page .btn { padding: 12px 18px; font-size: 13px; cursor: pointer; }
     .info-page .btn:active { transform: scale(.98); }
-    .info-page .btn-primary { color: white; background: var(--info-blue); }
-    .info-page .btn-primary:hover { background: #244fae; }
-    .info-page .btn-light { color: #263b5c; background: #edf2f9; }
-    .info-page .btn-light:hover { background: #dfe8f5; }
-    .info-page .btn-danger { color: #c53342; background: #fff0f0; }
-    .info-page .btn-danger:hover { background: #ffdddd; }
+    .info-page .btn-light { color: #536682; background: white; border: 1px solid var(--border); }
+    .info-page .btn-light:hover { background: #f5f8fc; }
+    .info-page .btn-danger { color: white; background: #e5384f; }
+    .info-page .btn-danger:hover { background: #c92a40; }
 
     .info-page .form-actions {
-        display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 9px;
-        padding-top: 17px; margin-top: 20px; border-top: 1px solid #e8edf5;
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-top: 20px;
+        margin-top: 24px;
+        border-top: 1px solid #e8edf5;
     }
 
     .info-page .check-row {
-        display: flex; align-items: center; gap: 9px; margin-top: 14px;
-        font-size: 11px; font-weight: 600; cursor: pointer;
+        display: flex; align-items: center; gap: 10px;
+        margin-top: 18px;
+        font-size: 14px; font-weight: 600; cursor: pointer;
     }
-    .info-page .check-row input { width: 15px; height: 15px; accent-color: var(--info-blue); }
+    .info-page .check-row input { width: 17px; height: 17px; accent-color: var(--blue); }
 
+    /* Pengumuman */
     .info-page .announcement-head {
         display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+        flex-wrap: wrap; gap: 12px;
+        padding-bottom: 16px; margin-bottom: 18px;
+        border-bottom: 1px solid #e6edf7;
     }
-    .info-page .announcement-head h4 { font-size: 13px; }
-    .info-page .status { display: inline-block; padding: 5px 9px; border-radius: 20px; font-size: 9px; font-weight: 800; }
-    .info-page .status.on { color: #16814f; background: #e0f7eb; }
-    .info-page .status.off { color: #6b7688; background: #edf0f5; }
-    .info-page .announcement-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .info-page .announcement-head h4 { font-size: 16px; font-weight: 800; }
+
+    .info-page .status { display: inline-block; padding: 6px 12px; border-radius: 30px; font-size: 12px; font-weight: 700; }
+    .info-page .status.on { color: #0f7a4d; background: #d6f5e5; }
+    .info-page .status.off { color: #5f6c82; background: #e6eaf1; }
+
+    .info-page .announcement-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 
     .info-page .empty {
-        padding: 32px 20px; border: 1px dashed #cbd7e8; border-radius: 12px; background: white;
-        color: var(--info-muted); text-align: center; font-size: 12px; line-height: 1.8;
+        padding: 40px 20px;
+        border: 1px dashed #cbd7e8;
+        border-radius: 14px;
+        background: white;
+        color: var(--muted);
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.8;
     }
-    .info-page .empty-icon { display: block; margin-bottom: 8px; font-size: 28px; }
-    .info-page .footer-note { padding: 20px 0 0; color: var(--info-muted); text-align: center; font-size: 10px; }
-
-    @keyframes infoRise {
-        from { opacity: 0; transform: translateY(7px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    .info-page .empty-icon { display: block; margin-bottom: 8px; font-size: 30px; }
+    .info-page .footer-note { padding: 22px 0 0; color: var(--muted); text-align: center; font-size: 12px; }
 
     @media (max-width: 700px) {
-        .info-page .intro { padding: 17px 15px; border-radius: 11px; }
-        .info-page .intro h2 { font-size: 17px; }
-        .info-page .intro p { font-size: 10px; }
-        .info-page .intro-mark { width: 38px; height: 38px; font-size: 20px; }
-        .info-page .card { padding: 16px 13px; }
-        .info-page .form-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+        .info-page .card, .info-page .announcement { padding: 18px 15px; }
+        .info-page .form-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
         .info-page .field.full { grid-column: auto; }
         .info-page .form-actions { flex-direction: column-reverse; }
         .info-page .form-actions .btn,
         .info-page .announcement-actions .btn { width: 100%; }
-        .info-page .announcement { padding: 14px 12px; }
         .info-page .photo-preview { max-width: 100%; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .info-page *, .info-page *::before, .info-page *::after {
-            animation-duration: .01ms !important;
-            transition-duration: .01ms !important;
-        }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="info-page">
-
-    <section class="intro">
+    <section class="page-heading">
         <div>
-            <h2>Informasi Bengkel Royal Motor</h2>
-            <p>Perbarui profil, jam operasional, foto, dan pengumuman bengkel dari satu halaman.</p>
+            <div class="breadcrumb">Admin / Informasi Bengkel</div>
+            <h1 class="page-title">Informasi Bengkel Royal Motor</h1>
+            <p class="page-description">Perbarui profil, jam operasional, foto, dan pengumuman bengkel dari satu halaman.</p>
         </div>
-        <div class="intro-mark">⚙</div>
     </section>
+
+<div class="info-page">
 
     @if (session('success'))
         <div class="alert success">✓ {{ session('success') }}</div>
@@ -378,7 +398,7 @@
             <div class="announcement-head">
                 <h4>Pengumuman #{{ $item->id }}</h4>
                 <span class="status {{ $item->aktif ? 'on' : 'off' }}">
-                    {{ $item->aktif ? 'AKTIF' : 'NONAKTIF' }}
+                    {{ $item->aktif ? 'Aktif' : 'Nonaktif' }}
                 </span>
             </div>
 
