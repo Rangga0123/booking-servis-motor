@@ -20,13 +20,14 @@
         'sedang dikerjakan', 'dikerjakan' => 'Sedang Dikerjakan',
         'disetujui' => 'Disetujui',
         'selesai' => 'Selesai',
+        'ditolak' => 'Ditolak',
         'dibatalkan', 'batal' => 'Dibatalkan',
         default => ucfirst($booking->status ?? 'Menunggu'),
     };
 
     $warnaStatus = match ($status) {
         'selesai' => 'success',
-        'dibatalkan', 'batal' => 'danger',
+        'dibatalkan', 'batal', 'ditolak' => 'danger',
         'proses', 'diproses', 'sedang dikerjakan', 'dikerjakan', 'disetujui' => 'process',
         default => 'waiting',
     };
@@ -43,10 +44,10 @@
 <style>
     .detail-page {
         width: 100%;
-        max-width: 1100px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 26px 20px 40px;
-        color: #14213d;
+        padding: 26px 22px 40px;
+        color: #343a40;
         box-sizing: border-box;
     }
 
@@ -56,26 +57,27 @@
         box-sizing: border-box;
     }
 
+    /* Header halaman */
     .detail-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 15px;
+        gap: 16px;
         flex-wrap: wrap;
         margin-bottom: 22px;
     }
 
     .detail-heading h1 {
-        margin: 0 0 6px;
+        margin: 0 0 7px;
+        color: #343a40;
         font-size: 27px;
-        font-weight: 750;
-        line-height: 1.4;
-        color: #14213d;
+        font-weight: 800;
+        line-height: 1.3;
     }
 
     .detail-heading p {
         margin: 0;
-        color: #718096;
+        color: #747d87;
         font-size: 13px;
         line-height: 1.7;
     }
@@ -84,35 +86,35 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 40px;
-        padding: 9px 14px;
-        border: 1px solid #dce5f1;
-        border-radius: 8px;
+        min-height: 41px;
+        padding: 10px 16px;
+        border: 1px solid #d5d9de;
+        border-radius: 7px;
         background: #fff;
-        color: #344767;
+        color: #495057;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 700;
         text-decoration: none;
-        transition: .2s ease;
+        transition: background .2s, border-color .2s;
     }
 
     .detail-back:hover {
-        background: #f5f8ff;
-        border-color: #b8c9e5;
-        color: #244fae;
+        background: #f1f3f5;
+        border-color: #bfc5cc;
     }
 
-    /* Ringkasan pesanan */
+    /* Ringkasan booking */
     .detail-summary {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 18px;
         padding: 22px;
-        margin-bottom: 18px;
-        border: 1px solid #dce5f1;
-        border-radius: 12px;
-        background: #fff;
+        margin-bottom: 20px;
+        border: 1px solid #dfe3e8;
+        border-left: 4px solid #6c8fc7;
+        border-radius: 9px;
+        background: #f7f8fa;
     }
 
     .detail-summary-info {
@@ -122,17 +124,16 @@
     .detail-eyebrow {
         display: block;
         margin-bottom: 7px;
-        color: #718096;
-        font-size: 11px;
+        color: #737d88;
+        font-size: 12px;
         font-weight: 700;
-        letter-spacing: .5px;
-        text-transform: uppercase;
     }
 
     .detail-summary h2 {
         margin: 0;
+        color: #343a40;
         font-size: 20px;
-        font-weight: 750;
+        font-weight: 800;
         line-height: 1.5;
         overflow-wrap: anywhere;
     }
@@ -142,52 +143,97 @@
         gap: 8px;
         flex-wrap: wrap;
         margin-top: 8px;
-        color: #718096;
+        color: #626b75;
         font-size: 13px;
     }
 
     .detail-status {
         flex-shrink: 0;
-        padding: 7px 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 13px;
+        border: 1px solid transparent;
         border-radius: 6px;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
         white-space: nowrap;
     }
 
     .detail-status.waiting {
-        background: #fff7df;
-        color: #946200;
+        background: #fff4d9;
+        border-color: #f1dfae;
+        color: #88631b;
     }
 
     .detail-status.process {
-        background: #edf4ff;
-        color: #2455a4;
+        background: #e8eff9;
+        border-color: #cedcf1;
+        color: #355b8e;
     }
 
     .detail-status.success {
-        background: #eaf7ee;
-        color: #267342;
+        background: #e0f2e8;
+        border-color: #c4e5d2;
+        color: #26734d;
     }
 
     .detail-status.danger {
-        background: #fff0f0;
-        color: #b42323;
+        background: #fbe8e9;
+        border-color: #f0cdd0;
+        color: #a33e46;
     }
 
-    /* Informasi booking */
+    /* Informasi penolakan */
+    .detail-reject {
+        padding: 18px 20px;
+        margin-bottom: 20px;
+        border: 1px solid #e8c9cc;
+        border-left: 4px solid #c96c74;
+        border-radius: 8px;
+        background: #fff8f8;
+    }
+
+    .detail-reject strong {
+        display: block;
+        margin-bottom: 7px;
+        color: #a33e46;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .detail-reject p {
+        margin: 0;
+        color: #65474a;
+        font-size: 13px;
+        line-height: 1.8;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    .detail-reject small {
+        display: block;
+        margin-top: 10px;
+        color: #8a6669;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    /* Susunan kotak informasi */
     .detail-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        gap: 18px;
+        align-items: stretch;
     }
 
     .detail-card {
         min-width: 0;
         padding: 21px;
-        border: 1px solid #dce5f1;
-        border-radius: 12px;
+        border: 1px solid #dfe3e8;
+        border-radius: 9px;
         background: #fff;
+        box-shadow: 0 2px 5px rgba(35, 45, 55, .025);
     }
 
     .detail-card.full {
@@ -197,31 +243,39 @@
     .detail-card-heading {
         padding-bottom: 13px;
         margin-bottom: 18px;
-        border-bottom: 1px solid #edf1f7;
+        border-bottom: 2px solid #e2e5e9;
     }
 
     .detail-card-heading h3 {
         margin: 0;
-        color: #14213d;
+        color: #424950;
         font-size: 15px;
-        font-weight: 750;
+        font-weight: 800;
+        line-height: 1.5;
     }
 
     .detail-card-heading p {
         margin: 4px 0 0;
-        color: #8794a9;
+        color: #7b838c;
         font-size: 12px;
         line-height: 1.6;
     }
 
+    /* Setiap data dipisahkan garis */
     .detail-list {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px 18px;
+        gap: 0 18px;
     }
 
     .detail-item {
         min-width: 0;
+        min-height: 67px;
+        padding: 13px 12px;
+        border: 1px solid #e2e5e9;
+        border-radius: 6px;
+        background: #fafbfc;
+        margin-bottom: 10px;
     }
 
     .detail-item.full {
@@ -231,50 +285,54 @@
     .detail-label {
         display: block;
         margin-bottom: 6px;
-        color: #718096;
+        color: #747d87;
         font-size: 12px;
         line-height: 1.5;
     }
 
     .detail-value {
         display: block;
-        color: #263750;
-        font-size: 13px;
-        font-weight: 650;
-        line-height: 1.7;
+        color: #343a40;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.65;
         overflow-wrap: anywhere;
         white-space: pre-line;
     }
 
     .detail-value.muted {
-        color: #929eaf;
+        color: #929aa3;
         font-weight: 400;
     }
 
+    /* Keluhan atau catatan */
     .detail-complaint {
-        padding: 13px 14px;
-        border: 1px solid #e4eaf2;
-        border-radius: 8px;
-        background: #fafbfd;
-        color: #344767;
-        font-size: 13px;
+        min-height: 70px;
+        padding: 15px;
+        border: 1px solid #e0e4e8;
+        border-radius: 7px;
+        background: #f8f9fa;
+        color: #495057;
+        font-size: 14px;
         line-height: 1.8;
         overflow-wrap: anywhere;
         white-space: pre-line;
     }
 
-    /* Tombol */
+    /* Bagian tombol bawah */
     .detail-footer {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 14px;
         flex-wrap: wrap;
-        margin-top: 20px;
+        padding-top: 18px;
+        margin-top: 22px;
+        border-top: 1px solid #e1e4e8;
     }
 
     .detail-footer-note {
-        color: #8794a9;
+        color: #747d87;
         font-size: 12px;
         line-height: 1.7;
     }
@@ -291,58 +349,46 @@
         align-items: center;
         justify-content: center;
         min-height: 41px;
-        padding: 10px 15px;
-        border: 1px solid #dce5f1;
-        border-radius: 8px;
+        padding: 10px 18px;
+        border: 1px solid #d5d9de;
+        border-radius: 7px;
         font-family: inherit;
         font-size: 13px;
-        font-weight: 650;
+        font-weight: 700;
         text-decoration: none;
         cursor: pointer;
-        transition: .2s ease;
+        transition: background .2s, border-color .2s;
     }
 
     .detail-button.back {
         background: #fff;
-        color: #344767;
+        color: #495057;
     }
 
     .detail-button.back:hover {
-        background: #f5f8ff;
-        border-color: #b8c9e5;
+        background: #f1f3f5;
+        border-color: #bfc5cc;
     }
 
     .detail-button.edit {
-        border-color: #3264d8;
-        background: #3264d8;
+        border-color: #527bb8;
+        background: #527bb8;
         color: #fff;
     }
 
     .detail-button.edit:hover {
-        border-color: #244fae;
-        background: #244fae;
+        border-color: #3f659e;
+        background: #3f659e;
     }
 
-    /* Tampilan HP */
-    @media (max-width: 700px) {
+    /* Responsif tablet dan HP */
+    @media (max-width: 760px) {
         .detail-page {
-            padding: 20px 14px 30px;
+            padding: 21px 15px 30px;
         }
 
         .detail-heading h1 {
-            font-size: 23px;
-        }
-
-        .detail-header {
-            align-items: flex-start;
-        }
-
-        .detail-summary {
-            padding: 18px;
-        }
-
-        .detail-summary h2 {
-            font-size: 18px;
+            font-size: 24px;
         }
 
         .detail-grid {
@@ -353,7 +399,40 @@
         .detail-card,
         .detail-card.full {
             grid-column: auto;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .detail-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .detail-back {
+            width: 100%;
+        }
+
+        .detail-summary {
+            align-items: flex-start;
+            flex-direction: column;
             padding: 18px;
+        }
+
+        .detail-summary h2 {
+            font-size: 18px;
+        }
+
+        .detail-card {
+            padding: 16px;
+        }
+
+        .detail-list {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .detail-item.full {
+            grid-column: auto;
         }
 
         .detail-footer {
@@ -371,30 +450,11 @@
             width: 100%;
         }
     }
-
-    @media (max-width: 420px) {
-        .detail-summary {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .detail-list {
-            grid-template-columns: 1fr;
-            gap: 17px;
-        }
-
-        .detail-item.full {
-            grid-column: auto;
-        }
-
-        .detail-footer-note {
-            font-size: 11px;
-        }
-    }
 </style>
 
 <div class="detail-page">
 
+    {{-- Header halaman --}}
     <div class="detail-header">
         <div class="detail-heading">
             <h1>Detail Pesanan</h1>
@@ -406,6 +466,7 @@
         </a>
     </div>
 
+    {{-- Ringkasan booking --}}
     <div class="detail-summary">
         <div class="detail-summary-info">
             <span class="detail-eyebrow">Ringkasan Booking</span>
@@ -425,6 +486,19 @@
             {{ $statusTampil }}
         </span>
     </div>
+
+    {{-- Alasan penolakan dari admin --}}
+    @if ($status === 'ditolak')
+        <div class="detail-reject">
+            <strong>Pesanan kamu ditolak</strong>
+
+            <p>{{ $booking->alasan_penolakan ?: 'Admin tidak mencantumkan alasan penolakan.' }}</p>
+
+            <small>
+                Kamu bisa membuat booking baru dengan jadwal lain lewat menu Booking.
+            </small>
+        </div>
+    @endif
 
     <div class="detail-grid">
 
@@ -500,7 +574,9 @@
 
                 <div class="detail-item">
                     <span class="detail-label">Tanggal Booking</span>
-                    <span class="detail-value">{{ $tanggalTampil }}</span>
+                    <span class="detail-value">
+                        {{ $tanggalTampil }}
+                    </span>
                 </div>
 
                 <div class="detail-item">
@@ -536,7 +612,7 @@
             </div>
         </section>
 
-        {{-- Keluhan --}}
+        {{-- Keluhan servis --}}
         <section class="detail-card full">
             <div class="detail-card-heading">
                 <h3>Keluhan / Catatan Servis</h3>
@@ -550,6 +626,7 @@
 
     </div>
 
+    {{-- Tombol navigasi --}}
     <div class="detail-footer">
         <span class="detail-footer-note">
             Pastikan data booking kamu sudah sesuai.

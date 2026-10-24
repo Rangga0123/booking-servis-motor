@@ -9,11 +9,11 @@ class Booking extends Model
 {
     use HasFactory;
 
-    // Kolom yang boleh diisi secara mass assignment dari Controller/Form
     protected $fillable = [
         'user_id',
-        'mechanic_id',       // <-- Tambahkan ini untuk relasi mekanik
-        'nama_pelanggan',    // data pemesan (boleh beda dari nama akun)
+        'service_id',
+        'mechanic_id',
+        'nama_pelanggan',
         'no_hp',
         'email_pelanggan',
         'nama_motor',
@@ -23,22 +23,25 @@ class Booking extends Model
         'jam_booking',
         'keluhan',
         'metode_pembayaran',
-        'status'
+        'status',
+        'harga',
+        'harga_barang',
+        'biaya_jasa',
     ];
 
-    // Relasi: 1 data booking milik 1 orang user
+    // Booking dimiliki oleh satu pelanggan.
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi: 1 data booking memesan 1 jenis servis
+    // Booking terhubung dengan satu layanan.
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
-    // Relasi: 1 data booking ditangani oleh 1 orang mekanik
+    // Booking bisa ditangani oleh satu mekanik.
     public function mechanic()
     {
         return $this->belongsTo(Mechanic::class, 'mechanic_id');

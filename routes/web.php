@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\InformasiBengkelController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordController;
@@ -10,10 +11,16 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+// ==========================================
+// HALAMAN UTAMA
+// ==========================================
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
+// ==========================================
+// LOGOUT
+// ==========================================
 Route::match(['get', 'post'], '/logout', function () {
     Auth::logout();
 
@@ -23,16 +30,17 @@ Route::match(['get', 'post'], '/logout', function () {
     return redirect('/login');
 })->name('logout');
 
+// ==========================================
+// DASHBOARD DAN BOOKING PELANGGAN
+// ==========================================
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard pelanggan
     Route::get('/dashboard', [BookingController::class, 'dashboard'])
         ->name('dashboard');
 
     Route::get('/home', [BookingController::class, 'dashboard'])
         ->name('home');
 
-    // Booking servis pelanggan
     Route::prefix('booking')->name('booking.')->group(function () {
 
         Route::get('/', [BookingController::class, 'index'])
@@ -44,15 +52,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [BookingController::class, 'store'])
             ->name('store');
 
-        // Detail booking. Harus setelah /create supaya "create" tidak dianggap {id}
         Route::get('/{id}', [BookingController::class, 'show'])
             ->whereNumber('id')
             ->name('show');
 
         Route::get('/{id}/edit', [BookingController::class, 'edit'])
+            ->whereNumber('id')
             ->name('edit');
 
         Route::put('/{id}', [BookingController::class, 'update'])
+            ->whereNumber('id')
             ->name('update');
 
         Route::delete('/{id}/cancel', [BookingController::class, 'cancel'])
@@ -60,7 +69,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-// Admin
+// ==========================================
+// ADMIN
+// ==========================================
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -74,10 +85,17 @@ Route::middleware(['auth', 'admin'])
         Route::get('/pelanggan-pesanan', [AdminController::class, 'pelangganPesanan'])
             ->name('pelanggan-pesanan');
 
+        // Jadwal servis
+        Route::get('/jadwal-servis', [BookingController::class, 'jadwal'])
+            ->name('jadwal-servis');
+
+        // Update status booking
         Route::put('/booking/{id}', [BookingController::class, 'updateStatus'])
             ->name('booking.update');
 
-        // Data mekanik
+        // ==========================================
+        // DATA MEKANIK
+        // ==========================================
         Route::get('/mekanik', [AdminController::class, 'indexMekanik'])
             ->name('mekanik.index');
 
@@ -96,14 +114,16 @@ Route::middleware(['auth', 'admin'])
         Route::delete('/mekanik/{id}', [AdminController::class, 'destroyMekanik'])
             ->name('mekanik.destroy');
 
-        // Pengaturan informasi bengkel
+        // ==========================================
+        // INFORMASI BENGKEL
+        // ==========================================
         Route::get('/informasi-bengkel', [InformasiBengkelController::class, 'index'])
             ->name('informasi-bengkel.index');
 
         Route::put('/informasi-bengkel', [InformasiBengkelController::class, 'update'])
             ->name('informasi-bengkel.update');
 
-        // Pengelolaan pengumuman
+        // Pengumuman
         Route::post('/pengumuman', [InformasiBengkelController::class, 'storePengumuman'])
             ->name('pengumuman.store');
 
@@ -112,9 +132,43 @@ Route::middleware(['auth', 'admin'])
 
         Route::delete('/pengumuman/{id}', [InformasiBengkelController::class, 'destroyPengumuman'])
             ->name('pengumuman.destroy');
+
+        // ==========================================
+        // KELOLA LAYANAN & HARGA
+        // ==========================================
+        Route::get('/layanan', [ServiceController::class, 'index'])
+            ->name('layanan.index');
+
+        Route::get('/layanan/tambah', [ServiceController::class, 'create'])
+            ->name('layanan.create');
+
+        Route::post('/layanan', [ServiceController::class, 'store'])
+            ->name('layanan.store');
+
+        // Detail layanan
+        Route::get('/layanan/{id}', [ServiceController::class, 'show'])
+            ->whereNumber('id')
+            ->name('layanan.show');
+
+        // Edit layanan
+        Route::get('/layanan/{id}/edit', [ServiceController::class, 'edit'])
+            ->whereNumber('id')
+            ->name('layanan.edit');
+
+        // Update layanan
+        Route::put('/layanan/{id}', [ServiceController::class, 'update'])
+            ->whereNumber('id')
+            ->name('layanan.update');
+
+        // Hapus layanan
+        Route::delete('/layanan/{id}', [ServiceController::class, 'destroy'])
+            ->whereNumber('id')
+            ->name('layanan.destroy');
     });
 
-// Profil
+// ==========================================
+// PROFIL
+// ==========================================
 Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])
@@ -136,7 +190,9 @@ Route::middleware('auth')->group(function () {
         ->name('password.update');
 });
 
-// Login dan register
+// ==========================================
+// LOGIN & REGISTER
+// ==========================================
 Route::middleware('guest')->group(function () {
 
     Route::get('/register', [RegisteredUserController::class, 'create'])

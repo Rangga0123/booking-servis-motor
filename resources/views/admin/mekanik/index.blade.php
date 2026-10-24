@@ -2,10 +2,59 @@
 
 @section('title', 'Data Mekanik')
 
+@push('styles')
+<style>
+    /* TABEL MEKANIK: bergaris di semua sel */
+    .panel .table-wrapper { padding: 20px 21px 6px; }
+
+    .panel .table-wrapper table {
+        min-width: 780px;
+        table-layout: fixed;
+        border-collapse: collapse;
+        border: 1px solid #dee2e6;
+    }
+
+    .panel .table-wrapper thead { background: #fff; }
+
+    .panel .table-wrapper th {
+        padding: 13px 14px;
+        color: #212529;
+        font-size: 13px;
+        border: 1px solid #dee2e6;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .panel .table-wrapper td {
+        padding: 12px 14px;
+        font-size: 14px;
+        border: 1px solid #dee2e6;
+        overflow-wrap: anywhere;
+    }
+
+    .panel .table-wrapper th:nth-child(1) { width: 70px; }
+    .panel .table-wrapper th:nth-child(2) { width: 28%; }
+    .panel .table-wrapper th:nth-child(4) { width: 130px; }
+    .panel .table-wrapper th:nth-child(5) { width: 150px; }
+    .panel .table-wrapper th:nth-child(6) { width: 170px; }
+
+    .panel .table-wrapper tbody tr:nth-child(even) { background: #fff; }
+    .panel .table-wrapper tbody tr:hover { background: #f2f4f7; }
+    .panel .table-wrapper tbody tr:last-child td { border-bottom: 1px solid #dee2e6; }
+
+    .panel .table-footer {
+        padding: 14px 21px 22px;
+        border-top: 0;
+        background: #fff;
+        color: #3c4858;
+        font-size: 13px;
+    }
+</style>
+@endpush
+
 @section('content')
     <section class="page-heading">
         <div>
-            <div class="breadcrumb">Admin / Data Mekanik</div>
+            <div class="breadcrumb">Admin / Data Master / Data Mekanik</div>
             <h1 class="page-title">Data Mekanik</h1>
             <p class="page-description">Kelola data mekanik Bengkel Royal Motor dengan mudah.</p>
         </div>

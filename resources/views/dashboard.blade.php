@@ -21,83 +21,64 @@
 
     /* HEADER DASHBOARD */
     .page-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
-        flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
         margin-bottom: 30px;
+        padding: 23px 25px;
+        background: #fff;
+        border: 1px solid #dce5f1;
+        border-left: 4px solid #3264d8;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(39, 61, 99, .035);
+        animation: headingAppear .45s ease both;
     }
 
     .heading-text {
-        flex: 1;
         min-width: 0;
+        max-width: 850px;
     }
 
     .breadcrumb {
-        margin-bottom: 10px;
-        font-size: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 18px;
         color: #7182a3;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .breadcrumb span:last-child {
+        color: #3264d8;
+        font-weight: 700;
+    }
+
+    .heading-greeting {
+        display: inline-block;
+        margin: 0 0 9px;
+        color: #3264d8;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.6;
     }
 
     .page-title {
         margin: 0;
-        font-size: 28px;
-        font-weight: 800;
         color: #14213d;
-        line-height: 1.4;
-        letter-spacing: -.4px;
+        font-size: 27px;
+        font-weight: 800;
+        line-height: 1.35;
+        letter-spacing: -.45px;
+        overflow-wrap: anywhere;
     }
 
     .page-description {
-        max-width: 620px;
+        max-width: 650px;
         margin: 9px 0 0;
-        font-size: 14px;
+        color: #7182a3;
+        font-size: 13px;
         line-height: 1.8;
-        color: #7182a3;
-    }
-
-    .page-description strong {
-        color: #244fae;
-        font-weight: 750;
-    }
-
-    /* JAM DIGITAL */
-    .clock-box {
-        min-width: 245px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 13px 16px;
-        background: #fff;
-        border: 1px solid #dce5f1;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(39, 61, 99, .04);
-    }
-
-    .clock-icon {
-        width: 42px;
-        height: 42px;
-        display: grid;
-        place-items: center;
-        flex-shrink: 0;
-        border-radius: 10px;
-        background: #e7efff;
-        color: #3264d8;
-    }
-
-    .clock-date {
-        margin-bottom: 4px;
-        font-size: 12px;
-        color: #7182a3;
-        line-height: 1.5;
-    }
-
-    .clock-time {
-        font-size: 18px;
-        font-weight: 800;
-        color: #14213d;
-        font-variant-numeric: tabular-nums;
     }
 
     /* JUDUL INFORMASI BENGKEL */
@@ -107,43 +88,50 @@
 
     .workshop-section-heading h2 {
         margin: 0;
+        color: #14213d;
         font-size: 21px;
         font-weight: 800;
         line-height: 1.5;
-        color: #14213d;
     }
 
     .workshop-section-heading p {
         max-width: 700px;
         margin: 5px 0 0;
+        color: #7182a3;
         font-size: 13px;
         line-height: 1.8;
-        color: #7182a3;
     }
 
-    /* PANEL INFORMASI BENGKEL */
+    /* PANEL INFORMASI */
     .dashboard-info {
         overflow: hidden;
         background: #fff;
         border: 1px solid #dce5f1;
-        border-radius: 13px;
-        box-shadow: 0 4px 14px rgba(39, 61, 99, .04);
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(39, 61, 99, .035);
+        animation: headingAppear .5s ease both;
     }
 
-    /* FOTO BENGKEL */
+    /* DUA FOTO BENGKEL TANPA TEKS */
     .workshop-photo-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-        padding: 20px;
+        gap: 18px;
+        padding: 18px;
     }
 
     .workshop-photo-card {
         min-width: 0;
         overflow: hidden;
+        background: #f0f4f9;
         border: 1px solid #e3eaf4;
-        border-radius: 10px;
-        background: #fff;
+        border-radius: 9px;
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .workshop-photo-card:hover {
+        border-color: #c7d7f6;
+        box-shadow: 0 5px 15px rgba(39, 61, 99, .07);
     }
 
     .workshop-photo-frame {
@@ -159,6 +147,11 @@
         height: 100%;
         object-fit: cover;
         object-position: center;
+        transition: transform .35s ease;
+    }
+
+    .workshop-photo-card:hover .workshop-photo {
+        transform: scale(1.025);
     }
 
     .workshop-photo-placeholder {
@@ -182,27 +175,6 @@
         opacity: .7;
     }
 
-    .workshop-photo-content {
-        padding: 16px 18px 18px;
-    }
-
-    .workshop-photo-title {
-        margin: 0 0 8px;
-        font-size: 16px;
-        font-weight: 750;
-        line-height: 1.5;
-        color: #14213d;
-        overflow-wrap: anywhere;
-    }
-
-    .workshop-photo-description {
-        font-size: 13px;
-        line-height: 1.9;
-        color: #60708a;
-        overflow-wrap: anywhere;
-        white-space: pre-line;
-    }
-
     /* DETAIL INFORMASI */
     .info-details {
         display: grid;
@@ -213,7 +185,7 @@
 
     .info-detail {
         min-width: 0;
-        padding: 21px;
+        padding: 20px;
     }
 
     .info-detail + .info-detail {
@@ -225,23 +197,23 @@
         align-items: center;
         gap: 9px;
         margin: 0 0 15px;
-        font-size: 15px;
-        font-weight: 750;
-        line-height: 1.5;
         color: #14213d;
+        font-size: 14px;
+        font-weight: 750;
+        line-height: 1.6;
     }
 
     .info-detail-title svg {
-        flex: 0 0 20px;
-        width: 20px;
-        height: 20px;
+        flex: 0 0 19px;
+        width: 19px;
+        height: 19px;
         color: #3568ce;
     }
 
     .dashboard-info-desc {
+        color: #60708a;
         font-size: 13px;
         line-height: 1.9;
-        color: #60708a;
         overflow-wrap: anywhere;
         white-space: pre-line;
     }
@@ -257,9 +229,9 @@
     .dashboard-info-list li {
         padding-bottom: 12px;
         border-bottom: 1px solid #edf1f7;
+        color: #60708a;
         font-size: 13px;
         line-height: 1.8;
-        color: #60708a;
         overflow-wrap: anywhere;
     }
 
@@ -268,7 +240,8 @@
         border-bottom: none;
     }
 
-    .dashboard-info-list strong {
+    .dashboard-info-list strong,
+    .booking-step strong {
         color: #14213d;
         font-weight: 700;
     }
@@ -279,7 +252,7 @@
         align-items: center;
         padding: 6px 10px;
         margin-bottom: 14px;
-        border-radius: 6px;
+        border-radius: 5px;
         font-size: 11px;
         font-weight: 750;
     }
@@ -299,6 +272,54 @@
         background: #fff2d7;
     }
 
+    /* INFORMASI BOOKING */
+    .booking-intro {
+        margin: 0 0 16px;
+        color: #60708a;
+        font-size: 13px;
+        line-height: 1.9;
+    }
+
+    .booking-steps {
+        display: grid;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .booking-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        color: #60708a;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .booking-step-number {
+        display: flex;
+        flex: 0 0 27px;
+        width: 27px;
+        height: 27px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        background: #eaf0ff;
+        color: #3264d8;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .booking-step-content {
+        min-width: 0;
+    }
+
+    .booking-step-content strong {
+        display: block;
+        margin-bottom: 2px;
+    }
+
     /* PENGUMUMAN */
     .dashboard-announcement {
         padding: 13px 0;
@@ -316,45 +337,57 @@
 
     .dashboard-announcement h4 {
         margin: 0 0 5px;
+        color: #14213d;
         font-size: 13px;
         font-weight: 750;
         line-height: 1.7;
-        color: #14213d;
         overflow-wrap: anywhere;
     }
 
     .dashboard-announcement time {
         display: block;
         margin-bottom: 7px;
-        font-size: 11px;
         color: #8491a8;
+        font-size: 11px;
     }
 
     .dashboard-announcement p {
         margin: 0;
+        color: #60708a;
         font-size: 13px;
         line-height: 1.8;
-        color: #60708a;
         overflow-wrap: anywhere;
         white-space: pre-line;
     }
 
     .dashboard-info-empty {
         margin: 0;
+        color: #8995a9;
         font-size: 13px;
         line-height: 1.8;
-        color: #8995a9;
     }
 
-    /* RESPONSIVE TABLET */
+    /* ANIMASI RINGAN */
+    @keyframes headingAppear {
+        from {
+            opacity: 0;
+            transform: translateY(7px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* TABLET */
     @media (max-width: 1050px) {
         .info-details {
             grid-template-columns: 1fr;
         }
 
         .info-detail + .info-detail {
-            border-left: none;
             border-top: 1px solid #e8edf5;
+            border-left: none;
         }
 
         .info-detail {
@@ -362,53 +395,42 @@
         }
     }
 
-    /* RESPONSIVE HP */
+    /* HP */
     @media (max-width: 700px) {
         .dashboard-content {
             padding-bottom: 22px;
         }
 
         .page-heading {
-            align-items: stretch;
-            gap: 16px;
+            padding: 18px;
             margin-bottom: 25px;
-        }
-
-        .heading-text {
-            flex: 1 1 100%;
+            border-radius: 9px;
         }
 
         .breadcrumb {
-            margin-bottom: 8px;
+            gap: 7px;
+            margin-bottom: 14px;
+            font-size: 11px;
+        }
+
+        .heading-greeting {
+            margin-bottom: 7px;
+            font-size: 12px;
         }
 
         .page-title {
-            font-size: 24px;
+            font-size: 23px;
             line-height: 1.4;
         }
 
         .page-description {
             margin-top: 8px;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.8;
         }
 
-        .clock-box {
-            width: 100%;
-            min-width: 0;
-            padding: 12px 14px;
-        }
-
-        .clock-date {
-            font-size: 12px;
-        }
-
-        .clock-time {
-            font-size: 17px;
-        }
-
         .workshop-section-heading {
-            margin-bottom: 14px;
+            margin-bottom: 13px;
         }
 
         .workshop-section-heading h2 {
@@ -422,19 +444,7 @@
         .workshop-photo-grid {
             grid-template-columns: 1fr;
             gap: 14px;
-            padding: 14px;
-        }
-
-        .workshop-photo-content {
-            padding: 14px 15px 16px;
-        }
-
-        .workshop-photo-title {
-            font-size: 15px;
-        }
-
-        .workshop-photo-description {
-            font-size: 13px;
+            padding: 13px;
         }
 
         .info-detail {
@@ -443,21 +453,32 @@
     }
 
     @media (max-width: 380px) {
+        .page-heading {
+            padding: 15px;
+        }
+
         .page-title {
-            font-size: 22px;
-        }
-
-        .clock-icon {
-            width: 38px;
-            height: 38px;
-        }
-
-        .clock-time {
-            font-size: 16px;
+            font-size: 21px;
         }
 
         .workshop-photo-grid {
             padding: 10px;
+        }
+
+        .info-detail {
+            padding: 15px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .page-heading,
+        .dashboard-info {
+            animation: none;
+        }
+
+        .workshop-photo,
+        .workshop-photo-card {
+            transition: none;
         }
     }
 </style>
@@ -516,44 +537,29 @@
 
         $fotoBengkel1 = $informasiBengkel?->foto_1;
         $fotoBengkel2 = $informasiBengkel?->foto_2;
-
-        $deskripsiFoto1 = $informasiBengkel?->deskripsi_foto_1;
-        $deskripsiFoto2 = $informasiBengkel?->deskripsi_foto_2;
     @endphp
 
     {{-- HEADER DASHBOARD --}}
     <section class="page-heading">
         <div class="heading-text">
-            <div class="breadcrumb">Pelanggan / Dashboard</div>
+
+            <div class="breadcrumb">
+                <span>Pelanggan</span>
+                <span aria-hidden="true">/</span>
+                <span>Dashboard</span>
+            </div>
+
+            <p class="heading-greeting">
+                Selamat datang kembali, {{ $namaPelanggan }}!
+            </p>
 
             <h1 class="page-title">Dashboard Pelanggan</h1>
 
             <p class="page-description">
-                Selamat datang kembali,
-                <strong>{{ $namaPelanggan }}</strong>!
-                Pantau booking servis dan lihat informasi terbaru
-                dari Bengkel Royal Motor di sini.
+                Lihat profil Bengkel Royal Motor, cek jam operasional,
+                pelajari cara booking servis, dan baca pengumuman terbaru di sini.
             </p>
-        </div>
 
-        <div class="clock-box">
-            <div class="clock-icon">
-                <svg width="21" height="21" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="17" rx="2"/>
-                    <path d="M8 2v4M16 2v4M3 10h18"/>
-                </svg>
-            </div>
-
-            <div>
-                <div id="liveDate" class="clock-date">
-                    Memuat tanggal...
-                </div>
-
-                <div id="liveTime" class="clock-time">
-                    --:--:-- WIB
-                </div>
-            </div>
         </div>
     </section>
 
@@ -561,15 +567,15 @@
     <section class="workshop-section-heading">
         <h2>Informasi Bengkel</h2>
         <p>
-            Kenali profil bengkel, layanan yang tersedia,
-            jam operasional, dan pengumuman terbaru.
+            Kenali profil bengkel, lihat informasi layanan,
+            cek jam operasional, dan dapatkan panduan booking servis.
         </p>
     </section>
 
     {{-- PANEL INFORMASI BENGKEL --}}
     <div class="dashboard-info">
 
-        {{-- FOTO PROFIL DAN LAYANAN --}}
+        {{-- FOTO BENGKEL TANPA JUDUL DAN DESKRIPSI --}}
         <div class="workshop-photo-grid">
 
             {{-- FOTO PROFIL BENGKEL --}}
@@ -585,7 +591,8 @@
                     @else
                         <div class="workshop-photo-placeholder">
                             <svg viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="1.6">
+                                 stroke="currentColor" stroke-width="1.6"
+                                 aria-hidden="true">
                                 <rect x="3" y="3" width="18" height="18" rx="2"/>
                                 <circle cx="8.5" cy="8.5" r="1.5"/>
                                 <path d="m21 15-5-5L5 21"/>
@@ -594,60 +601,44 @@
                         </div>
                     @endif
                 </div>
-
-                <div class="workshop-photo-content">
-                    <h3 class="workshop-photo-title">Profil Bengkel</h3>
-
-                    <div class="workshop-photo-description">
-                        {{ $deskripsiFoto1 ?: ($informasiBengkel?->deskripsi
-                            ?: 'Informasi profil Bengkel Royal Motor belum ditambahkan.') }}
-                    </div>
-                </div>
             </article>
 
-            {{-- FOTO INFORMASI LAYANAN --}}
+            {{-- FOTO AKTIVITAS SERVIS --}}
             <article class="workshop-photo-card">
                 <div class="workshop-photo-frame">
                     @if($fotoBengkel2)
                         <img
                             src="{{ asset($fotoBengkel2) }}"
-                            alt="Informasi layanan {{ $namaBengkel }}"
+                            alt="Aktivitas servis di {{ $namaBengkel }}"
                             class="workshop-photo"
                             loading="lazy"
                         >
                     @else
                         <div class="workshop-photo-placeholder">
                             <svg viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="1.6">
+                                 stroke="currentColor" stroke-width="1.6"
+                                 aria-hidden="true">
                                 <rect x="3" y="3" width="18" height="18" rx="2"/>
                                 <circle cx="8.5" cy="8.5" r="1.5"/>
                                 <path d="m21 15-5-5L5 21"/>
                             </svg>
-                            Foto layanan belum ditambahkan.
+                            Foto aktivitas servis belum ditambahkan.
                         </div>
                     @endif
-                </div>
-
-                <div class="workshop-photo-content">
-                    <h3 class="workshop-photo-title">Informasi Layanan</h3>
-
-                    <div class="workshop-photo-description">
-                        {{ $deskripsiFoto2 ?: ($informasiBengkel?->informasi_layanan
-                            ?: 'Informasi layanan bengkel belum ditambahkan.') }}
-                    </div>
                 </div>
             </article>
 
         </div>
 
-        {{-- JAM OPERASIONAL, LAYANAN, PENGUMUMAN --}}
+        {{-- JAM OPERASIONAL, INFORMASI BOOKING, DAN PENGUMUMAN --}}
         <div class="info-details">
 
             {{-- JAM OPERASIONAL --}}
             <section class="info-detail">
                 <h3 class="info-detail-title">
                     <svg viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="1.8">
+                         stroke="currentColor" stroke-width="1.8"
+                         aria-hidden="true">
                         <circle cx="12" cy="12" r="9"/>
                         <path d="M12 7v5l3 2"/>
                     </svg>
@@ -655,17 +646,11 @@
                 </h3>
 
                 @if(strtolower($statusOperasional) === 'buka')
-                    <span class="operational-status open">
-                        Sedang Buka
-                    </span>
+                    <span class="operational-status open">Sedang Buka</span>
                 @elseif(strtolower($statusOperasional) === 'tutup')
-                    <span class="operational-status closed">
-                        Sedang Tutup
-                    </span>
+                    <span class="operational-status closed">Sedang Tutup</span>
                 @else
-                    <span class="operational-status unknown">
-                        Belum Diatur
-                    </span>
+                    <span class="operational-status unknown">Belum Diatur</span>
                 @endif
 
                 <ul class="dashboard-info-list">
@@ -681,28 +666,63 @@
                 </ul>
             </section>
 
-            {{-- INFORMASI LAYANAN --}}
+            {{-- INFORMASI BOOKING --}}
             <section class="info-detail">
                 <h3 class="info-detail-title">
                     <svg viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="1.8">
-                        <path d="m14.7 6.3 3 3M4 20l5.5-1.2L20 8.3 15.7 4 5.2 14.5 4 20Z"/>
-                        <path d="m13.8 5.9 4.3 4.3"/>
+                         stroke="currentColor" stroke-width="1.8"
+                         aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="16" rx="2"/>
+                        <path d="M16 3v4M8 3v4M3 10h18"/>
+                        <path d="m9 15 2 2 4-4"/>
                     </svg>
-                    Informasi Layanan
+                    Informasi Booking
                 </h3>
 
-                <div class="dashboard-info-desc">
-                    {{ $informasiBengkel?->informasi_layanan
-                        ?: 'Informasi layanan bengkel belum ditambahkan oleh admin.' }}
-                </div>
+                <p class="booking-intro">
+                    Dengan fitur booking servis online, Anda dapat memilih
+                    layanan servis motor serta menentukan tanggal dan jam
+                    kedatangan sesuai kebutuhan.
+
+                    Buat booking terlebih dahulu agar jadwal servis lebih
+                    teratur dan Anda dapat mempersiapkan kedatangan ke bengkel.
+                </p>
+
+                <ol class="booking-steps">
+                    <li class="booking-step">
+                        <span class="booking-step-number">1</span>
+                        <div class="booking-step-content">
+                            <strong>Pilih layanan servis</strong>
+                            Tentukan layanan yang sesuai dengan kebutuhan motor Anda.
+                        </div>
+                    </li>
+
+                    <li class="booking-step">
+                        <span class="booking-step-number">2</span>
+                        <div class="booking-step-content">
+                            <strong>Tentukan jadwal kedatangan</strong>
+                            Pilih tanggal dan jam yang diinginkan, lalu periksa
+                            kembali data booking sebelum dikirim.
+                        </div>
+                    </li>
+
+                    <li class="booking-step">
+                        <span class="booking-step-number">3</span>
+                        <div class="booking-step-content">
+                            <strong>Pantau status booking</strong>
+                            Buka menu Riwayat Booking untuk melihat perkembangan
+                            status booking Anda.
+                        </div>
+                    </li>
+                </ol>
             </section>
 
             {{-- PENGUMUMAN --}}
             <section class="info-detail">
                 <h3 class="info-detail-title">
                     <svg viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="1.8">
+                         stroke="currentColor" stroke-width="1.8"
+                         aria-hidden="true">
                         <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
                         <path d="M10 21h4"/>
                     </svg>
@@ -731,35 +751,3 @@
 
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    function updateClock() {
-        const now = new Date();
-
-        const dateElement = document.getElementById('liveDate');
-        const timeElement = document.getElementById('liveTime');
-
-        if (dateElement) {
-            dateElement.textContent = now.toLocaleDateString('id-ID', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        if (timeElement) {
-            timeElement.textContent = now.toLocaleTimeString('id-ID', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            }) + ' WIB';
-        }
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);
-</script>
-@endpush

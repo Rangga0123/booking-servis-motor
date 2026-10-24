@@ -4,101 +4,332 @@
 
 @push('styles')
 <style>
-    /* Semua CSS di sini hanya berlaku untuk halaman dashboard (diawali .dash-page) */
+    .dash-page {
+        --dash-card: #ffffff;
+        --dash-text: #17243c;
+        --dash-border: #e2e8f1;
+        color: var(--dash-text);
+    }
 
-    /* Kotak tanggal & jam di kanan judul */
-    .clock-box {
-        min-width: 240px;
+    .page-heading {
+        gap: 20px;
+        margin-bottom: 26px;
+        align-items: center;
+    }
+
+    /* KARTU RINGKASAN ATAS */
+    .dash-page .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .dash-page .kpi {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 13px;
-        box-shadow: 0 5px 14px #273d630b;
+        gap: 17px;
+        min-width: 0;
+        padding: 24px 22px;
+        overflow: hidden;
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 18px;
+        box-shadow: 0 5px 20px rgba(31, 52, 88, .045);
+        transition: transform .2s ease, box-shadow .2s ease;
     }
-    .clock-icon {
-        width: 40px; height: 40px;
-        display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 11px; background: #e7efff; color: var(--blue);
+
+    .dash-page .kpi:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(31, 52, 88, .09);
     }
-    .clock-date { font-size: 13px; color: #46618e; margin-bottom: 4px; }
-    .clock-time { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
 
-    /* Tiga kartu ringkasan atas */
-    .dash-page .kpi-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
-    .dash-page .kpi {
-        display: flex; align-items: center; gap: 16px;
-        padding: 20px;
-        background: white;
-        border: 1px solid #dae3ee;
-        border-radius: 14px;
-        box-shadow: 0 5px 14px #273d630b;
+    .dash-page .kpi::after {
+        content: "";
+        position: absolute;
+        right: -25px;
+        top: -35px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: .035;
+        pointer-events: none;
     }
-    .dash-page .kpi-icon { width: 54px; height: 54px; display: grid; place-items: center; flex-shrink: 0; border-radius: 15px; }
-    .dash-page .kpi-title { font-size: 14px; font-weight: 700; color: #526585; }
-    .dash-page .kpi-number { margin-top: 6px; font-size: 30px; font-weight: 800; }
-    .dash-page .kpi-desc { margin-top: 5px; font-size: 12px; color: var(--muted); }
 
-    .dash-page .tone-blue { background: #e2eeff; color: #3580ff; }
-    .dash-page .tone-orange { background: #fff1dc; color: #e99516; }
-    .dash-page .tone-green { background: #def6ed; color: #19a875; }
-    .dash-page .tone-red { background: #ffe7eb; color: #e54860; }
+    .dash-page .kpi-icon {
+        width: 58px;
+        height: 58px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        border-radius: 17px;
+    }
 
-    /* Dua panel ringkasan + tabel aktivitas */
-    .dash-page .dash-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
-    .dash-page .activity-panel { grid-column: 1 / -1; }
-    .dash-page .panel { margin-bottom: 0; }
+    .dash-page .kpi-title { font-size: 13px; font-weight: 700; color: #75839a; }
 
-    .dash-page .panel-heading { display: flex; align-items: center; gap: 14px; }
+    .dash-page .kpi-number {
+        margin-top: 7px;
+        font-size: clamp(25px, 2.5vw, 32px);
+        line-height: 1.15;
+        font-weight: 800;
+        letter-spacing: -1px;
+        color: #17243c;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dash-page .kpi-desc { margin-top: 7px; font-size: 11px; color: #94a0b2; }
+
+    .dash-page .tone-blue   { background: #e9efff; color: #4978f5; }
+    .dash-page .tone-orange { background: #fff2df; color: #e69a28; }
+    .dash-page .tone-green  { background: #e1f7ec; color: #17a875; }
+    .dash-page .tone-red    { background: #ffe8ec; color: #e34e65; }
+
+    /* PANEL */
+    .dash-page .dash-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        align-items: start;
+    }
+
+    .dash-page .today-panel { grid-column: 1 / -1; }
+
+    .dash-page .panel {
+        min-width: 0;
+        margin-bottom: 0;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #e3e9f2;
+        border-radius: 18px;
+        box-shadow: 0 5px 22px rgba(31, 52, 88, .045);
+    }
+
+    .dash-page .panel-header {
+        padding: 21px 23px;
+        background: linear-gradient(135deg, #ffffff, #f9fbff);
+        border-bottom: 1px solid #edf1f7;
+    }
+
+    .dash-page .panel-header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .dash-page .panel-heading { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
     .dash-page .panel-heading-icon {
-        width: 44px; height: 44px; display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 12px; background: linear-gradient(135deg, #3468d5, #355eb8); color: white;
+        width: 45px;
+        height: 45px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #527fff, #3158cb);
+        color: white;
+        box-shadow: 0 5px 12px #3f6fe52a;
     }
 
-    .dash-page .summary-content { padding: 20px; }
-    .dash-page .summary-item {
-        display: flex; align-items: center; gap: 14px;
-        padding: 16px;
-        margin-bottom: 12px;
-        border: 1px solid #e3eaf3;
-        border-radius: 12px;
+    .dash-page .panel-title { color: #1a2943; font-size: 15px; font-weight: 800; }
+    .dash-page .panel-subtitle { margin-top: 5px; color: #8794a9; font-size: 12px; line-height: 1.6; }
+
+    .dash-page .today-badge {
+        padding: 8px 13px;
+        border: 1px solid #e0e9ff;
+        border-radius: 10px;
+        background: #edf3ff;
+        color: #456cce;
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
     }
-    .dash-page .summary-icon { width: 48px; height: 48px; display: grid; place-items: center; flex-shrink: 0; border-radius: 13px; }
-    .dash-page .summary-label { font-size: 14px; font-weight: 700; color: #526585; }
-    .dash-page .summary-number { margin-top: 5px; font-size: 26px; font-weight: 800; }
-    .dash-page .summary-desc { margin-top: 4px; font-size: 12px; color: #8190a8; }
+
+    /* RINGKASAN */
+    .dash-page .summary-content { padding: 21px; }
+
+    .dash-page .summary-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 13px;
+        padding: 17px;
+        background: #fafbfe;
+        border: 1px solid #e9edf5;
+        border-radius: 14px;
+        transition: background .2s ease, border-color .2s ease;
+    }
+
+    .dash-page .summary-item:hover { background: #f5f8ff; border-color: #dbe5ff; }
+
+    .dash-page .summary-icon {
+        width: 49px;
+        height: 49px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        border-radius: 14px;
+    }
+
+    .dash-page .summary-label { color: #697a95; font-size: 13px; font-weight: 700; }
+
+    .dash-page .summary-number {
+        margin-top: 5px;
+        color: #192740;
+        font-size: 26px;
+        font-weight: 800;
+        line-height: 1.2;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dash-page .summary-desc { margin-top: 5px; color: #95a0b2; font-size: 11px; }
 
     .dash-page .summary-link {
-        display: flex; align-items: center; justify-content: space-between; gap: 10px;
-        margin-top: 16px; padding: 13px 16px;
-        border-radius: 10px; background: #f0f5ff; color: var(--blue);
-        font-size: 13px; font-weight: 700;
-        transition: background .2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 17px;
+        padding: 14px 16px;
+        color: #426ee4;
+        background: #edf3ff;
+        border: 1px solid #e1eaff;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: .2s ease;
     }
-    .dash-page .summary-link:hover { background: #e2ebff; }
 
-    /* Tabel aktivitas */
-    .dash-page table { min-width: 560px; }
-    .dash-page .customer-name { display: block; font-size: 14px; font-weight: 800; color: #17243f; }
-    .dash-page .customer-detail { display: block; margin-top: 4px; font-size: 12px; color: #6f86ad; }
+    .dash-page .summary-link:hover { background: #e1eaff; transform: translateX(2px); }
 
-    .dash-page .status.waiting { background: #fff2d7; color: #b87400; }
-    .dash-page .status.process { background: #e8f1ff; color: #2a5fd4; }
-    .dash-page .status.done { background: #d6f5e5; color: #0f7a4d; }
-    .dash-page .status.rejected { background: #ffe5e9; color: #c4253f; }
+    /* JADWAL SERVIS HARI INI */
+    .dash-page .today-list { padding: 18px 21px; display: grid; gap: 12px; }
 
-    .dash-page .table-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-    .dash-page .table-footer a { color: var(--blue); font-weight: 700; }
+    .dash-page .today-item {
+        display: grid;
+        grid-template-columns: 90px minmax(0, 1.6fr) minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 16px;
+        background: #fafbfe;
+        border: 1px solid #e9edf5;
+        border-radius: 14px;
+        transition: background .2s ease, border-color .2s ease;
+    }
+
+    .dash-page .today-item:hover { background: #f5f8ff; border-color: #dbe5ff; }
+
+    .dash-page .today-time {
+        padding: 10px 8px;
+        border-radius: 11px;
+        background: #e9efff;
+        color: #3864d2;
+        font-size: 17px;
+        font-weight: 800;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dash-page .today-time small { display: block; margin-top: 2px; font-size: 9px; font-weight: 700; letter-spacing: .5px; }
+
+    .dash-page .customer-name {
+        display: block;
+        color: #263650;
+        font-size: 13px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+    }
+
+    .dash-page .customer-detail {
+        display: block;
+        margin-top: 5px;
+        color: #91a0b7;
+        font-size: 11px;
+        overflow-wrap: anywhere;
+    }
+
+    .dash-page .today-mech small {
+        display: block;
+        margin-bottom: 4px;
+        color: #91a0b7;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .dash-page .today-mech strong { color: #3c4a63; font-size: 12px; overflow-wrap: anywhere; }
+    .dash-page .today-mech strong.muted { color: #9aa6b8; font-weight: 600; }
+
+    .dash-page .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .dash-page .status.waiting { background: #fff3dc; color: #b9790b; }
+    .dash-page .status.process { background: #eaf0ff; color: #3864d2; }
+    .dash-page .status.done    { background: #e0f7eb; color: #138453; }
+
+    .dash-page .today-more { padding: 0 21px 6px; color: #8996aa; font-size: 12px; }
+
+    .dash-page .empty-state {
+        padding: 34px 15px;
+        color: #8a97ab;
+        text-align: center;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .dash-page .panel-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px 21px;
+        background: #fafbfe;
+        border-top: 1px solid #edf1f6;
+        color: #8996aa;
+        font-size: 12px;
+    }
+
+    .dash-page .panel-footer a { color: #416fe8; font-weight: 800; text-decoration: none; }
+    .dash-page .panel-footer a:hover { text-decoration: underline; }
 
     @media (max-width: 1100px) {
-        .dash-page .kpi-grid { grid-template-columns: 1fr; gap: 12px; }
+        .dash-page .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .dash-page .dash-grid { grid-template-columns: minmax(0, 1fr); }
-        .dash-page .activity-panel { grid-column: auto; }
+        .dash-page .today-panel { grid-column: auto; }
     }
+
+    @media (max-width: 760px) {
+        .dash-page .today-item {
+            grid-template-columns: 80px minmax(0, 1fr);
+            gap: 12px;
+        }
+        .dash-page .today-mech,
+        .dash-page .today-item .status { grid-column: 2; justify-self: start; }
+    }
+
     @media (max-width: 650px) {
-        .clock-box { width: 100%; min-width: 0; }
+        .page-heading { align-items: stretch; }
+        .dash-page .kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+        .dash-page .kpi { padding: 18px; }
+        .dash-page .panel-header { padding: 17px; }
+        .dash-page .summary-content { padding: 15px; }
+        .dash-page .summary-item { padding: 13px; }
+        .dash-page .today-list { padding: 14px; }
+        .dash-page .panel-footer { padding: 15px; }
     }
 </style>
 @endpush
@@ -130,33 +361,30 @@
         return strtolower($item->status ?? '') === 'nonaktif';
     })->count();
 
-    $aktivitasTerbaru = $bookings->sortByDesc('created_at')->take(5);
+    // Jadwal servis hari ini (tanpa pesanan ditolak / dibatalkan), urut dari jam paling awal
+    $jadwalHariIni = $bookings->filter(function ($item) use ($tanggalHariIni) {
+        $st = strtolower($item->status ?? '');
+
+        return $item->tanggal_booking
+            && \Carbon\Carbon::parse($item->tanggal_booking)->toDateString() === $tanggalHariIni
+            && ! in_array($st, ['ditolak', 'dibatalkan', 'batal']);
+    })->sortBy(function ($item) {
+        return str_replace(',', ':', (string) $item->jam_booking);
+    })->values();
+
+    $jadwalTampil = $jadwalHariIni->take(8);
+    $jadwalSisa = $jadwalHariIni->count() - $jadwalTampil->count();
 @endphp
 
 <section class="page-heading">
     <div>
         <div class="breadcrumb">Admin / Dashboard</div>
         <h1 class="page-title">Ringkasan Operasional Bengkel</h1>
-        <p class="page-description">Pantau ringkasan booking, data mekanik, dan aktivitas bengkel dalam satu tempat.</p>
-    </div>
-
-    <div class="clock-box">
-        <div class="clock-icon">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="17" rx="2"/>
-                <path d="M8 2v4M16 2v4M3 10h18"/>
-            </svg>
-        </div>
-        <div>
-            <div id="liveDate" class="clock-date">Memuat tanggal...</div>
-            <div id="liveTime" class="clock-time">--:--:-- WIB</div>
-        </div>
+        <p class="page-description">Pantau ringkasan booking, data mekanik, dan jadwal servis hari ini dalam satu tempat.</p>
     </div>
 </section>
 
 <div class="dash-page">
-
-    {{-- ============ KARTU RINGKASAN ============ --}}
     <section class="kpi-grid">
         <div class="kpi">
             <div class="kpi-icon tone-blue">
@@ -199,8 +427,7 @@
     </section>
 
     <section class="dash-grid">
-
-        {{-- ============ RINGKASAN BOOKING ============ --}}
+        {{-- RINGKASAN BOOKING --}}
         <section class="panel">
             <div class="panel-header">
                 <div class="panel-heading">
@@ -244,12 +471,12 @@
                 </div>
 
                 <a href="{{ route('admin.pelanggan-pesanan') }}" class="summary-link">
-                    Lihat Pengelolaan Pesanan <span>→</span>
+                    Lihat Daftar Pesanan <span>→</span>
                 </a>
             </div>
         </section>
 
-        {{-- ============ RINGKASAN MEKANIK ============ --}}
+        {{-- RINGKASAN MEKANIK --}}
         <section class="panel">
             <div class="panel-header">
                 <div class="panel-heading">
@@ -298,107 +525,4 @@
             </div>
         </section>
 
-        {{-- ============ AKTIVITAS BOOKING TERBARU ============ --}}
-        <section class="panel activity-panel">
-            <div class="panel-header">
-                <div class="panel-heading">
-                    <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="panel-title">Aktivitas Booking Terbaru</div>
-                        <div class="panel-subtitle">Lima booking terbaru. Tidak ada aksi pengelolaan di bagian ini.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pelanggan</th>
-                            <th>Kendaraan</th>
-                            <th>Tanggal Booking</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($aktivitasTerbaru as $item)
-                            @php
-                                $status = strtolower($item->status ?? '');
-                            @endphp
-                            <tr>
-                                <td>
-                                    <span class="customer-name">{{ $item->user->name ?? 'Pelanggan' }}</span>
-                                    <span class="customer-detail">{{ $item->plat_nomor ?? '-' }}</span>
-                                </td>
-                                <td>{{ $item->nama_motor ?? '-' }}</td>
-                                <td>
-                                    {{ $item->tanggal_booking
-                                        ? \Carbon\Carbon::parse($item->tanggal_booking)->format('d M Y')
-                                        : '-' }}
-                                </td>
-                                <td>
-                                    @if(in_array($status, ['menunggu', 'pending']))
-                                        <span class="status waiting">● Menunggu</span>
-                                    @elseif($status === 'selesai')
-                                        <span class="status done">● Selesai</span>
-                                    @elseif($status === 'ditolak')
-                                        <span class="status rejected">● Ditolak</span>
-                                    @else
-                                        <span class="status process">● {{ ucfirst($item->status ?? '-') }}</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4">
-                                    <div class="empty-state">Belum ada aktivitas booking.</div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="table-footer">
-                <span>Menampilkan {{ $aktivitasTerbaru->count() }} aktivitas terbaru</span>
-                <a href="{{ route('admin.pelanggan-pesanan') }}">Kelola semua pesanan →</a>
-            </div>
-        </section>
-    </section>
-</div>
 @endsection
-
-@push('scripts')
-<script>
-    function updateClock() {
-        const now = new Date();
-        const dateElement = document.getElementById('liveDate');
-        const timeElement = document.getElementById('liveTime');
-
-        if (dateElement) {
-            dateElement.textContent = now.toLocaleDateString('id-ID', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        if (timeElement) {
-            timeElement.textContent = now.toLocaleTimeString('id-ID', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            }) + ' WIB';
-        }
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);
-</script>
-@endpush

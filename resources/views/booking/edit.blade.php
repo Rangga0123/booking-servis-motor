@@ -20,13 +20,13 @@
         'qris' => [
             'label' => 'QRIS',
             'badge' => 'QR',
-            'warna' => '#1f2937',
+            'warna' => '#64748b',
             'pilihan' => [],
         ],
         'bank' => [
             'label' => 'Transfer Bank',
             'badge' => 'TF',
-            'warna' => '#0060af',
+            'warna' => '#3975ad',
             'pilihan' => ['BCA', 'BRI', 'Mandiri', 'BNI'],
         ],
     ];
@@ -75,21 +75,20 @@
 @endphp
 
 <div class="bk-page">
-
     <header class="bk-head">
         <div>
-            <span class="bk-eyebrow">Royal Motor</span>
+            <span class="bk-eyebrow">ROYAL MOTOR</span>
             <h1>Edit Booking Servis</h1>
             <p>Periksa dan perbarui data booking sebelum menyimpan perubahan.</p>
         </div>
 
         <a href="{{ route('booking.index') }}" class="bk-btn bk-btn-ghost">
-            ← Riwayat Booking
+            <span aria-hidden="true">←</span> Riwayat Booking
         </a>
     </header>
 
     @if ($errors->any())
-        <div class="bk-alert">
+        <div class="bk-alert" role="alert">
             <strong>Ada data yang perlu diperbaiki.</strong>
             <ul>
                 @foreach ($errors->all() as $error)
@@ -314,7 +313,7 @@
                 </div>
             </section>
 
-            {{-- 4. MEKANIK --}}
+            {{-- 4. PILIH MEKANIK --}}
             <section class="bk-card">
                 <div class="bk-card-head">
                     <span class="bk-step">4</span>
@@ -381,7 +380,7 @@
                 @enderror
             </section>
 
-            {{-- 5. PEMBAYARAN --}}
+            {{-- 5. METODE PEMBAYARAN --}}
             <section class="bk-card">
                 <div class="bk-card-head">
                     <span class="bk-step">5</span>
@@ -510,17 +509,22 @@
 @push('styles')
 <style>
     .bk-page {
-        --bk-blue: #3264d8;
-        --bk-blue-dark: #244fae;
-        --bk-text: #14213d;
-        --bk-muted: #6b7c99;
-        --bk-line: #dce5f1;
+        --bk-blue: #3975ad;
+        --bk-blue-dark: #2f6597;
+        --bk-text: #343a40;
+        --bk-muted: #737d87;
+        --bk-line: #dfe3e8;
+        --bk-soft: #f7f8fa;
+
+        width: 100%;
         max-width: 1180px;
         margin: 0 auto;
         color: var(--bk-text);
     }
 
-    .bk-page * { box-sizing: border-box; }
+    .bk-page * {
+        box-sizing: border-box;
+    }
 
     .bk-head {
         display: flex;
@@ -533,34 +537,36 @@
 
     .bk-eyebrow {
         display: inline-block;
+        margin-bottom: 7px;
+        color: #6485a5;
         font-size: 11px;
         font-weight: 800;
-        letter-spacing: .18em;
+        letter-spacing: .16em;
         text-transform: uppercase;
-        color: var(--bk-blue);
-        margin-bottom: 8px;
     }
 
     .bk-head h1 {
-        font-size: 27px;
-        line-height: 1.25;
-        font-weight: 800;
         margin: 0;
+        color: #343a40;
+        font-size: 27px;
+        font-weight: 800;
+        line-height: 1.3;
     }
 
     .bk-head p {
-        margin: 6px 0 0;
+        margin: 7px 0 0;
+        color: #737d87;
         font-size: 13px;
-        color: var(--bk-muted);
+        line-height: 1.7;
     }
 
     .bk-alert {
-        padding: 14px 16px;
         margin-bottom: 18px;
-        border: 1px solid #f4cdd1;
+        padding: 15px 17px;
+        border: 1px solid #efc9cd;
         border-radius: 12px;
-        background: #fff0f0;
-        color: #a52e3c;
+        background: #fff6f6;
+        color: #a63843;
         font-size: 13px;
     }
 
@@ -579,52 +585,59 @@
 
     .bk-main {
         display: flex;
+        min-width: 0;
         flex-direction: column;
         gap: 18px;
+    }
+
+    .bk-card,
+    .bk-summary {
         min-width: 0;
+        border: 1px solid #dfe3e8;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 3px 12px rgba(40, 52, 65, .035);
     }
 
     .bk-card {
-        background: #fff;
-        border: 1px solid var(--bk-line);
-        border-radius: 16px;
         padding: 22px;
-        box-shadow: 0 4px 16px #17254108;
-        animation: bkUp .4s ease both;
+        animation: bkUp .35s ease both;
     }
 
     .bk-card-head {
         display: flex;
         align-items: flex-start;
-        gap: 14px;
+        gap: 13px;
+        margin-bottom: 19px;
         padding-bottom: 16px;
-        margin-bottom: 18px;
-        border-bottom: 1px solid #e8eef7;
+        border-bottom: 1px solid #e7eaee;
     }
 
     .bk-step {
+        display: grid;
         width: 32px;
         height: 32px;
         flex-shrink: 0;
-        display: grid;
         place-items: center;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #3567d9, #355dbb);
-        color: #fff;
-        font-size: 14px;
+        border: 1px solid #d5e0eb;
+        border-radius: 9px;
+        background: #edf3f8;
+        color: #3975ad;
+        font-size: 13px;
         font-weight: 800;
     }
 
     .bk-card-head h2 {
+        margin: 0;
+        color: #343a40;
         font-size: 16px;
         font-weight: 800;
-        margin: 0;
     }
 
     .bk-card-head p {
-        margin: 4px 0 0;
+        margin: 5px 0 0;
+        color: #7a838d;
         font-size: 12px;
-        color: var(--bk-muted);
         line-height: 1.6;
     }
 
@@ -634,68 +647,88 @@
         gap: 18px;
     }
 
-    .bk-span { grid-column: 1 / -1; }
-    .bk-field { min-width: 0; }
+    .bk-span {
+        grid-column: 1 / -1;
+    }
+
+    .bk-field {
+        min-width: 0;
+    }
 
     .bk-field label {
         display: block;
-        margin-bottom: 7px;
+        margin-bottom: 8px;
+        color: #4b5560;
         font-size: 12px;
         font-weight: 700;
-        color: #2a3a58;
     }
 
     .bk-field label i {
+        color: #d64b58;
         font-style: normal;
-        color: #d63b4f;
     }
 
     .bk-input {
         display: block;
         width: 100%;
-        padding: 12px 14px;
-        border: 1px solid #d3deee;
-        border-radius: 10px;
+        min-width: 0;
+        padding: 12px 13px;
+        border: 1px solid #d4d9df;
+        border-radius: 9px;
+        outline: none;
         background: #fff;
-        color: var(--bk-text);
+        color: #343a40;
         font: inherit;
         font-size: 14px;
-        outline: none;
-        transition: border-color .2s, box-shadow .2s;
+        transition: border-color .2s, box-shadow .2s, background .2s;
     }
 
-    .bk-input::placeholder { color: #9aa8c0; }
+    .bk-input:hover {
+        border-color: #b9c4cf;
+    }
 
     .bk-input:focus {
-        border-color: var(--bk-blue);
-        box-shadow: 0 0 0 4px #3264d816;
+        border-color: #7198bc;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(57, 117, 173, .11);
+    }
+
+    .bk-input::placeholder {
+        color: #a0a8b0;
     }
 
     textarea.bk-input {
-        resize: vertical;
         min-height: 110px;
+        resize: vertical;
         line-height: 1.7;
     }
 
-    .bk-upper { text-transform: uppercase; }
-    .bk-upper::placeholder { text-transform: none; }
+    .bk-upper {
+        text-transform: uppercase;
+    }
+
+    .bk-upper::placeholder {
+        text-transform: none;
+    }
 
     .bk-hint {
         display: block;
         margin-top: 7px;
+        color: #7a838d;
         font-size: 11px;
-        color: var(--bk-muted);
         line-height: 1.6;
     }
 
     .bk-error {
         display: block;
-        margin-top: 6px;
+        margin-top: 7px;
+        color: #c13e4c;
         font-size: 12px;
-        color: #d63b4f;
+        line-height: 1.5;
     }
 
-    .bk-chips {
+    .bk-chips,
+    .bk-sub-chips {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
@@ -703,112 +736,97 @@
     }
 
     .bk-chip {
-        padding: 6px 12px;
-        border: 1px solid #cddcf6;
-        border-radius: 999px;
-        background: #f2f7ff;
-        color: #2f56b3;
+        padding: 7px 11px;
+        border: 1px solid #d8dfe6;
+        border-radius: 7px;
+        background: #f7f8fa;
+        color: #596775;
         font: inherit;
         font-size: 12px;
         font-weight: 600;
         cursor: pointer;
-        transition: background .15s, transform .15s;
+        transition: background .18s, border-color .18s;
     }
 
-    .bk-chip:hover { background: #e0ebff; }
-    .bk-chip:active { transform: scale(.97); }
+    .bk-chip:hover {
+        border-color: #b8c9d9;
+        background: #edf3f8;
+    }
 
     .bk-badge {
-        min-width: 42px;
+        display: grid;
+        min-width: 40px;
         height: 30px;
-        padding: 0 8px;
-        display: grid;
+        padding: 0 7px;
+        flex-shrink: 0;
         place-items: center;
-        border-radius: 8px;
-        font-size: 11px;
+        border-radius: 7px;
+        font-size: 10px;
         font-weight: 800;
-        letter-spacing: .02em;
-    }
-
-    .bk-tick {
-        width: 20px;
-        height: 20px;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        background: var(--bk-blue);
-        color: #fff;
-        font-size: 11px;
-        opacity: 0;
-        transform: scale(.6);
-        transition: opacity .15s, transform .15s;
     }
 
     .bk-mek-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
         gap: 10px;
     }
 
     .bk-mek {
+        position: relative;
         display: block;
         cursor: pointer;
-        position: relative;
     }
 
     .bk-mek input {
         position: absolute;
+        width: 1px;
+        height: 1px;
         opacity: 0;
-        pointer-events: none;
     }
 
     .bk-mek-box {
         display: flex;
+        min-height: 66px;
         align-items: center;
-        gap: 12px;
+        gap: 11px;
         padding: 12px;
-        border: 1.5px solid #dbe4f1;
-        border-radius: 12px;
+        border: 1px solid #d9dee4;
+        border-radius: 10px;
         background: #fff;
-        transition: border-color .18s, background .18s, box-shadow .18s;
+        transition: border-color .18s, background .18s;
     }
 
     .bk-mek:hover .bk-mek-box {
-        border-color: #b9ccec;
-        background: #fafcff;
+        border-color: #b8c9d9;
+        background: #fafbfd;
     }
 
     .bk-mek input:focus-visible + .bk-mek-box {
-        box-shadow: 0 0 0 4px #3264d822;
+        outline: 3px solid rgba(57, 117, 173, .15);
     }
 
     .bk-mek input:checked + .bk-mek-box {
-        border-color: var(--bk-blue);
-        background: #eef4ff;
-        box-shadow: 0 3px 12px #3264d81f;
-    }
-
-    .bk-mek input:checked + .bk-mek-box .bk-tick {
-        opacity: 1;
-        transform: scale(1);
+        border-color: #7198bc;
+        background: #f0f5f9;
     }
 
     .bk-mek-avatar {
-        width: 40px;
-        height: 40px;
-        flex-shrink: 0;
         display: grid;
+        width: 39px;
+        height: 39px;
+        flex-shrink: 0;
         place-items: center;
+        border: 1px solid #d6e0e9;
         border-radius: 50%;
-        background: linear-gradient(135deg, #d9e6ff, #9ebcff);
-        color: #224c9c;
-        font-size: 16px;
+        background: #edf3f8;
+        color: #3975ad;
+        font-size: 15px;
         font-weight: 800;
     }
 
     .bk-mek-any {
-        background: #edf1f7;
-        color: #6b7c99;
+        background: #f0f1f3;
+        color: #78818a;
     }
 
     .bk-mek-info {
@@ -818,16 +836,38 @@
 
     .bk-mek-info strong {
         display: block;
+        color: #414a53;
         font-size: 13px;
-        color: #2a3a58;
         overflow-wrap: anywhere;
     }
 
     .bk-mek-info small {
         display: block;
-        margin-top: 3px;
+        margin-top: 4px;
+        color: #7b858f;
         font-size: 11px;
-        color: var(--bk-muted);
+        line-height: 1.5;
+    }
+
+    .bk-tick {
+        display: grid;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        place-items: center;
+        border: 1px solid #d5dbe1;
+        border-radius: 50%;
+        background: #fff;
+        color: #fff;
+        font-size: 11px;
+        opacity: .45;
+        transition: background .18s, opacity .18s;
+    }
+
+    .bk-mek input:checked + .bk-mek-box .bk-tick {
+        border-color: #3975ad;
+        background: #3975ad;
+        opacity: 1;
     }
 
     .bk-cat-grid {
@@ -838,193 +878,216 @@
 
     .bk-cat {
         display: flex;
+        min-width: 0;
         align-items: center;
-        gap: 10px;
-        padding: 11px 12px;
-        border: 1.5px solid #dbe4f1;
-        border-radius: 12px;
+        gap: 9px;
+        padding: 11px 10px;
+        border: 1px solid #d9dee4;
+        border-radius: 10px;
         background: #fff;
-        cursor: pointer;
+        color: #454e57;
         font: inherit;
         text-align: left;
-        transition: border-color .18s, background .18s, box-shadow .18s;
+        cursor: pointer;
+        transition: border-color .18s, background .18s;
     }
 
     .bk-cat:hover {
-        border-color: #b9ccec;
-        background: #fafcff;
+        border-color: #b8c9d9;
+        background: #fafbfd;
     }
 
     .bk-cat.is-active {
-        border-color: var(--bk-blue);
-        background: #eef4ff;
-        box-shadow: 0 3px 12px #3264d81f;
+        border-color: #7198bc;
+        background: #f0f5f9;
     }
 
     .bk-cat-label {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
-        color: #2a3a58;
-        line-height: 1.3;
+        line-height: 1.4;
     }
 
     .bk-sub {
         margin-top: 14px;
         padding: 14px;
-        border: 1px dashed #cddcf6;
-        border-radius: 12px;
-        background: #f8fbff;
+        border: 1px solid #dfe3e8;
+        border-radius: 10px;
+        background: #f8f9fa;
     }
 
     .bk-sub-title {
         display: block;
         margin-bottom: 10px;
+        color: #737d87;
         font-size: 11px;
         font-weight: 800;
-        letter-spacing: .06em;
+        letter-spacing: .05em;
         text-transform: uppercase;
-        color: var(--bk-muted);
-    }
-
-    .bk-sub-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
     }
 
     .bk-opt {
-        padding: 9px 16px;
-        border: 1.5px solid #d3deee;
-        border-radius: 999px;
+        padding: 9px 14px;
+        border: 1px solid #d5dbe1;
+        border-radius: 7px;
         background: #fff;
-        color: #2a3a58;
+        color: #4b5560;
         font: inherit;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
         cursor: pointer;
-        transition: border-color .15s, background .15s, color .15s;
+        transition: border-color .18s, background .18s, color .18s;
     }
 
-    .bk-opt:hover { border-color: #9fb9e6; }
+    .bk-opt:hover {
+        border-color: #aebfce;
+        background: #f4f7f9;
+    }
 
     .bk-opt.is-active {
-        border-color: var(--bk-blue);
-        background: var(--bk-blue);
-        color: #fff;
+        border-color: #7198bc;
+        background: #eaf1f7;
+        color: #315f88;
     }
 
-    .is-hidden { display: none !important; }
+    .is-hidden {
+        display: none !important;
+    }
 
     .bk-actions {
         display: flex;
         justify-content: flex-end;
-        gap: 10px;
         flex-wrap: wrap;
+        gap: 10px;
     }
 
     .bk-btn {
         display: inline-flex;
+        min-height: 43px;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        padding: 13px 24px;
-        border: 0;
-        border-radius: 11px;
+        gap: 7px;
+        padding: 12px 20px;
+        border: 1px solid transparent;
+        border-radius: 9px;
         font: inherit;
         font-size: 13px;
-        font-weight: 800;
-        cursor: pointer;
+        font-weight: 700;
+        text-align: center;
         text-decoration: none;
-        transition: background .2s, transform .2s, box-shadow .2s;
+        cursor: pointer;
+        transition: background .18s, border-color .18s, transform .18s;
     }
 
-    .bk-btn:active { transform: scale(.98); }
+    .bk-btn:active {
+        transform: scale(.98);
+    }
 
     .bk-btn-primary {
-        background: var(--bk-blue);
+        border-color: #3975ad;
+        background: #3975ad;
         color: #fff;
-        box-shadow: 0 6px 16px #3264d838;
     }
 
-    .bk-btn-primary:hover { background: var(--bk-blue-dark); }
+    .bk-btn-primary:hover {
+        border-color: #2f6597;
+        background: #2f6597;
+    }
 
     .bk-btn-ghost {
+        border-color: #d5dbe1;
         background: #fff;
-        color: #2a3a58;
-        border: 1px solid #d3deee;
+        color: #59636d;
     }
 
-    .bk-btn-ghost:hover { background: #f2f6fc; }
+    .bk-btn-ghost:hover {
+        background: #f3f5f7;
+        border-color: #c3cbd3;
+    }
+
+    .bk-btn:disabled {
+        cursor: wait;
+    }
 
     .bk-side {
         position: sticky;
         top: 92px;
+        min-width: 0;
     }
 
     .bk-summary {
-        background: #fff;
-        border: 1px solid var(--bk-line);
-        border-radius: 16px;
         padding: 20px;
-        box-shadow: 0 4px 16px #17254108;
     }
 
     .bk-summary h3 {
+        margin: 0;
+        color: #343a40;
         font-size: 15px;
         font-weight: 800;
-        margin: 0;
     }
 
     .bk-sum-sub {
-        margin: 5px 0 14px;
+        margin: 6px 0 15px;
+        color: #7a838d;
         font-size: 11px;
-        color: var(--bk-muted);
+        line-height: 1.6;
     }
 
-    .bk-summary dl { margin: 0; }
+    .bk-summary dl {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 0;
+    }
 
     .bk-summary dl > div {
-        display: flex;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 10px 0;
-        border-bottom: 1px dashed #dfe7f3;
+        display: grid;
+        grid-template-columns: minmax(75px, .8fr) minmax(0, 1.2fr);
+        gap: 12px;
+        padding: 11px 0;
+        border-bottom: 1px solid #e7eaee;
         font-size: 12px;
     }
 
     .bk-summary dt {
-        color: var(--bk-muted);
-        flex-shrink: 0;
+        color: #7a838d;
     }
 
     .bk-summary dd {
         margin: 0;
-        text-align: right;
+        color: #414a53;
         font-weight: 700;
-        color: var(--bk-text);
+        text-align: right;
         overflow-wrap: anywhere;
     }
 
     .bk-note {
-        margin-top: 14px;
-        padding: 12px 13px;
-        border-radius: 10px;
-        background: #eef4ff;
-        color: #3f5a8a;
+        margin-top: 15px;
+        padding: 12px;
+        border: 1px solid #dce5ed;
+        border-radius: 9px;
+        background: #f4f7fa;
+        color: #65788a;
         font-size: 11px;
         line-height: 1.7;
     }
 
     .bk-foot {
         margin: 22px 0 0;
-        text-align: center;
+        color: #9aa2aa;
         font-size: 11px;
-        color: #97a5bd;
+        text-align: center;
     }
 
     @keyframes bkUp {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @media (max-width: 1080px) {
@@ -1039,31 +1102,77 @@
     }
 
     @media (max-width: 700px) {
-        .bk-head h1 { font-size: 22px; }
+        .bk-head {
+            align-items: stretch;
+        }
 
-        .bk-card { padding: 16px 14px; }
+        .bk-head h1 {
+            font-size: 23px;
+        }
+
+        .bk-head > a {
+            width: 100%;
+        }
+
+        .bk-card {
+            padding: 16px 14px;
+            border-radius: 12px;
+        }
 
         .bk-grid {
             grid-template-columns: minmax(0, 1fr);
             gap: 15px;
         }
 
-        .bk-span { grid-column: auto; }
+        .bk-span {
+            grid-column: auto;
+        }
 
         .bk-cat-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        .bk-actions { flex-direction: column-reverse; }
+        .bk-mek-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
 
-        .bk-actions .bk-btn { width: 100%; }
+        .bk-actions {
+            flex-direction: column-reverse;
+        }
 
-        .bk-head > a { width: 100%; }
+        .bk-actions .bk-btn {
+            width: 100%;
+        }
+
+        .bk-summary {
+            padding: 16px;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .bk-cat {
+            gap: 7px;
+            padding: 9px 7px;
+        }
+
+        .bk-cat-label {
+            font-size: 11px;
+        }
+
+        .bk-summary dl > div {
+            grid-template-columns: minmax(65px, .8fr) minmax(0, 1.2fr);
+            gap: 8px;
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .bk-card { animation: none; }
-        .bk-page * { transition-duration: .01ms !important; }
+        .bk-card {
+            animation: none;
+        }
+
+        .bk-page * {
+            transition-duration: .01ms !important;
+        }
     }
 </style>
 @endpush
@@ -1084,34 +1193,48 @@
 
     const bayarInput = $('metode_pembayaran');
     const errBayar = $('errBayar');
+    const form = $('bookingForm');
+
+    if (!form || !bayarInput) {
+        return;
+    }
 
     function teks(el, nilai) {
-        el.textContent = nilai && nilai.trim() ? nilai.trim() : '-';
+        if (!el) return;
+        el.textContent = nilai && String(nilai).trim()
+            ? String(nilai).trim()
+            : '-';
     }
 
     function labelWaktu() {
-        if (!jam.value) {
-            ket.textContent = '';
+        if (!jam || !ket || !jam.value) {
+            if (ket) ket.textContent = '';
             return '';
         }
 
         const j = Number(jam.value.split(':')[0]);
-        const waktu = j < 11 ? 'Pagi' : j < 15 ? 'Siang' : j < 18 ? 'Sore' : 'Malam';
+        const waktu = j < 11
+            ? 'Pagi'
+            : j < 15
+                ? 'Siang'
+                : j < 18
+                    ? 'Sore'
+                    : 'Malam';
 
         ket.textContent = waktu;
         return waktu;
     }
 
     function ringkasan() {
-        teks($('sumNama'), nama.value);
-        teks($('sumHp'), hp.value);
-        teks($('sumMotor'), motor.value);
-        teks($('sumPlat'), plat.value.toUpperCase());
-        teks($('sumServis'), servis.value);
+        teks($('sumNama'), nama?.value);
+        teks($('sumHp'), hp?.value);
+        teks($('sumMotor'), motor?.value);
+        teks($('sumPlat'), plat?.value.toUpperCase());
+        teks($('sumServis'), servis?.value);
 
         let jadwal = '-';
 
-        if (tgl.value) {
+        if (tgl?.value) {
             const tanggal = new Date(tgl.value + 'T00:00:00');
 
             jadwal = tanggal.toLocaleDateString('id-ID', {
@@ -1120,32 +1243,45 @@
                 year: 'numeric'
             });
 
-            if (jam.value) {
+            if (jam?.value) {
                 jadwal += ', ' + jam.value;
             }
-        } else if (jam.value) {
+        } else if (jam?.value) {
             jadwal = jam.value;
         }
 
-        $('sumJadwal').textContent = jadwal;
-        $('sumBayar').textContent = bayarInput.dataset.label || '-';
+        teks($('sumJadwal'), jadwal);
+        teks($('sumBayar'), bayarInput.dataset.label || '-');
 
-        const mekanik = document.querySelector('input[name="mechanic_id"]:checked');
+        const mekanik = document.querySelector(
+            'input[name="mechanic_id"]:checked'
+        );
 
-        $('sumMekanik').textContent = mekanik
-            ? mekanik.dataset.label
-            : 'Ditentukan admin';
+        teks(
+            $('sumMekanik'),
+            mekanik?.dataset.label || 'Ditentukan admin'
+        );
     }
 
-    hp.addEventListener('input', function () {
-        hp.value = hp.value.replace(/[^0-9+\-\s]/g, '');
-    });
+    if (hp) {
+        hp.addEventListener('input', function () {
+            hp.value = hp.value.replace(/[^0-9+\-\s]/g, '');
+            ringkasan();
+        });
+    }
 
-    plat.addEventListener('input', function () {
-        const posisi = plat.selectionStart;
-        plat.value = plat.value.toUpperCase();
-        plat.setSelectionRange(posisi, posisi);
-    });
+    if (plat) {
+        plat.addEventListener('input', function () {
+            const posisi = plat.selectionStart;
+            plat.value = plat.value.toUpperCase();
+
+            if (posisi !== null) {
+                plat.setSelectionRange(posisi, posisi);
+            }
+
+            ringkasan();
+        });
+    }
 
     document.querySelectorAll('.bk-chip').forEach(function (tombol) {
         tombol.addEventListener('click', function () {
@@ -1160,28 +1296,34 @@
                 ? sekarang + ', ' + saran.toLowerCase()
                 : saran;
 
-            servis.dispatchEvent(new Event('input'));
+            servis.dispatchEvent(new Event('input', { bubbles: true }));
             servis.focus();
-        });
-    });
-
-    [nama, hp, motor, plat, servis, tgl, jam].forEach(function (elemen) {
-        elemen.addEventListener('input', function () {
-            labelWaktu();
-            ringkasan();
-        });
-
-        elemen.addEventListener('change', function () {
-            labelWaktu();
             ringkasan();
         });
     });
+
+    [nama, hp, motor, plat, servis, tgl, jam]
+        .filter(Boolean)
+        .forEach(function (elemen) {
+            elemen.addEventListener('input', function () {
+                labelWaktu();
+                ringkasan();
+            });
+
+            elemen.addEventListener('change', function () {
+                labelWaktu();
+                ringkasan();
+            });
+        });
 
     function setBayar(nilai, label) {
         bayarInput.value = nilai;
         bayarInput.dataset.label = label;
 
-        errBayar.classList.add('is-hidden');
+        if (errBayar) {
+            errBayar.classList.add('is-hidden');
+        }
+
         ringkasan();
     }
 
@@ -1203,14 +1345,20 @@
                     opsi.classList.remove('is-active');
                 });
 
-                setBayar(tombol.dataset.nilai, tombol.dataset.label);
+                setBayar(
+                    tombol.dataset.nilai,
+                    tombol.dataset.label
+                );
             } else {
                 const opsiAktif = document.querySelector(
                     '.bk-sub[data-sub="' + tombol.dataset.kat + '"] .bk-opt.is-active'
                 );
 
                 if (opsiAktif) {
-                    setBayar(opsiAktif.dataset.nilai, opsiAktif.dataset.label);
+                    setBayar(
+                        opsiAktif.dataset.nilai,
+                        opsiAktif.dataset.label
+                    );
                 } else {
                     bayarInput.value = '';
                     bayarInput.dataset.label = '';
@@ -1247,7 +1395,9 @@
             label = nilai;
         } else if (nilai === 'QRIS') {
             label = 'QRIS';
-        } else if (['OVO', 'GoPay', 'DANA', 'ShopeePay', 'LinkAja'].includes(nilai)) {
+        } else if (
+            ['OVO', 'GoPay', 'DANA', 'ShopeePay', 'LinkAja'].includes(nilai)
+        ) {
             label = nilai;
         } else if (nilai) {
             label = 'Tunai (bayar di kasir)';
@@ -1260,24 +1410,28 @@
         }
     })();
 
-    $('bookingForm').addEventListener('submit', function (event) {
+    form.addEventListener('submit', function (event) {
         if (!bayarInput.value) {
             event.preventDefault();
 
-            errBayar.classList.remove('is-hidden');
-            errBayar.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+            if (errBayar) {
+                errBayar.classList.remove('is-hidden');
+                errBayar.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
 
             return;
         }
 
         const tombol = $('btnKirim');
 
-        tombol.disabled = true;
-        tombol.style.opacity = '.75';
-        tombol.textContent = 'Menyimpan...';
+        if (tombol) {
+            tombol.disabled = true;
+            tombol.style.opacity = '.75';
+            tombol.textContent = 'Menyimpan...';
+        }
     });
 
     labelWaktu();

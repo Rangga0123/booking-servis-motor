@@ -29,7 +29,7 @@
         button, input, select { font: inherit; }
         button { cursor: pointer; }
 
-        /* ================= SIDEBAR ================= */
+        /* SIDEBAR */
         .sidebar {
             position: fixed;
             inset: 0 auto 0 0;
@@ -77,12 +77,12 @@
             box-shadow: 0 7px 22px #305fd059;
         }
 
-        /* Submenu dropdown */
         .menu-link.has-sub {
             border: 0;
             background: transparent;
             text-align: left;
         }
+
         .menu-link.has-sub:hover { background: #ffffff14; }
 
         .menu-arrow {
@@ -92,14 +92,20 @@
             transition: transform .25s ease;
             transform: rotate(-90deg);
         }
-        .menu-group.open .menu-arrow { transform: rotate(0deg); }
 
-        .menu-group.open > .has-sub {
-            background: #ffffff1f;
+        .menu-group.open .menu-arrow { transform: rotate(0deg); }
+        .menu-group.open > .has-sub { background: #ffffff1f; }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .3s ease;
         }
 
-        .submenu { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-        .menu-group.open .submenu { max-height: 400px; padding: 6px 0 4px; }
+        .menu-group.open .submenu {
+            max-height: 400px;
+            padding: 6px 0 4px;
+        }
 
         .submenu-link {
             display: flex;
@@ -112,15 +118,21 @@
             color: #cfd8ea;
             transition: background .2s ease;
         }
+
         .submenu-link:hover { background: #ffffff14; }
+
         .submenu-link.active {
             background: linear-gradient(90deg, #3567d9, #355dbb);
             color: white;
             font-weight: 700;
         }
 
-        /* ================= MAIN & TOPBAR ================= */
-        .main { margin-left: 278px; min-height: 100vh; transition: margin-left .3s ease; }
+        /* MAIN DAN TOPBAR */
+        .main {
+            margin-left: 278px;
+            min-height: 100vh;
+            transition: margin-left .3s ease;
+        }
 
         .topbar {
             height: 72px;
@@ -148,9 +160,10 @@
             justify-content: center;
             transition: background .2s ease;
         }
-        .mobile-menu { display: none; background: #f3f6fa; }
-        .mobile-menu:hover, .desktop-menu:hover { background: #eaf0fa; }
 
+        .mobile-menu { display: none; background: #f3f6fa; }
+
+        .mobile-menu:hover, .desktop-menu:hover { background: #eaf0fa; }
         .topbar-spacer { flex: 1; }
         .profile-wrap { position: relative; }
 
@@ -165,6 +178,7 @@
             text-align: left;
             transition: background .2s ease;
         }
+
         .profile-trigger:hover,
         .profile-trigger[aria-expanded="true"] { background: #f2f6fc; }
 
@@ -185,7 +199,13 @@
         .profile-text strong { display: block; font-size: 14px; color: #182543; }
         .profile-text small { display: block; margin-top: 4px; font-size: 12px; color: #50658a; }
 
-        .chevron { width: 15px; height: 15px; color: #7182a3; transition: transform .2s ease; }
+        .chevron {
+            width: 15px;
+            height: 15px;
+            color: #7182a3;
+            transition: transform .2s ease;
+        }
+
         .profile-trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
 
         .profile-dropdown {
@@ -201,15 +221,25 @@
             box-shadow: 0 16px 40px #17254120;
             z-index: 1200;
         }
+
         .profile-dropdown.show { display: block; animation: dropIn .2s ease both; }
 
         @keyframes dropIn {
             from { opacity: 0; transform: translateY(-7px) scale(.98); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .dropdown-heading { padding: 10px 11px 12px; border-bottom: 1px solid #edf1f7; margin-bottom: 5px; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dropdown-heading {
+            padding: 10px 11px 12px;
+            border-bottom: 1px solid #edf1f7;
+            margin-bottom: 5px;
+        }
+
         .dropdown-heading strong { display: block; font-size: 13px; }
         .dropdown-heading small { display: block; color: #8290a8; font-size: 12px; margin-top: 4px; }
 
@@ -223,9 +253,9 @@
             color: #344765;
             transition: background .18s ease;
         }
+
         .dropdown-link:hover { background: #f2f6fc; }
         .dropdown-link svg { width: 17px; height: 17px; color: #637795; flex-shrink: 0; }
-
         .dropdown-divider { height: 1px; background: #edf1f7; margin: 5px 0; }
 
         .dropdown-link.logout {
@@ -235,10 +265,15 @@
             text-align: left;
             color: #dc4353;
         }
+
         .dropdown-link.logout:hover { background: #fff0f2; }
 
-        /* ================= KONTEN ================= */
-        .content { padding: 26px 28px 34px; max-width: 1600px; margin: auto; }
+        /* KONTEN */
+        .content {
+            padding: 26px 28px 34px;
+            max-width: 1600px;
+            margin: auto;
+        }
 
         .page-heading {
             display: flex;
@@ -253,7 +288,7 @@
         .page-title { font-size: 28px; font-weight: 800; color: var(--text); }
         .page-description { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
 
-        /* Tombol */
+        /* TOMBOL */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -266,6 +301,7 @@
             font-weight: 700;
             transition: background .2s ease, box-shadow .2s ease;
         }
+
         .btn-primary { background: var(--blue); color: white; box-shadow: 0 5px 14px #3264d82b; }
         .btn-primary:hover { background: #244fb5; }
         .btn-dark { background: var(--text); color: white; }
@@ -273,21 +309,25 @@
         .btn-light { border: 1px solid var(--border); background: white; color: #536682; }
         .btn-light:hover { background: #f5f8fc; }
 
-        /* Tombol aksi tabel (solid, lebih kontras) */
         .btn-sm { padding: 8px 14px; font-size: 12px; border-radius: 8px; }
         .btn-edit { background: #f5a524; color: #3b2600; }
         .btn-edit:hover { background: #e19410; }
         .btn-delete { background: #e5384f; color: white; }
         .btn-delete:hover { background: #c92a40; }
 
-        /* Notifikasi */
+        /* NOTIFIKASI */
         .notice { padding: 14px 16px; border-radius: 11px; margin-bottom: 18px; font-size: 13px; line-height: 1.7; }
         .notice-success { background: #e8f8ef; color: #137849; border: 1px solid #bcebd0; }
         .notice-error { background: #fff0f2; color: #bd263e; border: 1px solid #ffd1d8; }
         .notice ul { margin-top: 6px; padding-left: 20px; }
 
-        /* Kartu statistik */
-        .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+        /* STATISTIK */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
 
         .stat-card {
             background: white;
@@ -299,13 +339,23 @@
             align-items: center;
             gap: 16px;
         }
-        .stat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
         .stat-blue { background: #e7efff; color: var(--blue); }
         .stat-green { background: #def6ed; color: #19a875; }
         .stat-label { font-size: 13px; color: var(--muted); font-weight: 700; }
         .stat-number { margin-top: 6px; font-size: 30px; font-weight: 800; color: var(--text); }
 
-        /* Panel */
+        /* PANEL */
         .panel {
             background: white;
             border: 1px solid var(--border);
@@ -329,18 +379,22 @@
             font-size: 14px;
             transition: border .2s ease, box-shadow .2s ease;
         }
-        .search-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px #3264d81a; background: white; }
+
+        .search-input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px #3264d81a;
+            background: white;
+        }
 
         .panel-header { padding: 18px 22px; border-bottom: 1px solid #e5ebf3; }
         .panel-title { font-size: 17px; font-weight: 800; }
         .panel-subtitle { margin-top: 5px; font-size: 13px; color: #8392aa; }
 
-        /* Tabel */
+        /* TABEL */
         .table-wrapper { width: 100%; overflow-x: auto; }
-
         table { width: 100%; border-collapse: collapse; text-align: left; min-width: 780px; }
-
         thead { background: #eaf0fa; }
+
         th {
             padding: 15px 20px;
             font-size: 13px;
@@ -361,9 +415,7 @@
         tbody tr:nth-child(even) { background: #f8fafd; }
         tbody tr:hover { background: #eef4ff; }
         tbody tr:last-child td { border-bottom: 0; }
-
         .col-no { width: 70px; text-align: center; }
-
         .mechanic-name { font-size: 15px; font-weight: 800; color: #1b2a47; }
         .mechanic-id { font-size: 12px; color: #94a1b6; margin-top: 5px; }
 
@@ -377,12 +429,11 @@
             font-weight: 700;
             white-space: nowrap;
         }
+
         .status-active { color: #0f7a4d; background: #d6f5e5; }
         .status-inactive { color: #5f6c82; background: #e6eaf1; }
-
         .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
         .delete-form { display: inline-flex; }
-
         .empty-state { padding: 44px 18px; text-align: center; color: #8190a8; font-size: 14px; }
 
         .table-footer {
@@ -393,10 +444,17 @@
             background: #fcfdff;
         }
 
-        /* Form (create / edit) */
+        /* FORM */
         .form-card { max-width: 720px; padding: 28px; }
         .form-grid { display: grid; gap: 20px; margin-top: 24px; }
-        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; color: #1b2a47; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1b2a47;
+        }
 
         .form-control {
             width: 100%;
@@ -409,12 +467,18 @@
             font-size: 14px;
             transition: border .2s ease, box-shadow .2s ease;
         }
-        .form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px #3264d81a; background: white; }
+
+        .form-control:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px #3264d81a;
+            background: white;
+        }
 
         .form-actions { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 6px; }
 
-        /* Overlay & responsif */
+        /* OVERLAY DAN RESPONSIF */
         .overlay { display: none; }
+
         .overlay.show {
             display: block;
             position: fixed;
@@ -467,8 +531,14 @@
 @php
     $namaAdmin = auth()->user()->name ?? 'Admin';
 
-    // Grup "Data Master" otomatis terbuka jika salah satu halaman anaknya sedang aktif
-    $masterAktif = request()->routeIs('admin.mekanik.*') || request()->routeIs('admin.informasi-bengkel.*');
+    // Data Master terbuka saat salah satu halaman di dalamnya aktif
+    $masterAktif = request()->routeIs('admin.mekanik.*')
+        || request()->routeIs('admin.informasi-bengkel.*')
+        || request()->routeIs('admin.layanan.*');
+
+    // Pelanggan terbuka saat daftar pesanan atau jadwal servis aktif
+    $pesananAktif = request()->routeIs('admin.pelanggan-pesanan*')
+        || request()->routeIs('admin.jadwal-servis*');
 @endphp
 
 <div id="overlay" class="overlay" onclick="tutupSidebarMobile()"></div>
@@ -482,6 +552,7 @@
     </div>
 
     <nav class="sidebar-menu">
+        {{-- DASHBOARD --}}
         <a href="{{ route('admin.dashboard') }}"
            class="menu-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
            onclick="tutupSidebarMobile()">
@@ -491,16 +562,35 @@
             Dashboard
         </a>
 
-        <a href="{{ route('admin.pelanggan-pesanan') }}"
-           class="menu-link {{ request()->routeIs('admin.pelanggan-pesanan*') ? 'active' : '' }}"
-           onclick="tutupSidebarMobile()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
-            Pelanggan &amp; Pesanan
-        </a>
+        {{-- PELANGGAN DAN PESANAN --}}
+        <div class="menu-group {{ $pesananAktif ? 'open' : '' }}">
+            <button type="button" class="menu-link has-sub" onclick="toggleSubmenu(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+                Pelanggan
+                <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m6 9 6 6 6-6"/>
+                </svg>
+            </button>
 
-        {{-- ===== Submenu: Data Master ===== --}}
+            <div class="submenu">
+                <a href="{{ route('admin.pelanggan-pesanan') }}"
+                   class="submenu-link {{ request()->routeIs('admin.pelanggan-pesanan*') ? 'active' : '' }}"
+                   onclick="tutupSidebarMobile()">
+                    Daftar Pesanan
+                </a>
+
+                <a href="{{ route('admin.jadwal-servis') }}"
+                   class="submenu-link {{ request()->routeIs('admin.jadwal-servis*') ? 'active' : '' }}"
+                   onclick="tutupSidebarMobile()">
+                    Jadwal Servis
+                </a>
+            </div>
+        </div>
+
+        {{-- DATA MASTER --}}
         <div class="menu-group {{ $masterAktif ? 'open' : '' }}">
             <button type="button" class="menu-link has-sub" onclick="toggleSubmenu(this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -519,22 +609,34 @@
                    onclick="tutupSidebarMobile()">
                     Data Mekanik
                 </a>
+
                 <a href="{{ route('admin.informasi-bengkel.index') }}"
                    class="submenu-link {{ request()->routeIs('admin.informasi-bengkel.*') ? 'active' : '' }}"
                    onclick="tutupSidebarMobile()">
                     Informasi Bengkel
                 </a>
-                {{-- Tambah menu master baru cukup di sini --}}
+
+                {{-- MENU BARU: KELOLA LAYANAN DAN HARGA --}}
+                
+                <a href="{{ route('admin.layanan.index') }}"
+                class="submenu-link {{ request()->routeIs('admin.layanan.*') ? 'active' : '' }}"
+                onclick="tutupSidebarMobile()">
+                    Kelola Layanan &amp; Harga
+                </a>
+
             </div>
         </div>
 
+        {{-- PEMBAYARAN --}}
         <a href="#" class="menu-link" onclick="return menuBelumTersedia(event, 'Pembayaran')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="M3 10h18M7 15h4"/>
             </svg>
             Pembayaran
         </a>
 
+        {{-- LAPORAN --}}
         <a href="#" class="menu-link" onclick="return menuBelumTersedia(event, 'Laporan')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-9"/>
@@ -562,7 +664,8 @@
 
         <div class="profile-wrap" id="profileWrap">
             <button type="button" class="profile-trigger" id="profileTrigger"
-                    aria-expanded="false" aria-controls="profileDropdown" onclick="toggleProfileDropdown()">
+                    aria-expanded="false" aria-controls="profileDropdown"
+                    onclick="toggleProfileDropdown()">
                 <div class="avatar">
                     @if(auth()->user()->profile_photo_url)
                         <img src="{{ auth()->user()->profile_photo_url }}" alt="Foto profil"
@@ -590,7 +693,8 @@
 
                 <a href="{{ route('profile.edit') }}" class="dropdown-link">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
                     </svg>
                     Profil Akun
                 </a>
@@ -598,7 +702,8 @@
                 <a href="{{ route('profile.edit') }}#profile-photo" class="dropdown-link">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="16" rx="2"/>
-                        <circle cx="9" cy="10" r="2"/><path d="m21 15-5-5L5 20"/>
+                        <circle cx="9" cy="10" r="2"/>
+                        <path d="m21 15-5-5L5 20"/>
                     </svg>
                     Ganti Foto Profil
                 </a>
@@ -686,13 +791,16 @@
     function closeProfileDropdown() {
         const dropdown = document.getElementById('profileDropdown');
         const trigger = document.getElementById('profileTrigger');
+
         if (dropdown) dropdown.classList.remove('show');
         if (trigger) trigger.setAttribute('aria-expanded', 'false');
     }
 
     document.addEventListener('click', function (event) {
         const wrap = document.getElementById('profileWrap');
-        if (wrap && !wrap.contains(event.target)) closeProfileDropdown();
+        if (wrap && !wrap.contains(event.target)) {
+            closeProfileDropdown();
+        }
     });
 
     document.addEventListener('keydown', function (event) {

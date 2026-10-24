@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Mechanic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -63,34 +64,23 @@ class AdminController extends Controller
         );
     }
 
-    public function pelangganPesanan()
+    // DAFTAR PESANAN (pagination + filter status di server)
+    public function pelangganPesanan(Request $request)
     {
-        $bookings = Booking::with(['user', 'mechanic'])
-            ->latest()
-            ->get();
+        $query = Booking::with(['user', 'mechanic'])->latest();
 
-        $mechanics = Mechanic::all();
+        if ($request->filled('status')) {
+            $status = strtolower($request->status);
 
-        $totalBooking = $bookings->count();
-
-        $totalMenunggu = $bookings->filter(function ($booking) {
-            return in_array(
-                strtolower($booking->status ?? ''),
-                ['menunggu', 'pending']
+            $query->whereIn(
+                DB::raw('LOWER(status)'),
+                $status === 'menunggu' ? ['menunggu', 'pending'] : [$status]
             );
-        })->count();
+        }
 
-        $totalSelesai = $bookings->filter(function ($booking) {
-            return strtolower($booking->status ?? '') === 'selesai';
-        })->count();
+        $bookings = $query->paginate(10)->withQueryString();
 
-        return view('admin.pelanggan-pesanan', compact(
-            'bookings',
-            'mechanics',
-            'totalBooking',
-            'totalMenunggu',
-            'totalSelesai'
-        ));
+        return view('admin.pelanggan-pesanan', compact('bookings'));
     }
 
     public function indexMekanik()

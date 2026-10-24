@@ -9,12 +9,19 @@ class Service extends Model
 {
     use HasFactory;
 
-    // Kolom yang boleh diisi (ditambah/diedit)
-    protected $fillable = ['nama_servis', 'deskripsi', 'harga', 'estimasi_waktu'];
+    protected $table = 'services';
 
-    // Relasi: 1 jenis servis bisa dipesan berkali-kali (hasMany)
+    protected $fillable = [
+        'nama_servis',
+        'deskripsi',
+        'harga',
+        'estimasi_waktu',
+        'harga_barang',
+        'biaya_jasa',
+    ];
+
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Booking::class, 'service_id');
     }
 }

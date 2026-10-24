@@ -2,194 +2,265 @@
 
 @section('title', 'Kelola Informasi Bengkel')
 
-@push('styles')
+@section('content')
+@php
+    $info = $informasiBengkel ?? null;
+    $daftarPengumuman = $pengumuman ?? collect();
+@endphp
+
 <style>
-    .info-page { max-width: 960px; color: var(--text); font-size: 14px; }
+    .info-page {
+        display: grid;
+        gap: 22px;
+        color: var(--text, #172033);
+    }
 
-    /* Notifikasi */
-    .info-page .alert { padding: 14px 16px; margin-bottom: 18px; border-radius: 11px; font-size: 13px; line-height: 1.7; }
-    .info-page .alert.success { color: #137849; background: #e8f8ef; border: 1px solid #bcebd0; }
-    .info-page .alert.error { color: #bd263e; background: #fff0f2; border: 1px solid #ffd1d8; }
+    .info-heading h1 {
+        margin: 0 0 7px;
+        font-size: 26px;
+        font-weight: 800;
+    }
 
-    /* Judul tiap bagian */
-    .info-page .section-heading { margin: 30px 0 14px; }
-    .info-page .section-heading:first-of-type { margin-top: 0; }
-    .info-page .section-heading h3 { font-size: 18px; font-weight: 800; color: var(--text); }
-    .info-page .section-heading p { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .info-heading p {
+        margin: 0;
+        color: var(--muted, #718096);
+        line-height: 1.7;
+    }
 
-    /* Kartu */
-    .info-page .card,
-    .info-page .announcement {
+    .info-card {
         padding: 24px;
-        margin-bottom: 18px;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: white;
-        box-shadow: 0 5px 16px #273d630b;
+        background: #fff;
+        border: 1px solid var(--border, #e5eaf1);
+        border-radius: 18px;
+        box-shadow: 0 5px 20px rgba(15, 23, 42, .04);
     }
 
-    .info-page .card-title {
+    .info-card h2 {
+        margin: 0 0 7px;
+        font-size: 19px;
+        font-weight: 800;
+    }
+
+    .info-description {
+        margin: 0 0 22px;
+        color: var(--muted, #718096);
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .info-field {
         display: flex;
-        align-items: center;
-        gap: 14px;
-        padding-bottom: 18px;
-        margin-bottom: 22px;
-        border-bottom: 1px solid #e6edf7;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
     }
-    .info-page .symbol {
-        width: 44px; height: 44px;
-        display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 12px;
-        background: #e7efff;
-        color: var(--blue);
-        font-size: 20px;
+
+    .info-field.full {
+        grid-column: 1 / -1;
     }
-    .info-page .card-title h4 { font-size: 16px; font-weight: 800; }
-    .info-page .card-title p { margin-top: 5px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-    /* Form */
-    .info-page .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-    .info-page .field { min-width: 0; }
-    .info-page .field.full { grid-column: 1 / -1; }
-    .info-page label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; color: #1b2a47; }
+    .info-field label {
+        font-size: 13px;
+        font-weight: 700;
+    }
 
-    .info-page input:not([type="checkbox"]):not([type="hidden"]):not([type="file"]),
-    .info-page textarea,
-    .info-page select {
+    .info-field input,
+    .info-field select,
+    .info-field textarea {
         width: 100%;
         padding: 12px 14px;
-        border: 1px solid #d8e1ed;
+        color: #172033;
+        background: #fff;
+        border: 1px solid #dce3ed;
         border-radius: 10px;
-        background: #fbfcfe;
-        color: var(--text);
-        font-family: inherit;
-        font-size: 14px;
         outline: none;
-        transition: border-color .2s, box-shadow .2s, background .2s;
+        font: inherit;
+        font-size: 14px;
     }
-    .info-page input[type="file"] {
-        width: 100%;
-        padding: 10px;
-        border: 1px dashed #b9c8de;
-        border-radius: 10px;
-        background: #f7faff;
-        font-size: 13px;
-        color: #465b7c;
-    }
-    .info-page input[type="file"]::file-selector-button {
-        margin-right: 12px;
-        padding: 8px 14px;
-        border: 0;
-        border-radius: 8px;
-        background: var(--blue);
-        color: white;
-        font-weight: 700;
-        font-size: 13px;
-        cursor: pointer;
-    }
-    .info-page input:focus,
-    .info-page textarea:focus,
-    .info-page select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px #3264d81a; background: white; }
-    .info-page textarea { min-height: 110px; resize: vertical; line-height: 1.7; }
 
-    .info-page .hint { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .info-field input:focus,
+    .info-field select:focus,
+    .info-field textarea:focus {
+        border-color: #3977ed;
+        box-shadow: 0 0 0 3px rgba(57, 119, 237, .12);
+    }
 
-    .info-page .photo-preview {
-        display: block;
+    .info-field textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .info-help {
+        color: #718096;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .info-photo {
         width: 100%;
-        max-width: 300px;
-        height: 180px;
+        max-width: 340px;
+        aspect-ratio: 16 / 9;
         object-fit: cover;
         border-radius: 12px;
-        border: 1px solid var(--border);
-        margin-bottom: 12px;
-        background: #edf2f8;
+        border: 1px solid #e5eaf1;
+        background: #f1f5f9;
     }
 
-    /* Tombol (menimpa ukuran .btn bawaan layout agar sesuai halaman ini) */
-    .info-page .btn { padding: 12px 18px; font-size: 13px; cursor: pointer; }
-    .info-page .btn:active { transform: scale(.98); }
-    .info-page .btn-light { color: #536682; background: white; border: 1px solid var(--border); }
-    .info-page .btn-light:hover { background: #f5f8fc; }
-    .info-page .btn-danger { color: white; background: #e5384f; }
-    .info-page .btn-danger:hover { background: #c92a40; }
-
-    .info-page .form-actions {
+    .info-actions {
         display: flex;
-        justify-content: flex-end;
         flex-wrap: wrap;
         gap: 10px;
-        padding-top: 20px;
-        margin-top: 24px;
-        border-top: 1px solid #e8edf5;
+        margin-top: 22px;
     }
 
-    .info-page .check-row {
-        display: flex; align-items: center; gap: 10px;
-        margin-top: 18px;
-        font-size: 14px; font-weight: 600; cursor: pointer;
+    .info-btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 11px 17px;
+        border: 0;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 750;
+        text-decoration: none;
+        cursor: pointer;
     }
-    .info-page .check-row input { width: 17px; height: 17px; accent-color: var(--blue); }
 
-    /* Pengumuman */
-    .info-page .announcement-head {
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 12px;
-        padding-bottom: 16px; margin-bottom: 18px;
-        border-bottom: 1px solid #e6edf7;
+    .info-btn-primary {
+        background: #2563eb;
+        color: #fff;
     }
-    .info-page .announcement-head h4 { font-size: 16px; font-weight: 800; }
 
-    .info-page .status { display: inline-block; padding: 6px 12px; border-radius: 30px; font-size: 12px; font-weight: 700; }
-    .info-page .status.on { color: #0f7a4d; background: #d6f5e5; }
-    .info-page .status.off { color: #5f6c82; background: #e6eaf1; }
-
-    .info-page .announcement-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-
-    .info-page .empty {
-        padding: 40px 20px;
-        border: 1px dashed #cbd7e8;
-        border-radius: 14px;
-        background: white;
-        color: var(--muted);
-        text-align: center;
-        font-size: 14px;
-        line-height: 1.8;
+    .info-btn-danger {
+        background: #fee2e2;
+        color: #b91c1c;
     }
-    .info-page .empty-icon { display: block; margin-bottom: 8px; font-size: 30px; }
-    .info-page .footer-note { padding: 22px 0 0; color: var(--muted); text-align: center; font-size: 12px; }
+
+    .info-alert {
+        padding: 13px 16px;
+        border-radius: 11px;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .info-alert-success {
+        color: #166534;
+        background: #dcfce7;
+    }
+
+    .info-alert-error {
+        color: #991b1b;
+        background: #fee2e2;
+    }
+
+    .announcement-item {
+        padding: 18px 0;
+        border-top: 1px solid #e5eaf1;
+    }
+
+    .announcement-item:first-of-type {
+        border-top: 0;
+    }
+
+    .announcement-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .announcement-item h3 {
+        margin: 0 0 7px;
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    .announcement-item p {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
+
+    .announcement-status {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .status-active {
+        color: #166534;
+        background: #dcfce7;
+    }
+
+    .status-inactive {
+        color: #92400e;
+        background: #fef3c7;
+    }
+
+    .announcement-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 13px;
+    }
+
+    .announcement-actions form {
+        margin: 0;
+    }
 
     @media (max-width: 700px) {
-        .info-page .card, .info-page .announcement { padding: 18px 15px; }
-        .info-page .form-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-        .info-page .field.full { grid-column: auto; }
-        .info-page .form-actions { flex-direction: column-reverse; }
-        .info-page .form-actions .btn,
-        .info-page .announcement-actions .btn { width: 100%; }
-        .info-page .photo-preview { max-width: 100%; }
+        .info-card {
+            padding: 17px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .info-field.full {
+            grid-column: auto;
+        }
+
+        .info-heading h1 {
+            font-size: 22px;
+        }
+
+        .announcement-top {
+            flex-direction: column;
+        }
     }
 </style>
-@endpush
-
-@section('content')
-    <section class="page-heading">
-        <div>
-            <div class="breadcrumb">Admin / Informasi Bengkel</div>
-            <h1 class="page-title">Informasi Bengkel Royal Motor</h1>
-            <p class="page-description">Perbarui profil, jam operasional, foto, dan pengumuman bengkel dari satu halaman.</p>
-        </div>
-    </section>
 
 <div class="info-page">
+    <header class="info-heading">
+        <h1>Kelola Informasi Bengkel</h1>
+        <p>
+            Atur informasi Bengkel Royal Motor yang ditampilkan kepada pelanggan,
+            termasuk jam operasional, foto bengkel, dan pengumuman.
+        </p>
+    </header>
 
     @if (session('success'))
-        <div class="alert success">✓ {{ session('success') }}</div>
+        <div class="info-alert info-alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
     @if ($errors->any())
-        <div class="alert error">
-            <strong>Data belum berhasil disimpan.</strong>
-            <ul style="padding-left:20px; margin-top:8px; line-height:1.8">
+        <div class="info-alert info-alert-error">
+            <strong>Data belum berhasil disimpan:</strong>
+            <ul style="margin: 8px 0 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -197,278 +268,321 @@
         </div>
     @endif
 
-    {{-- ====================== PROFIL DAN OPERASIONAL ====================== --}}
-    <div class="section-heading">
-        <div>
-            <h3>Profil dan Operasional</h3>
-            <p>Informasi dasar yang dapat diperbarui oleh admin.</p>
-        </div>
-    </div>
+    {{-- INFORMASI UTAMA --}}
+    <section class="info-card">
+        <h2>Informasi Utama Bengkel</h2>
+        <p class="info-description">
+            Informasi ini digunakan untuk menampilkan identitas dan jam operasional
+            bengkel di dashboard pelanggan.
+        </p>
 
-    <section class="card">
-        <div class="card-title">
-            <div class="symbol">▣</div>
-            <div>
-                <h4>Informasi Utama Bengkel</h4>
-                <p>Nama, deskripsi, jadwal, dan status operasional.</p>
-            </div>
-        </div>
-
-        <form action="{{ route('admin.informasi-bengkel.update') }}" method="POST">
+        <form action="{{ route('admin.informasi-bengkel.update') }}"
+              method="POST">
             @csrf
             @method('PUT')
 
-            <div class="form-grid">
-                <div class="field full">
+            <div class="info-grid">
+                <div class="info-field full">
                     <label for="nama_bengkel">Nama Bengkel</label>
-                    <input id="nama_bengkel" name="nama_bengkel" type="text" maxlength="255"
-                        value="{{ old('nama_bengkel', $informasiBengkel->nama_bengkel) }}" required>
+                    <input
+                        type="text"
+                        id="nama_bengkel"
+                        name="nama_bengkel"
+                        value="{{ old('nama_bengkel', $info?->nama_bengkel ?? 'Bengkel Royal Motor') }}"
+                        required
+                    >
                 </div>
 
-                <div class="field full">
+                <div class="info-field full">
                     <label for="deskripsi">Deskripsi Bengkel</label>
-                    <textarea id="deskripsi" name="deskripsi">{{ old('deskripsi', $informasiBengkel->deskripsi) }}</textarea>
+                    <textarea
+                        id="deskripsi"
+                        name="deskripsi"
+                        placeholder="Ceritakan secara singkat tentang bengkel..."
+                    >{{ old('deskripsi', $info?->deskripsi) }}</textarea>
                 </div>
 
-                <div class="field full">
+                <div class="info-field">
                     <label for="hari_operasional">Hari Operasional</label>
-                    <input id="hari_operasional" name="hari_operasional" type="text" maxlength="255"
-                        value="{{ old('hari_operasional', $informasiBengkel->hari_operasional) }}"
-                        placeholder="Contoh: Senin–Minggu" required>
+                    <input
+                        type="text"
+                        id="hari_operasional"
+                        name="hari_operasional"
+                        value="{{ old('hari_operasional', $info?->hari_operasional ?? 'Senin–Minggu') }}"
+                        placeholder="Contoh: Senin–Minggu"
+                        required
+                    >
                 </div>
 
-                <div class="field">
-                    <label for="jam_buka">Jam Buka</label>
-                    <input id="jam_buka" name="jam_buka" type="time"
-                        value="{{ old('jam_buka', substr($informasiBengkel->jam_buka ?? '13:00', 0, 5)) }}" required>
-                </div>
-
-                <div class="field">
-                    <label for="jam_tutup">Jam Tutup</label>
-                    <input id="jam_tutup" name="jam_tutup" type="time"
-                        value="{{ old('jam_tutup', substr($informasiBengkel->jam_tutup ?? '22:00', 0, 5)) }}" required>
-                </div>
-
-                <div class="field full">
+                <div class="info-field">
                     <label for="status_operasional">Status Operasional</label>
                     <select id="status_operasional" name="status_operasional" required>
-                        <option value="otomatis" @selected(old('status_operasional', $informasiBengkel->status_operasional) === 'otomatis')>Otomatis berdasarkan jam</option>
-                        <option value="buka" @selected(old('status_operasional', $informasiBengkel->status_operasional) === 'buka')>Buka</option>
-                        <option value="tutup" @selected(old('status_operasional', $informasiBengkel->status_operasional) === 'tutup')>Tutup</option>
-                        <option value="libur" @selected(old('status_operasional', $informasiBengkel->status_operasional) === 'libur')>Libur</option>
+                        <option value="buka"
+                            @selected(old('status_operasional', $info?->status_operasional) === 'buka')>
+                            Buka
+                        </option>
+                        <option value="tutup"
+                            @selected(old('status_operasional', $info?->status_operasional) === 'tutup')>
+                            Tutup
+                        </option>
                     </select>
                 </div>
 
-                <div class="field full">
-                    <label for="informasi_layanan">Informasi Layanan</label>
-                    <textarea id="informasi_layanan" name="informasi_layanan"
-                        placeholder="Tuliskan informasi layanan bengkel...">{{ old('informasi_layanan', $informasiBengkel->informasi_layanan) }}</textarea>
+                <div class="info-field">
+                    <label for="jam_buka">Jam Buka</label>
+                    <input
+                        type="time"
+                        id="jam_buka"
+                        name="jam_buka"
+                        value="{{ old('jam_buka', $info?->jam_buka ?? '13:00') }}"
+                        required
+                    >
+                </div>
+
+                <div class="info-field">
+                    <label for="jam_tutup">Jam Tutup</label>
+                    <input
+                        type="time"
+                        id="jam_tutup"
+                        name="jam_tutup"
+                        value="{{ old('jam_tutup', $info?->jam_tutup ?? '22:00') }}"
+                        required
+                    >
                 </div>
             </div>
 
-            <div class="form-actions">
-                <button type="reset" class="btn btn-light">Reset Form</button>
-                <button type="submit" class="btn btn-primary">Simpan Informasi ↗</button>
+            <div class="info-actions">
+                <button type="submit" class="info-btn info-btn-primary">
+                    Simpan Informasi
+                </button>
             </div>
         </form>
     </section>
 
-    {{-- ====================== FOTO BENGKEL (UPLOAD FILE) ====================== --}}
-    <div class="section-heading">
-        <div>
-            <h3>Foto dan Informasi Tambahan</h3>
-            <p>Pilih foto dari komputer atau HP, lalu simpan. Foto otomatis tampil di dashboard pelanggan.</p>
-        </div>
-    </div>
+    {{-- FOTO BENGKEL --}}
+    <section class="info-card">
+        <h2>Foto Bengkel</h2>
+        <p class="info-description">
+            Foto pertama untuk tampilan bengkel. Foto kedua untuk aktivitas servis.
+            Foto ditampilkan di dashboard pelanggan tanpa judul atau keterangan tambahan.
+        </p>
 
-    <section class="card">
-        <div class="card-title">
-            <div class="symbol">▧</div>
-            <div>
-                <h4>Foto Bengkel</h4>
-                <p>Unggah foto bengkel dan layanan beserta keterangannya.</p>
-            </div>
-        </div>
-
-        <form action="{{ route('admin.informasi-bengkel.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.informasi-bengkel.update') }}"
+              method="POST"
+              enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            <input type="hidden" name="nama_bengkel" value="{{ $informasiBengkel->nama_bengkel }}">
-            <input type="hidden" name="deskripsi" value="{{ $informasiBengkel->deskripsi }}">
-            <input type="hidden" name="hari_operasional" value="{{ $informasiBengkel->hari_operasional }}">
-            <input type="hidden" name="jam_buka" value="{{ substr($informasiBengkel->jam_buka ?? '13:00', 0, 5) }}">
-            <input type="hidden" name="jam_tutup" value="{{ substr($informasiBengkel->jam_tutup ?? '22:00', 0, 5) }}">
-            <input type="hidden" name="status_operasional" value="{{ $informasiBengkel->status_operasional ?? 'otomatis' }}">
-            <input type="hidden" name="informasi_layanan" value="{{ $informasiBengkel->informasi_layanan }}">
+            {{-- Pertahankan data informasi utama saat form foto dikirim --}}
+            <input type="hidden" name="nama_bengkel"
+                value="{{ $info?->nama_bengkel ?? 'Bengkel Royal Motor' }}">
+            <input type="hidden" name="deskripsi"
+                value="{{ $info?->deskripsi }}">
+            <input type="hidden" name="hari_operasional"
+                value="{{ $info?->hari_operasional ?? 'Senin–Minggu' }}">
+            <input type="hidden" name="jam_buka"
+                value="{{ $info?->jam_buka ?? '13:00' }}">
+            <input type="hidden" name="jam_tutup"
+                value="{{ $info?->jam_tutup ?? '22:00' }}">
+            <input type="hidden" name="status_operasional"
+                value="{{ $info?->status_operasional ?? 'buka' }}">
 
-            <div class="form-grid">
-                <div class="field full">
-                    <label for="foto_1">Foto 1 (Profil Bengkel)</label>
-                    @if ($informasiBengkel->foto_1)
-                        <img src="{{ asset($informasiBengkel->foto_1) }}" alt="Foto 1" class="photo-preview">
+            <div class="info-grid">
+                <div class="info-field">
+                    <label for="foto_1">Foto 1 — Tampilan Bengkel</label>
+
+                    @if ($info?->foto_1)
+                        <img
+                            class="info-photo"
+                            src="{{ asset('storage/' . $info->foto_1) }}"
+                            alt="Foto bengkel"
+                        >
                     @endif
-                    <input id="foto_1" name="foto_1" type="file" accept="image/jpeg,image/png,image/webp">
-                    <span class="hint">JPG/PNG/WebP, maksimal 2 MB. Kosongkan jika tidak ingin mengganti foto.</span>
+
+                    <input
+                        type="file"
+                        id="foto_1"
+                        name="foto_1"
+                        accept="image/*"
+                    >
+                    <span class="info-help">
+                        Pilih foto baru jika ingin mengganti foto pertama.
+                    </span>
                 </div>
 
-                <div class="field full">
-                    <label for="deskripsi_foto_1">Keterangan Foto 1</label>
-                    <textarea id="deskripsi_foto_1" name="deskripsi_foto_1">{{ old('deskripsi_foto_1', $informasiBengkel->deskripsi_foto_1) }}</textarea>
-                </div>
+                <div class="info-field">
+                    <label for="foto_2">Foto 2 — Aktivitas Servis</label>
 
-                <div class="field full">
-                    <label for="foto_2">Foto 2 (Informasi Layanan)</label>
-                    @if ($informasiBengkel->foto_2)
-                        <img src="{{ asset($informasiBengkel->foto_2) }}" alt="Foto 2" class="photo-preview">
+                    @if ($info?->foto_2)
+                        <img
+                            class="info-photo"
+                            src="{{ asset('storage/' . $info->foto_2) }}"
+                            alt="Aktivitas servis bengkel"
+                        >
                     @endif
-                    <input id="foto_2" name="foto_2" type="file" accept="image/jpeg,image/png,image/webp">
-                    <span class="hint">JPG/PNG/WebP, maksimal 2 MB. Kosongkan jika tidak ingin mengganti foto.</span>
-                </div>
 
-                <div class="field full">
-                    <label for="deskripsi_foto_2">Keterangan Foto 2</label>
-                    <textarea id="deskripsi_foto_2" name="deskripsi_foto_2">{{ old('deskripsi_foto_2', $informasiBengkel->deskripsi_foto_2) }}</textarea>
+                    <input
+                        type="file"
+                        id="foto_2"
+                        name="foto_2"
+                        accept="image/*"
+                    >
+                    <span class="info-help">
+                        Pilih foto aktivitas montir atau proses servis.
+                    </span>
                 </div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Simpan Foto dan Keterangan ↗</button>
+            <div class="info-actions">
+                <button type="submit" class="info-btn info-btn-primary">
+                    Simpan Foto
+                </button>
             </div>
         </form>
     </section>
 
-    {{-- ====================== TAMBAH PENGUMUMAN ====================== --}}
-    <div class="section-heading">
-        <div>
-            <h3>Kelola Pengumuman</h3>
-            <p>Buat pengumuman yang bisa ditampilkan kepada pelanggan.</p>
-        </div>
-    </div>
-
-    <section class="card">
-        <div class="card-title">
-            <div class="symbol">▤</div>
-            <div>
-                <h4>Tambah Pengumuman</h4>
-                <p>Pengumuman dapat diaktifkan atau dinonaktifkan.</p>
-            </div>
-        </div>
+    {{-- TAMBAH PENGUMUMAN --}}
+    <section class="info-card">
+        <h2>Tambah Pengumuman</h2>
+        <p class="info-description">
+            Buat pengumuman untuk pelanggan. Pengumuman aktif akan ditampilkan
+            di bagian Pengumuman Terbaru pada dashboard pelanggan.
+        </p>
 
         <form action="{{ route('admin.pengumuman.store') }}" method="POST">
             @csrf
 
-            <div class="form-grid">
-                <div class="field full">
-                    <label for="judul_baru">Judul Pengumuman</label>
-                    <input id="judul_baru" name="judul" type="text" maxlength="255"
+            <div class="info-grid">
+                <div class="info-field full">
+                    <label for="judul">Judul Pengumuman</label>
+                    <input
+                        type="text"
+                        id="judul"
+                        name="judul"
                         value="{{ old('judul') }}"
-                        placeholder="Contoh: Perubahan Jam Operasional" required>
+                        maxlength="255"
+                        required
+                    >
                 </div>
 
-                <div class="field full">
-                    <label for="isi_baru">Isi Pengumuman</label>
-                    <textarea id="isi_baru" name="isi"
-                        placeholder="Tuliskan isi pengumuman..." required>{{ old('isi') }}</textarea>
+                <div class="info-field full">
+                    <label for="isi">Isi Pengumuman</label>
+                    <textarea
+                        id="isi"
+                        name="isi"
+                        required
+                        placeholder="Tulis informasi yang ingin disampaikan..."
+                    >{{ old('isi') }}</textarea>
+                </div>
+
+                <div class="info-field">
+                    <label for="aktif">Status Pengumuman</label>
+                    <select id="aktif" name="aktif" required>
+                        <option value="1">Aktif — tampil ke pelanggan</option>
+                        <option value="0">Nonaktif — disembunyikan</option>
+                    </select>
                 </div>
             </div>
 
-            <label class="check-row">
-                <input type="hidden" name="aktif" value="0">
-                <input type="checkbox" name="aktif" value="1" checked>
-                Aktifkan pengumuman setelah disimpan
-            </label>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">+ Tambah Pengumuman</button>
+            <div class="info-actions">
+                <button type="submit" class="info-btn info-btn-primary">
+                    Tambah Pengumuman
+                </button>
             </div>
         </form>
     </section>
 
-    {{-- ====================== DAFTAR PENGUMUMAN ====================== --}}
-    <div class="section-heading">
-        <div>
-            <h3>Daftar Pengumuman</h3>
-            <p>{{ $pengumuman->count() }} pengumuman tersimpan.</p>
-        </div>
-    </div>
+    {{-- DAFTAR PENGUMUMAN --}}
+    <section class="info-card">
+        <h2>Daftar Pengumuman</h2>
+        <p class="info-description">
+            Kamu bisa mengubah isi pengumuman, mengaktifkannya, atau menghapusnya.
+        </p>
 
-    @forelse ($pengumuman as $item)
-        <section class="announcement">
-            <div class="announcement-head">
-                <h4>Pengumuman #{{ $item->id }}</h4>
-                <span class="status {{ $item->aktif ? 'on' : 'off' }}">
-                    {{ $item->aktif ? 'Aktif' : 'Nonaktif' }}
-                </span>
-            </div>
-
-            <form action="{{ route('admin.pengumuman.update', $item->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <div class="form-grid">
-                    <div class="field full">
-                        <label for="judul_{{ $item->id }}">Judul</label>
-                        <input id="judul_{{ $item->id }}" name="judul" type="text"
-                            maxlength="255" value="{{ $item->judul }}" required>
+        @forelse ($daftarPengumuman as $item)
+            <article class="announcement-item">
+                <div class="announcement-top">
+                    <div>
+                        <h3>{{ $item->judul }}</h3>
+                        <p>{{ $item->isi }}</p>
                     </div>
 
-                    <div class="field full">
-                        <label for="isi_{{ $item->id }}">Isi Pengumuman</label>
-                        <textarea id="isi_{{ $item->id }}" name="isi" required>{{ $item->isi }}</textarea>
+                    <span class="announcement-status {{ $item->aktif ? 'status-active' : 'status-inactive' }}">
+                        {{ $item->aktif ? 'Aktif' : 'Nonaktif' }}
+                    </span>
+                </div>
+
+                <div class="announcement-actions">
+                    <button
+                        type="button"
+                        class="info-btn info-btn-primary"
+                        onclick="document.getElementById('edit-pengumuman-{{ $item->id }}').hidden = !document.getElementById('edit-pengumuman-{{ $item->id }}').hidden"
+                    >
+                        Edit
+                    </button>
+
+                    <form
+                        action="{{ route('admin.pengumuman.destroy', $item->id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Yakin ingin menghapus pengumuman ini?')"
+                    >
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" class="info-btn info-btn-danger">
+                            Hapus
+                        </button>
+                    </form>
+                </div>
+
+                <form
+                    id="edit-pengumuman-{{ $item->id }}"
+                    action="{{ route('admin.pengumuman.update', $item->id) }}"
+                    method="POST"
+                    hidden
+                    style="margin-top: 18px;"
+                >
+                    @csrf
+                    @method('PUT')
+
+                    <div class="info-grid">
+                        <div class="info-field full">
+                            <label>Judul Pengumuman</label>
+                            <input
+                                type="text"
+                                name="judul"
+                                value="{{ $item->judul }}"
+                                maxlength="255"
+                                required
+                            >
+                        </div>
+
+                        <div class="info-field full">
+                            <label>Isi Pengumuman</label>
+                            <textarea name="isi" required>{{ $item->isi }}</textarea>
+                        </div>
+
+                        <div class="info-field">
+                            <label>Status</label>
+                            <select name="aktif" required>
+                                <option value="1" @selected((bool) $item->aktif)>Aktif</option>
+                                <option value="0" @selected(!(bool) $item->aktif)>Nonaktif</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <label class="check-row">
-                    <input type="hidden" name="aktif" value="0">
-                    <input type="checkbox" name="aktif" value="1" {{ $item->aktif ? 'checked' : '' }}>
-                    Tampilkan pengumuman kepada pelanggan
-                </label>
-
-                <div class="announcement-actions">
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
-            </form>
-
-            <form action="{{ route('admin.pengumuman.destroy', $item->id) }}" method="POST"
-                onsubmit="return confirm('Yakin ingin menghapus pengumuman ini?')">
-                @csrf
-                @method('DELETE')
-
-                <div class="announcement-actions">
-                    <button type="submit" class="btn btn-danger">Hapus Pengumuman</button>
-                </div>
-            </form>
-        </section>
-    @empty
-        <div class="empty">
-            <span class="empty-icon">▤</span>
-            <strong>Belum ada pengumuman</strong>
-            <p>Pengumuman yang kamu tambahkan akan muncul di bagian ini.</p>
-        </div>
-    @endforelse
-
-    <div class="footer-note">Bengkel Royal Motor · Panel Pengelolaan Informasi</div>
-
+                    <div class="info-actions">
+                        <button type="submit" class="info-btn info-btn-primary">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </article>
+        @empty
+            <p class="info-description" style="margin-bottom: 0;">
+                Belum ada pengumuman. Silakan buat pengumuman pertama.
+            </p>
+        @endforelse
+    </section>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    document.querySelectorAll('.info-page form').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.hasAttribute('onsubmit')) {
-                return;
-            }
-
-            const button = event.submitter;
-
-            if (button && button.type === 'submit') {
-                button.style.opacity = '0.75';
-                button.style.cursor = 'wait';
-                button.textContent = 'Menyimpan...';
-            }
-        });
-    });
-</script>
-@endpush
