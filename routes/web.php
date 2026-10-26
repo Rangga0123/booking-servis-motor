@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LayananController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\InformasiBengkelController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -31,16 +32,26 @@ Route::match(['get', 'post'], '/logout', function () {
 })->name('logout');
 
 // ==========================================
-// DASHBOARD DAN BOOKING PELANGGAN
+// DASHBOARD, LAYANAN, DAN BOOKING PELANGGAN
 // ==========================================
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    // Dashboard pelanggan
     Route::get('/dashboard', [BookingController::class, 'dashboard'])
         ->name('dashboard');
 
     Route::get('/home', [BookingController::class, 'dashboard'])
         ->name('home');
 
+    // Layanan & harga untuk pelanggan
+    Route::get('/layanan', [LayananController::class, 'index'])
+        ->name('layanan.index');
+
+    // Kontak bengkel untuk pelanggan (tanpa controller)
+    Route::view('/kontak', 'customer.kontak')
+        ->name('kontak');
+
+    // Booking pelanggan
     Route::prefix('booking')->name('booking.')->group(function () {
 
         Route::get('/', [BookingController::class, 'index'])
@@ -134,7 +145,7 @@ Route::middleware(['auth', 'admin'])
             ->name('pengumuman.destroy');
 
         // ==========================================
-        // KELOLA LAYANAN & HARGA
+        // KELOLA LAYANAN & HARGA ADMIN
         // ==========================================
         Route::get('/layanan', [ServiceController::class, 'index'])
             ->name('layanan.index');

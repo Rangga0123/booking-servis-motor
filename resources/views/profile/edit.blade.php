@@ -4,71 +4,62 @@
 
 @push('styles')
 <style>
-    .pf-page { max-width: 820px; }
-    .pf-head { margin-bottom: 20px; }
-    .pf-head h1 { font-size: 24px; color: #102143; }
-    .pf-head p { margin-top: 6px; font-size: 12px; color: #7182a3; line-height: 1.6; }
+    .pf-page,
+    .pf-page * { box-sizing: border-box; }
+    .pf-page { width: 100%; max-width: 820px; color: #192740; }
 
-    .pf-alert {
-        padding: 13px 16px; margin-bottom: 16px; border-radius: 10px;
-        font-size: 12px; line-height: 1.7;
-        color: #137849; background: #e8f8ef; border: 1px solid #bcebd0;
-    }
+    .pf-head { margin-bottom: 20px; padding: 21px 23px; background: linear-gradient(120deg, #fff, #f7faff); border: 1px solid #e3e9f2; border-left: 4px solid #3264d8; border-radius: 18px; box-shadow: 0 5px 22px rgba(31,52,88,.045); }
+    .pf-head h1 { margin: 0; font-size: 24px; font-weight: 800; color: #102143; line-height: 1.35; }
+    .pf-head p { margin: 6px 0 0; font-size: 12px; color: #7182a3; line-height: 1.7; }
 
-    .pf-card {
-        background: white; border: 1px solid #dce5f1; border-radius: 14px;
-        box-shadow: 0 5px 16px #273d630b; padding: 22px; margin-bottom: 18px;
-        scroll-margin-top: 90px;
-    }
-    .pf-card-title {
-        display: flex; align-items: center; gap: 12px;
-        padding-bottom: 16px; margin-bottom: 18px; border-bottom: 1px solid #e6edf7;
-    }
-    .pf-icon {
-        width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0;
-        background: linear-gradient(135deg, #3468d5, #355eb8); color: white;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .pf-card-title h2 { font-size: 15px; font-weight: 800; }
-    .pf-card-title p { margin-top: 5px; font-size: 11px; color: #7890b9; line-height: 1.5; }
+    .pf-alert { display: flex; align-items: flex-start; gap: 8px; padding: 13px 16px; margin-bottom: 16px; border-radius: 12px; font-size: 12px; font-weight: 600; line-height: 1.7; color: #087647; background: #e1f8eb; border: 1px solid #bcebd0; }
 
-    .pf-field { margin-bottom: 15px; }
+    .pf-card { overflow: hidden; margin-bottom: 18px; background: #fff; border: 1px solid #e3e9f2; border-radius: 18px; box-shadow: 0 5px 22px rgba(31,52,88,.045); scroll-margin-top: 90px; }
+    .pf-card-title { display: flex; align-items: center; gap: 14px; padding: 19px 23px; background: linear-gradient(135deg, #fff, #f8faff); border-bottom: 1px solid #edf1f7; }
+    .pf-card-body { padding: 22px 23px 24px; }
+    .pf-icon { width: 45px; height: 45px; border-radius: 14px; flex-shrink: 0; display: grid; place-items: center; background: linear-gradient(145deg, #527fff, #3158cb); color: #fff; }
+    .pf-card-title h2 { margin: 0; font-size: 15px; font-weight: 800; color: #1a2943; }
+    .pf-card-title p { margin: 5px 0 0; font-size: 12px; color: #8794a9; line-height: 1.5; }
+
+    .pf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+    .pf-grid .full { grid-column: 1 / -1; }
+    .pf-field { margin-bottom: 16px; min-width: 0; }
     .pf-field label { display: block; margin-bottom: 7px; font-size: 11px; font-weight: 700; color: #344765; }
-    .pf-input {
-        width: 100%; padding: 11px 13px; border: 1px solid #d8e1ed; border-radius: 9px;
-        background: #fbfcfe; color: #14213d; font-size: 12px; outline: none;
-        transition: border-color .2s, box-shadow .2s;
-    }
-    .pf-input:focus { border-color: #3264d8; background: white; box-shadow: 0 0 0 3px #3264d81a; }
-    .pf-error { margin-top: 6px; font-size: 11px; color: #d92f4d; }
-
-    .pf-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-    .pf-btn {
-        display: inline-flex; align-items: center; justify-content: center;
-        padding: 11px 18px; border: 0; border-radius: 9px;
-        font-size: 12px; font-weight: 700; cursor: pointer;
-        transition: background .2s, transform .2s;
-    }
-    .pf-btn:hover { transform: translateY(-1px); }
-    .pf-btn-primary { background: #3264d8; color: white; box-shadow: 0 5px 14px #3264d82b; }
-    .pf-btn-primary:hover { background: #244fb5; }
-    .pf-btn-danger { background: #ffe7eb; color: #d92f4d; }
-    .pf-btn-danger:hover { background: #ffd4db; }
-
-    .pf-photo-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
-    .pf-photo {
-        width: 92px; height: 92px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
-        background: linear-gradient(135deg, #d9e6ff, #9ebcff); color: #224c9c;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 34px; font-weight: 800; border: 3px solid white; box-shadow: 0 4px 14px #17254126;
-    }
-    .pf-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-input { width: 100%; min-height: 44px; padding: 11px 13px; border: 1px solid #d3dcea; border-radius: 10px; background: #fbfcfe; color: #14213d; font-family: inherit; font-size: 13px; outline: none; transition: border-color .2s, box-shadow .2s; }
+    .pf-input:focus { border-color: #3264d8; background: #fff; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
+    .pf-error { margin-top: 6px; font-size: 11px; color: #bb2942; line-height: 1.5; }
     .pf-hint { font-size: 11px; color: #7182a3; line-height: 1.7; }
-    .pf-file { font-size: 12px; max-width: 100%; }
+
+    .pf-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .pf-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 11px 20px; border: 0; border-radius: 10px; font-family: inherit; font-size: 12px; font-weight: 800; cursor: pointer; transition: background .2s, transform .2s; }
+    .pf-btn:hover { transform: translateY(-1px); }
+    .pf-btn-primary { background: #3264d8; color: #fff; box-shadow: 0 5px 14px rgba(50,100,216,.22); }
+    .pf-btn-primary:hover { background: #244fb5; }
+    .pf-btn-danger { background: #ffedf0; color: #bb2942; border: 1px solid #ffd0d8; }
+    .pf-btn-danger:hover { background: #ffdde3; }
+
+    .pf-photo-row { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+    .pf-photo { width: 92px; height: 92px; border-radius: 50%; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #d9e6ff, #9ebcff); color: #224c9c; font-size: 34px; font-weight: 800; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(23,37,65,.15); }
+    .pf-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-file { width: 100%; padding: 10px; font-family: inherit; font-size: 12px; color: #52647b; background: #f7f9fd; border: 1px dashed #c4d1e6; border-radius: 10px; }
+    .pf-file::file-selector-button { margin-right: 12px; padding: 9px 14px; color: #1854b4; background: #eaf2ff; border: 1px solid #d2e2ff; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .pf-divider { height: 1px; margin: 18px 0 0; background: #edf1f7; border: 0; }
+    .pf-delete-form { margin-top: 12px; }
 
     @media (max-width: 700px) {
-        .pf-card { padding: 16px 14px; }
+        .pf-head { padding: 17px 16px; border-radius: 14px; }
         .pf-head h1 { font-size: 20px; }
+        .pf-card { border-radius: 14px; }
+        .pf-card-title { padding: 15px 16px; gap: 12px; }
+        .pf-icon { width: 40px; height: 40px; border-radius: 12px; }
+        .pf-card-body { padding: 17px 16px 20px; }
+        .pf-grid { grid-template-columns: minmax(0, 1fr); }
+        .pf-input { font-size: 16px; }          /* cegah zoom otomatis di iPhone */
+        .pf-actions { flex-direction: column; align-items: stretch; }
+        .pf-btn { width: 100%; }
+        .pf-photo-row { flex-direction: column; text-align: center; }
+        .pf-file { font-size: 13px; }
+        .pf-file::file-selector-button { display: block; margin: 0 0 8px; }
     }
 </style>
 @endpush
@@ -109,41 +100,45 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('profile.update') }}">
-            @csrf
-            @method('PATCH')
+        <div class="pf-card-body">
+            <form method="POST" action="{{ route('profile.update') }}">
+                @csrf
+                @method('PATCH')
 
-            <div class="pf-field">
-                <label for="name">Nama</label>
-                <input id="name" name="name" type="text" class="pf-input"
-                       value="{{ old('name', $user->name) }}" required autocomplete="name">
-                @error('name') <div class="pf-error">{{ $message }}</div> @enderror
-            </div>
+                <div class="pf-grid">
+                    <div class="pf-field">
+                        <label for="name">Nama</label>
+                        <input id="name" name="name" type="text" class="pf-input"
+                               value="{{ old('name', $user->name) }}" required autocomplete="name">
+                        @error('name') <div class="pf-error">{{ $message }}</div> @enderror
+                    </div>
 
-            <div class="pf-field">
-                <label for="phone">Nomor HP</label>
-                <input id="phone" name="phone" type="tel" class="pf-input"
-                       value="{{ old('phone', $user->phone) }}"
-                       placeholder="Contoh: 081234567890"
-                       inputmode="numeric" maxlength="16" autocomplete="tel">
-                @error('phone')
-                    <div class="pf-error">{{ $message }}</div>
-                @else
-                    <div class="pf-hint" style="margin-top:6px">Satu nomor HP hanya untuk satu akun.</div>
-                @enderror
-            </div>
+                    <div class="pf-field">
+                        <label for="phone">Nomor HP</label>
+                        <input id="phone" name="phone" type="tel" class="pf-input"
+                               value="{{ old('phone', $user->phone) }}"
+                               placeholder="Contoh: 081234567890"
+                               inputmode="numeric" maxlength="16" autocomplete="tel">
+                        @error('phone')
+                            <div class="pf-error">{{ $message }}</div>
+                        @else
+                            <div class="pf-hint" style="margin-top:6px">Satu nomor HP hanya untuk satu akun.</div>
+                        @enderror
+                    </div>
 
-            <div class="pf-field">
-                <label for="email">Email</label>
-                <input id="email" name="email" type="email" class="pf-input"
-                       value="{{ old('email', $user->email) }}" required autocomplete="username">
-                @error('email') <div class="pf-error">{{ $message }}</div> @enderror
-            </div>
+                    <div class="pf-field full">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" class="pf-input"
+                               value="{{ old('email', $user->email) }}" required autocomplete="username">
+                        @error('email') <div class="pf-error">{{ $message }}</div> @enderror
+                    </div>
+                </div>
 
-            <div class="pf-actions">
-                <button type="submit" class="pf-btn pf-btn-primary">Simpan Perubahan</button>
-            </div>
-        </form>
+                <div class="pf-actions">
+                    <button type="submit" class="pf-btn pf-btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
     </section>
 
     {{-- Foto profil --}}
@@ -161,44 +156,48 @@
             </div>
         </div>
 
-        <div class="pf-photo-row">
-            <div class="pf-photo" id="photoPreview">
-                @if($user->profile_photo_url)
-                    <img src="{{ $user->profile_photo_url }}" alt="Foto profil">
-                @else
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                @endif
-            </div>
-            <div class="pf-hint">
-                Format JPG, PNG, atau WEBP.<br>
-                Ukuran maksimal 2 MB.
-            </div>
-        </div>
-
-        <form method="POST" action="{{ route('profile.photo.update') }}" enctype="multipart/form-data">
-            @csrf
-
-            <div class="pf-field">
-                <input id="profile_photo" name="profile_photo" type="file" class="pf-file"
-                       accept="image/png,image/jpeg,image/webp" required>
-                @if($errors->updatePhoto->has('profile_photo'))
-                    <div class="pf-error">{{ $errors->updatePhoto->first('profile_photo') }}</div>
-                @endif
+        <div class="pf-card-body">
+            <div class="pf-photo-row">
+                <div class="pf-photo" id="photoPreview">
+                    @if($user->profile_photo_url)
+                        <img src="{{ $user->profile_photo_url }}" alt="Foto profil">
+                    @else
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    @endif
+                </div>
+                <div class="pf-hint">
+                    Format JPG, PNG, atau WEBP.<br>
+                    Ukuran maksimal 2 MB.
+                </div>
             </div>
 
-            <div class="pf-actions">
-                <button type="submit" class="pf-btn pf-btn-primary">Simpan Foto</button>
-            </div>
-        </form>
-
-        @if($user->profile_photo)
-            <form method="POST" action="{{ route('profile.photo.destroy') }}" style="margin-top:10px">
+            <form method="POST" action="{{ route('profile.photo.update') }}" enctype="multipart/form-data">
                 @csrf
-                @method('DELETE')
-                <button type="submit" class="pf-btn pf-btn-danger"
-                        onclick="return confirm('Hapus foto profil?')">Hapus Foto</button>
+
+                <div class="pf-field">
+                    <input id="profile_photo" name="profile_photo" type="file" class="pf-file"
+                           accept="image/png,image/jpeg,image/webp" required>
+                    @if($errors->updatePhoto->has('profile_photo'))
+                        <div class="pf-error">{{ $errors->updatePhoto->first('profile_photo') }}</div>
+                    @endif
+                </div>
+
+                <div class="pf-actions">
+                    <button type="submit" class="pf-btn pf-btn-primary">Simpan Foto</button>
+                </div>
             </form>
-        @endif
+
+            @if($user->profile_photo)
+                <form method="POST" action="{{ route('profile.photo.destroy') }}" class="pf-delete-form">
+                    @csrf
+                    @method('DELETE')
+                    <div class="pf-actions">
+                        <button type="submit" class="pf-btn pf-btn-danger"
+                                onclick="return confirm('Hapus foto profil?')">Hapus Foto</button>
+                    </div>
+                </form>
+            @endif
+        </div>
     </section>
 
     {{-- Ganti password --}}
@@ -216,40 +215,43 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
-            @method('PUT')
+        <div class="pf-card-body">
+            <form method="POST" action="{{ route('password.update') }}">
+                @csrf
+                @method('PUT')
 
-            <div class="pf-field">
-                <label for="current_password">Password Saat Ini</label>
-                <input id="current_password" name="current_password" type="password"
-                       class="pf-input" autocomplete="current-password">
-                @if($errors->updatePassword->has('current_password'))
-                    <div class="pf-error">{{ $errors->updatePassword->first('current_password') }}</div>
-                @endif
-            </div>
+                <div class="pf-field">
+                    <label for="current_password">Password Saat Ini</label>
+                    <input id="current_password" name="current_password" type="password"
+                           class="pf-input" autocomplete="current-password">
+                    @if($errors->updatePassword->has('current_password'))
+                        <div class="pf-error">{{ $errors->updatePassword->first('current_password') }}</div>
+                    @endif
+                </div>
 
-            <div class="pf-field">
-                <label for="password">Password Baru</label>
-                <input id="password" name="password" type="password"
-                       class="pf-input" autocomplete="new-password">
-                @if($errors->updatePassword->has('password'))
-                    <div class="pf-error">{{ $errors->updatePassword->first('password') }}</div>
-                @endif
-            </div>
+                <div class="pf-grid">
+                    <div class="pf-field">
+                        <label for="password">Password Baru</label>
+                        <input id="password" name="password" type="password"
+                               class="pf-input" autocomplete="new-password">
+                        @if($errors->updatePassword->has('password'))
+                            <div class="pf-error">{{ $errors->updatePassword->first('password') }}</div>
+                        @endif
+                    </div>
 
-            <div class="pf-field">
-                <label for="password_confirmation">Konfirmasi Password Baru</label>
-                <input id="password_confirmation" name="password_confirmation" type="password"
-                       class="pf-input" autocomplete="new-password">
-            </div>
+                    <div class="pf-field">
+                        <label for="password_confirmation">Konfirmasi Password Baru</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password"
+                               class="pf-input" autocomplete="new-password">
+                    </div>
+                </div>
 
-            <div class="pf-actions">
-                <button type="submit" class="pf-btn pf-btn-primary">Simpan Password</button>
-            </div>
-        </form>
+                <div class="pf-actions">
+                    <button type="submit" class="pf-btn pf-btn-primary">Simpan Password</button>
+                </div>
+            </form>
+        </div>
     </section>
-
 </div>
 @endsection
 

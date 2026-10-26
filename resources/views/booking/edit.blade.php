@@ -2,7 +2,6 @@
 
 @section('title', 'Edit Booking - Bengkel Royal Motor')
 
-@section('content')
 @php
     $kategoriBayar = [
         'tunai' => [
@@ -20,13 +19,13 @@
         'qris' => [
             'label' => 'QRIS',
             'badge' => 'QR',
-            'warna' => '#64748b',
+            'warna' => '#1f2937',
             'pilihan' => [],
         ],
         'bank' => [
             'label' => 'Transfer Bank',
             'badge' => 'TF',
-            'warna' => '#3975ad',
+            'warna' => '#0060af',
             'pilihan' => ['BCA', 'BRI', 'Mandiri', 'BNI'],
         ],
     ];
@@ -46,18 +45,7 @@
         $kategoriAktif = 'tunai';
     }
 
-    $mekanikTerpilih = old('mechanic_id', $booking->mechanic_id);
-
-    $saranServis = [
-        'Servis rutin',
-        'Ganti oli',
-        'Ganti aki',
-        'Ganti ban',
-        'Rem',
-        'Kelistrikan',
-        'Tune up',
-        'Cek kerusakan',
-    ];
+    $serviceTerpilih = old('service_id', $booking->service_id ?? '');
 
     $tanggalLama = old(
         'tanggal_booking',
@@ -72,23 +60,39 @@
             ? substr((string) $booking->jam_booking, 0, 5)
             : ''
     );
+
+    $mekanikTerpilih = old('mechanic_id', $booking->mechanic_id ?? '');
 @endphp
 
-<div class="bk-page">
-    <header class="bk-head">
-        <div>
-            <span class="bk-eyebrow">ROYAL MOTOR</span>
-            <h1>Edit Booking Servis</h1>
-            <p>Periksa dan perbarui data booking sebelum menyimpan perubahan.</p>
+@section('content')
+<div class="booking-page">
+
+    {{-- HEADER HALAMAN --}}
+    <header class="booking-header">
+        <div class="booking-breadcrumb">
+            <span>Pelanggan</span>
+            <span aria-hidden="true">/</span>
+            <a href="{{ route('booking.index') }}">Riwayat Booking</a>
+            <span aria-hidden="true">/</span>
+            <strong>Edit Booking</strong>
         </div>
 
-        <a href="{{ route('booking.index') }}" class="bk-btn bk-btn-ghost">
-            <span aria-hidden="true">←</span> Riwayat Booking
-        </a>
+        <div class="booking-header-content">
+            <div>
+                <h1>Edit Booking Servis Motor</h1>
+                <p>Periksa dan sesuaikan data kendaraan serta jadwal booking sebelum menyimpan perubahan.</p>
+            </div>
+
+            <a href="{{ route('booking.index') }}" class="booking-btn booking-btn-outline">
+                <span aria-hidden="true">←</span>
+                Riwayat Booking
+            </a>
+        </div>
     </header>
 
+    {{-- PESAN VALIDASI --}}
     @if ($errors->any())
-        <div class="bk-alert" role="alert">
+        <div class="booking-alert" role="alert">
             <strong>Ada data yang perlu diperbaiki.</strong>
             <ul>
                 @foreach ($errors->all() as $error)
@@ -102,249 +106,270 @@
         action="{{ route('booking.update', $booking->id) }}"
         method="POST"
         id="bookingForm"
-        class="bk-layout"
+        class="booking-layout"
     >
         @csrf
         @method('PUT')
 
-        <div class="bk-main">
+        <main class="booking-main">
 
-            {{-- 1. DATA PELANGGAN --}}
-            <section class="bk-card">
-                <div class="bk-card-head">
-                    <span class="bk-step">1</span>
+            {{-- 01. DATA PELANGGAN --}}
+            <section class="booking-card">
+                <div class="booking-card-heading">
+                    <span class="booking-step">01</span>
                     <div>
                         <h2>Data Pelanggan</h2>
-                        <p>Perbarui informasi orang yang membawa motor.</p>
+                        <p>Masukkan data orang yang membawa motor untuk diservis.</p>
                     </div>
                 </div>
 
-                <div class="bk-grid">
-                    <div class="bk-field">
-                        <label for="nama_pelanggan">Nama Pemesan <i>*</i></label>
+                <div class="booking-fields">
+                    <div class="booking-field">
+                        <label for="nama_pelanggan">Nama Pemesan <span>*</span></label>
                         <input
-                            class="bk-input"
+                            class="booking-input"
                             type="text"
                             id="nama_pelanggan"
                             name="nama_pelanggan"
-                            value="{{ old('nama_pelanggan', $booking->nama_pelanggan) }}"
+                            value="{{ old('nama_pelanggan', $booking->nama_pelanggan ?? Auth::user()->name) }}"
                             maxlength="255"
+                            autocomplete="name"
                             required
-                            placeholder="Nama lengkap"
+                            placeholder="Masukkan nama lengkap"
                         >
                         @error('nama_pelanggan')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <div class="bk-field">
-                        <label for="no_hp">No. HP / WhatsApp <i>*</i></label>
+                    <div class="booking-field">
+                        <label for="no_hp">No. HP / WhatsApp <span>*</span></label>
                         <input
-                            class="bk-input"
+                            class="booking-input"
                             type="tel"
                             id="no_hp"
                             name="no_hp"
-                            value="{{ old('no_hp', $booking->no_hp) }}"
+                            value="{{ old('no_hp', $booking->no_hp ?? '') }}"
                             inputmode="tel"
                             maxlength="20"
+                            autocomplete="tel"
                             required
                             placeholder="Contoh: 081234567890"
                         >
                         @error('no_hp')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <div class="bk-field bk-span">
+                    <div class="booking-field booking-field-full">
                         <label for="email_pelanggan">Email</label>
                         <input
-                            class="bk-input"
+                            class="booking-input"
                             type="email"
                             id="email_pelanggan"
                             name="email_pelanggan"
-                            value="{{ old('email_pelanggan', $booking->email_pelanggan) }}"
+                            value="{{ old('email_pelanggan', $booking->email_pelanggan ?? Auth::user()->email) }}"
                             maxlength="255"
+                            autocomplete="email"
                             placeholder="nama@email.com"
                         >
                         @error('email_pelanggan')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
             </section>
 
-            {{-- 2. DATA KENDARAAN --}}
-            <section class="bk-card">
-                <div class="bk-card-head">
-                    <span class="bk-step">2</span>
+            {{-- 02. DATA KENDARAAN --}}
+            <section class="booking-card">
+                <div class="booking-card-heading">
+                    <span class="booking-step">02</span>
                     <div>
                         <h2>Data Kendaraan</h2>
-                        <p>Perbarui merek motor dan nomor polisi kendaraan.</p>
+                        <p>Lengkapi identitas motor yang akan diservis.</p>
                     </div>
                 </div>
 
-                <div class="bk-grid">
-                    <div class="bk-field">
-                        <label for="nama_motor">Merek / Tipe Motor <i>*</i></label>
+                <div class="booking-fields">
+                    <div class="booking-field">
+                        <label for="nama_motor">Merek / Tipe Motor <span>*</span></label>
                         <input
-                            class="bk-input"
+                            class="booking-input"
                             type="text"
                             id="nama_motor"
                             name="nama_motor"
-                            value="{{ old('nama_motor', $booking->nama_motor) }}"
+                            value="{{ old('nama_motor', $booking->nama_motor ?? '') }}"
                             maxlength="255"
                             required
                             placeholder="Contoh: Honda Vario 160"
                         >
                         @error('nama_motor')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <div class="bk-field">
-                        <label for="plat_nomor">Nomor Polisi <i>*</i></label>
+                    <div class="booking-field">
+                        <label for="plat_nomor">Nomor Polisi <span>*</span></label>
                         <input
-                            class="bk-input bk-upper"
+                            class="booking-input booking-uppercase"
                             type="text"
                             id="plat_nomor"
                             name="plat_nomor"
-                            value="{{ old('plat_nomor', $booking->plat_nomor) }}"
+                            value="{{ old('plat_nomor', $booking->plat_nomor ?? '') }}"
                             maxlength="20"
                             required
                             placeholder="Contoh: B 1234 ABC"
                         >
                         @error('plat_nomor')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
             </section>
 
-            {{-- 3. LAYANAN DAN JADWAL --}}
-            <section class="bk-card">
-                <div class="bk-card-head">
-                    <span class="bk-step">3</span>
+            {{-- 03. LAYANAN DAN JADWAL --}}
+            <section class="booking-card">
+                <div class="booking-card-heading">
+                    <span class="booking-step">03</span>
                     <div>
                         <h2>Layanan dan Jadwal</h2>
-                        <p>Sesuaikan kebutuhan servis serta waktu kedatangan.</p>
+                        <p>Tentukan layanan, tanggal, dan waktu kedatangan.</p>
                     </div>
                 </div>
 
-                <div class="bk-grid">
-                    <div class="bk-field bk-span">
-                        <label for="jenis_servis">Servis yang Diinginkan <i>*</i></label>
-                        <input
-                            class="bk-input"
-                            type="text"
-                            id="jenis_servis"
-                            name="jenis_servis"
-                            value="{{ old('jenis_servis', $booking->jenis_servis) }}"
-                            maxlength="255"
-                            required
-                            placeholder="Contoh: Ganti oli dan cek rem depan"
-                        >
+                <div class="booking-fields">
+                    <div class="booking-field booking-field-full">
+                        <label for="service_id">Pilih Layanan Servis <span>*</span></label>
 
-                        <div class="bk-chips" aria-label="Saran cepat">
-                            @foreach ($saranServis as $saran)
-                                <button
-                                    type="button"
-                                    class="bk-chip"
-                                    data-saran="{{ $saran }}"
+                        <select class="booking-input" id="service_id" name="service_id" required>
+                            <option value="">-- Pilih layanan servis --</option>
+
+                            @foreach (($services ?? collect()) as $service)
+                                <option
+                                    value="{{ $service->id }}"
+                                    data-nama="{{ $service->nama_servis }}"
+                                    data-barang="{{ $service->harga_barang ?? 0 }}"
+                                    data-jasa="{{ $service->biaya_jasa ?? 0 }}"
+                                    @selected((string) $serviceTerpilih === (string) $service->id)
                                 >
-                                    + {{ $saran }}
-                                </button>
+                                    {{ $service->nama_servis }}
+                                </option>
                             @endforeach
+                        </select>
+
+                        @if (($services ?? collect())->isEmpty())
+                            <small class="booking-error">
+                                Belum ada layanan. Silakan hubungi admin bengkel.
+                            </small>
+                        @endif
+
+                        @error('service_id')
+                            <small class="booking-error">{{ $message }}</small>
+                        @enderror
+
+                        <div class="booking-price-box">
+                            <div class="booking-price-row">
+                                <span>Harga barang / suku cadang</span>
+                                <strong id="harga-barang">Rp0</strong>
+                            </div>
+
+                            <div class="booking-price-row">
+                                <span>Biaya jasa servis</span>
+                                <strong id="biaya-jasa">Rp0</strong>
+                            </div>
+
+                            <div class="booking-price-row booking-price-total">
+                                <span>Total biaya servis</span>
+                                <strong id="total-harga">Rp0</strong>
+                            </div>
                         </div>
 
-                        <small class="bk-hint">
-                            Ketik kebutuhan servis atau klik salah satu saran.
+                        <small class="booking-hint">
+                            Harga mengikuti layanan yang dipilih. Total akhir dihitung kembali oleh sistem.
                         </small>
-
-                        @error('jenis_servis')
-                            <small class="bk-error">{{ $message }}</small>
-                        @enderror
                     </div>
 
-                    <div class="bk-field">
-                        <label for="tanggal_booking">Tanggal Servis <i>*</i></label>
+                    <div class="booking-field">
+                        <label for="tanggal_booking">Tanggal Servis <span>*</span></label>
                         <input
-                            class="bk-input"
+                            class="booking-input"
                             type="date"
                             id="tanggal_booking"
                             name="tanggal_booking"
                             value="{{ $tanggalLama }}"
+                            min="{{ date('Y-m-d') }}"
                             required
                         >
                         @error('tanggal_booking')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <div class="bk-field">
-                        <label for="jam_booking">Jam Servis <i>*</i></label>
+                    <div class="booking-field">
+                        <label for="jam_booking">Jam Servis <span>*</span></label>
                         <input
-                            class="bk-input"
+                            class="booking-input"
                             type="time"
                             id="jam_booking"
                             name="jam_booking"
                             value="{{ $jamLama }}"
                             required
                         >
-                        <small class="bk-hint" id="ket_waktu"></small>
+                        <small class="booking-hint" id="ket_waktu"></small>
                         @error('jam_booking')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <div class="bk-field bk-span">
-                        <label for="keluhan">Keluhan / Catatan <i>*</i></label>
+                    <div class="booking-field booking-field-full">
+                        <label for="keluhan">Keluhan / Catatan <span>*</span></label>
                         <textarea
-                            class="bk-input"
+                            class="booking-input"
                             id="keluhan"
                             name="keluhan"
                             rows="4"
                             required
-                            placeholder="Ceritakan kendala motor Anda..."
-                        >{{ old('keluhan', $booking->keluhan) }}</textarea>
+                            placeholder="Ceritakan kendala motor, misalnya mesin kasar, rem berbunyi, atau susah distarter..."
+                        >{{ old('keluhan', $booking->keluhan ?? '') }}</textarea>
                         @error('keluhan')
-                            <small class="bk-error">{{ $message }}</small>
+                            <small class="booking-error">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
             </section>
 
-            {{-- 4. PILIH MEKANIK --}}
-            <section class="bk-card">
-                <div class="bk-card-head">
-                    <span class="bk-step">4</span>
+            {{-- 04. PILIH MEKANIK --}}
+            <section class="booking-card">
+                <div class="booking-card-heading">
+                    <span class="booking-step">04</span>
                     <div>
                         <h2>Pilih Mekanik</h2>
-                        <p>Pilih mekanik atau biarkan admin yang menentukan.</p>
+                        <p>Pilih mekanik jika tersedia, atau biarkan admin yang menentukan.</p>
                     </div>
                 </div>
 
-                <div class="bk-mek-grid">
-                    <label class="bk-mek">
+                <div class="booking-mechanics">
+                    <label class="booking-mechanic">
                         <input
                             type="radio"
                             name="mechanic_id"
                             value=""
                             data-label="Ditentukan admin"
-                            @checked($mekanikTerpilih === null || $mekanikTerpilih === '')
+                            @checked((string) $mekanikTerpilih === '')
                         >
 
-                        <span class="bk-mek-box">
-                            <span class="bk-mek-avatar bk-mek-any">?</span>
-                            <span class="bk-mek-info">
+                        <span class="booking-mechanic-box">
+                            <span class="booking-avatar booking-avatar-neutral">?</span>
+                            <span class="booking-mechanic-info">
                                 <strong>Bebas</strong>
                                 <small>Ditentukan oleh admin</small>
                             </span>
-                            <span class="bk-tick" aria-hidden="true">✓</span>
+                            <span class="booking-check" aria-hidden="true">✓</span>
                         </span>
                     </label>
 
                     @foreach (($mechanics ?? collect()) as $mekanik)
-                        <label class="bk-mek">
+                        <label class="booking-mechanic">
                             <input
                                 type="radio"
                                 name="mechanic_id"
@@ -353,40 +378,38 @@
                                 @checked((string) $mekanikTerpilih === (string) $mekanik->id)
                             >
 
-                            <span class="bk-mek-box">
-                                <span class="bk-mek-avatar">
+                            <span class="booking-mechanic-box">
+                                <span class="booking-avatar">
                                     {{ strtoupper(substr($mekanik->nama_mekanik ?? 'M', 0, 1)) }}
                                 </span>
-
-                                <span class="bk-mek-info">
+                                <span class="booking-mechanic-info">
                                     <strong>{{ $mekanik->nama_mekanik }}</strong>
                                     <small>{{ $mekanik->spesialisasi ?: 'Mekanik Royal Motor' }}</small>
                                 </span>
-
-                                <span class="bk-tick" aria-hidden="true">✓</span>
+                                <span class="booking-check" aria-hidden="true">✓</span>
                             </span>
                         </label>
                     @endforeach
                 </div>
 
-                @if (($mechanics ?? collect())->count() === 0)
-                    <small class="bk-hint">
-                        Belum ada mekanik aktif yang bisa dipilih. Mekanik akan ditentukan oleh admin.
-                    </small>
+                @if (($mechanics ?? collect())->isEmpty())
+                    <div class="booking-info">
+                        Belum ada mekanik aktif. Mekanik akan ditentukan oleh admin.
+                    </div>
                 @endif
 
                 @error('mechanic_id')
-                    <small class="bk-error">{{ $message }}</small>
+                    <small class="booking-error">{{ $message }}</small>
                 @enderror
             </section>
 
-            {{-- 5. METODE PEMBAYARAN --}}
-            <section class="bk-card">
-                <div class="bk-card-head">
-                    <span class="bk-step">5</span>
+            {{-- 05. METODE PEMBAYARAN --}}
+            <section class="booking-card">
+                <div class="booking-card-heading">
+                    <span class="booking-step">05</span>
                     <div>
                         <h2>Metode Pembayaran</h2>
-                        <p>Perbarui metode pembayaran yang akan digunakan.</p>
+                        <p>Pilih metode pembayaran. Pembayaran dilakukan setelah servis.</p>
                     </div>
                 </div>
 
@@ -397,8 +420,8 @@
                     value="{{ $metodeLama }}"
                 >
 
-                <div class="bk-cat-grid">
-                    @foreach ($kategoriBayar as $kode => $kat)
+                <div class="booking-payment-categories">
+                    @foreach ($kategoriBayar as $kode => $kategori)
                         @php
                             $nilaiLangsung = $kode === 'tunai'
                                 ? 'Tunai / Bayar di Kasir'
@@ -411,32 +434,34 @@
 
                         <button
                             type="button"
-                            class="bk-cat {{ $kode === $kategoriAktif ? 'is-active' : '' }}"
+                            class="booking-payment-category {{ $kode === $kategoriAktif ? 'is-active' : '' }}"
                             data-kat="{{ $kode }}"
                             data-nilai="{{ $nilaiLangsung }}"
                             data-label="{{ $labelLangsung }}"
+                            aria-pressed="{{ $kode === $kategoriAktif ? 'true' : 'false' }}"
                         >
                             <span
-                                class="bk-badge"
-                                style="background:{{ $kat['warna'] }};color:#fff"
+                                class="booking-payment-badge"
+                                style="background: {{ $kategori['warna'] }};"
                             >
-                                {{ $kat['badge'] }}
+                                {{ $kategori['badge'] }}
                             </span>
-                            <span class="bk-cat-label">{{ $kat['label'] }}</span>
+                            <span>{{ $kategori['label'] }}</span>
+                            <span class="booking-payment-arrow" aria-hidden="true">›</span>
                         </button>
                     @endforeach
                 </div>
 
                 @foreach (['ewallet', 'bank'] as $kode)
                     <div
-                        class="bk-sub {{ $kode === $kategoriAktif ? '' : 'is-hidden' }}"
+                        class="booking-payment-options {{ $kode === $kategoriAktif ? '' : 'is-hidden' }}"
                         data-sub="{{ $kode }}"
                     >
-                        <span class="bk-sub-title">
-                            Pilih {{ $kode === 'ewallet' ? 'e-wallet' : 'bank' }}
-                        </span>
+                        <strong>
+                            Pilih {{ $kode === 'ewallet' ? 'e-wallet' : 'bank tujuan' }}
+                        </strong>
 
-                        <div class="bk-sub-chips">
+                        <div class="booking-payment-chips">
                             @foreach ($kategoriBayar[$kode]['pilihan'] as $pilihan)
                                 @php
                                     $nilai = $kode === 'bank'
@@ -446,7 +471,7 @@
 
                                 <button
                                     type="button"
-                                    class="bk-opt {{ $metodeLama === $nilai ? 'is-active' : '' }}"
+                                    class="booking-payment-option {{ $metodeLama === $nilai ? 'is-active' : '' }}"
                                     data-nilai="{{ $nilai }}"
                                     data-label="{{ $nilai }}"
                                 >
@@ -457,720 +482,653 @@
                     </div>
                 @endforeach
 
-                <small class="bk-error is-hidden" id="errBayar">
+                <small class="booking-error is-hidden" id="errBayar" role="alert">
                     Pilih e-wallet atau bank terlebih dahulu.
                 </small>
 
                 @error('metode_pembayaran')
-                    <small class="bk-error">{{ $message }}</small>
+                    <small class="booking-error">{{ $message }}</small>
                 @enderror
             </section>
 
-            <div class="bk-actions">
-                <a href="{{ route('booking.index') }}" class="bk-btn bk-btn-ghost">
+            {{-- TOMBOL AKSI --}}
+            <div class="booking-actions">
+                <a href="{{ route('booking.index') }}" class="booking-btn booking-btn-outline">
                     Batal
                 </a>
 
-                <button type="submit" class="bk-btn bk-btn-primary" id="btnKirim">
-                    Simpan Perubahan →
+                <button type="submit" class="booking-btn booking-btn-primary" id="btnKirim">
+                    Simpan Perubahan <span aria-hidden="true">→</span>
                 </button>
             </div>
-        </div>
+        </main>
 
         {{-- RINGKASAN BOOKING --}}
-        <aside class="bk-side">
-            <div class="bk-summary">
-                <h3>Ringkasan Booking</h3>
-                <p class="bk-sum-sub">Ringkasan diperbarui sesuai data yang Anda isi.</p>
-
-                <dl>
-                    <div><dt>Pemesan</dt><dd id="sumNama">-</dd></div>
-                    <div><dt>No. HP</dt><dd id="sumHp">-</dd></div>
-                    <div><dt>Motor</dt><dd id="sumMotor">-</dd></div>
-                    <div><dt>Nomor polisi</dt><dd id="sumPlat">-</dd></div>
-                    <div><dt>Servis</dt><dd id="sumServis">-</dd></div>
-                    <div><dt>Jadwal</dt><dd id="sumJadwal">-</dd></div>
-                    <div><dt>Mekanik</dt><dd id="sumMekanik">Ditentukan admin</dd></div>
-                    <div><dt>Pembayaran</dt><dd id="sumBayar">-</dd></div>
-                </dl>
-
-                <div class="bk-note">
-                    Periksa kembali perubahan sebelum menyimpannya. Booking akan diperbarui
-                    setelah data berhasil diproses.
+        <aside class="booking-sidebar">
+            <section class="booking-summary">
+                <div class="booking-summary-heading">
+                    <div>
+                        <span class="booking-summary-kicker">RINGKASAN</span>
+                        <h2>Booking Kamu</h2>
+                    </div>
+                    <span class="booking-summary-icon" aria-hidden="true">✓</span>
                 </div>
-            </div>
+
+                <p class="booking-summary-description">
+                    Periksa kembali data sebelum menyimpan perubahan booking.
+                </p>
+
+                <div class="booking-summary-section">
+                    <h3 class="booking-summary-section-title">Informasi Booking</h3>
+
+                    <dl class="booking-summary-list">
+                        <div><dt>Pemesan</dt><dd id="sumNama">-</dd></div>
+                        <div><dt>No. HP</dt><dd id="sumHp">-</dd></div>
+                        <div><dt>Motor</dt><dd id="sumMotor">-</dd></div>
+                        <div><dt>Nomor polisi</dt><dd id="sumPlat">-</dd></div>
+                        <div><dt>Jadwal</dt><dd id="sumJadwal">-</dd></div>
+                        <div><dt>Mekanik</dt><dd id="sumMekanik">Ditentukan admin</dd></div>
+                    </dl>
+                </div>
+
+                <div class="booking-summary-section booking-summary-cost-section">
+                    <h3 class="booking-summary-section-title">Layanan &amp; Biaya</h3>
+
+                    <dl class="booking-summary-list booking-summary-cost-list">
+                        <div><dt>Layanan servis</dt><dd id="sumServis">-</dd></div>
+                        <div><dt>Harga barang</dt><dd id="sumHargaBarang">Rp0</dd></div>
+                        <div><dt>Biaya jasa</dt><dd id="sumBiayaJasa">Rp0</dd></div>
+                        <div class="booking-summary-total"><dt>Total biaya</dt><dd id="sumTotalHarga">Rp0</dd></div>
+                    </dl>
+                </div>
+
+                <div class="booking-summary-section booking-summary-payment-section">
+                    <h3 class="booking-summary-section-title">Pembayaran</h3>
+
+                    <dl class="booking-summary-list">
+                        <div><dt>Metode pembayaran</dt><dd id="sumBayar">-</dd></div>
+                    </dl>
+                </div>
+
+                <div class="booking-summary-note">
+                    <span aria-hidden="true">i</span>
+                    <p>
+                        Perubahan booking akan disimpan setelah kamu menekan tombol
+                        Simpan Perubahan.
+                    </p>
+                </div>
+            </section>
         </aside>
     </form>
 
-    <p class="bk-foot">Royal Motor · Booking Servis Motor</p>
+    <p class="booking-footer">Royal Motor · Booking Servis Motor</p>
 </div>
 @endsection
 
 @push('styles')
 <style>
-    .bk-page {
-        --bk-blue: #3975ad;
-        --bk-blue-dark: #2f6597;
-        --bk-text: #343a40;
-        --bk-muted: #737d87;
-        --bk-line: #dfe3e8;
-        --bk-soft: #f7f8fa;
-
+    .booking-page {
+        --booking-blue: #3264d8;
+        --booking-blue-dark: #244fae;
+        --booking-text: #343a40;
+        --booking-muted: #6c757d;
+        --booking-line: #dfe3e8;
+        --booking-line-dark: #cbd1d8;
         width: 100%;
         max-width: 1180px;
         margin: 0 auto;
-        color: var(--bk-text);
+        color: var(--booking-text);
     }
 
-    .bk-page * {
-        box-sizing: border-box;
+    .booking-page,
+    .booking-page * { box-sizing: border-box; }
+
+    .booking-page button,
+    .booking-page input,
+    .booking-page textarea,
+    .booking-page select { font: inherit; }
+
+    .booking-header {
+        margin-bottom: 24px;
+        padding: 23px 25px;
+        border: 1px solid #dce5f1;
+        border-left: 4px solid var(--booking-blue);
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 3px 12px rgba(39, 61, 99, .035);
+        animation: booking-enter .35s ease both;
     }
 
-    .bk-head {
+    .booking-breadcrumb {
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 16px;
         flex-wrap: wrap;
-        margin-bottom: 22px;
+        gap: 9px;
+        margin-bottom: 17px;
+        color: #7182a3;
+        font-size: 12px;
     }
 
-    .bk-eyebrow {
-        display: inline-block;
-        margin-bottom: 7px;
-        color: #6485a5;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .16em;
-        text-transform: uppercase;
+    .booking-breadcrumb a { color: var(--booking-blue); text-decoration: none; }
+    .booking-breadcrumb strong { color: var(--booking-blue); }
+
+    .booking-header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
     }
 
-    .bk-head h1 {
+    .booking-header h1 {
         margin: 0;
-        color: #343a40;
+        color: #14213d;
         font-size: 27px;
         font-weight: 800;
-        line-height: 1.3;
+        line-height: 1.35;
+        letter-spacing: -.4px;
     }
 
-    .bk-head p {
-        margin: 7px 0 0;
-        color: #737d87;
-        font-size: 13px;
-        line-height: 1.7;
-    }
-
-    .bk-alert {
-        margin-bottom: 18px;
-        padding: 15px 17px;
-        border: 1px solid #efc9cd;
-        border-radius: 12px;
-        background: #fff6f6;
-        color: #a63843;
-        font-size: 13px;
-    }
-
-    .bk-alert ul {
+    .booking-header p {
         margin: 8px 0 0;
-        padding-left: 20px;
+        color: #7182a3;
+        font-size: 13px;
         line-height: 1.8;
     }
 
-    .bk-layout {
+    @keyframes booking-enter {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .booking-alert {
+        margin-bottom: 20px;
+        padding: 15px 18px;
+        border: 1px solid #f0c2c7;
+        border-left: 4px solid #dc3545;
+        border-radius: 8px;
+        background: #fff8f8;
+        color: #842029;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .booking-alert ul { margin: 6px 0 0; padding-left: 19px; }
+
+    .booking-layout {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 22px;
         align-items: start;
+        gap: 22px;
     }
 
-    .bk-main {
-        display: flex;
+    .booking-main { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+    .booking-card {
         min-width: 0;
-        flex-direction: column;
-        gap: 18px;
-    }
-
-    .bk-card,
-    .bk-summary {
-        min-width: 0;
-        border: 1px solid #dfe3e8;
-        border-radius: 14px;
-        background: #fff;
-        box-shadow: 0 3px 12px rgba(40, 52, 65, .035);
-    }
-
-    .bk-card {
         padding: 22px;
-        animation: bkUp .35s ease both;
+        border: 1px solid var(--booking-line);
+        border-radius: 9px;
+        background: #fff;
+        box-shadow: 0 2px 7px rgba(30, 41, 59, .025);
+        transition: border-color .2s ease, box-shadow .2s ease;
     }
 
-    .bk-card-head {
+    .booking-card:hover {
+        border-color: #cbd3dd;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, .035);
+    }
+
+    .booking-card-heading {
         display: flex;
         align-items: flex-start;
         gap: 13px;
-        margin-bottom: 19px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid #e7eaee;
+        padding-bottom: 17px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--booking-line);
     }
 
-    .bk-step {
+    .booking-step {
         display: grid;
-        width: 32px;
-        height: 32px;
-        flex-shrink: 0;
         place-items: center;
-        border: 1px solid #d5e0eb;
-        border-radius: 9px;
-        background: #edf3f8;
-        color: #3975ad;
-        font-size: 13px;
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        border: 1px solid #d6e2ff;
+        border-radius: 8px;
+        background: #edf3ff;
+        color: var(--booking-blue);
+        font-size: 12px;
         font-weight: 800;
     }
 
-    .bk-card-head h2 {
+    .booking-card-heading h2 {
         margin: 0;
         color: #343a40;
         font-size: 16px;
+        line-height: 1.5;
         font-weight: 800;
     }
 
-    .bk-card-head p {
-        margin: 5px 0 0;
-        color: #7a838d;
+    .booking-card-heading p {
+        margin: 4px 0 0;
+        color: var(--booking-muted);
         font-size: 12px;
-        line-height: 1.6;
-    }
-
-    .bk-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-    }
-
-    .bk-span {
-        grid-column: 1 / -1;
-    }
-
-    .bk-field {
-        min-width: 0;
-    }
-
-    .bk-field label {
-        display: block;
-        margin-bottom: 8px;
-        color: #4b5560;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .bk-field label i {
-        color: #d64b58;
-        font-style: normal;
-    }
-
-    .bk-input {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        padding: 12px 13px;
-        border: 1px solid #d4d9df;
-        border-radius: 9px;
-        outline: none;
-        background: #fff;
-        color: #343a40;
-        font: inherit;
-        font-size: 14px;
-        transition: border-color .2s, box-shadow .2s, background .2s;
-    }
-
-    .bk-input:hover {
-        border-color: #b9c4cf;
-    }
-
-    .bk-input:focus {
-        border-color: #7198bc;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(57, 117, 173, .11);
-    }
-
-    .bk-input::placeholder {
-        color: #a0a8b0;
-    }
-
-    textarea.bk-input {
-        min-height: 110px;
-        resize: vertical;
         line-height: 1.7;
     }
 
-    .bk-upper {
-        text-transform: uppercase;
+    .booking-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 19px;
     }
 
-    .bk-upper::placeholder {
-        text-transform: none;
+    .booking-field { min-width: 0; }
+    .booking-field-full { grid-column: 1 / -1; }
+
+    .booking-field label {
+        display: block;
+        margin-bottom: 8px;
+        color: #343a40;
+        font-size: 13px;
+        font-weight: 700;
     }
 
-    .bk-hint {
+    .booking-field label span { color: #dc3545; }
+
+    .booking-input {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        min-height: 43px;
+        padding: 11px 13px;
+        border: 1px solid var(--booking-line-dark);
+        border-radius: 7px;
+        outline: none;
+        background: #fff;
+        color: #343a40;
+        font-size: 13px;
+        line-height: 1.6;
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .booking-input:hover { border-color: #aeb8c4; }
+    .booking-input:focus {
+        border-color: var(--booking-blue);
+        box-shadow: 0 0 0 3px rgba(50, 100, 216, .12);
+    }
+    .booking-input::placeholder { color: #9aa2ad; }
+    textarea.booking-input { min-height: 115px; resize: vertical; }
+    .booking-uppercase { text-transform: uppercase; }
+    .booking-uppercase::placeholder { text-transform: none; }
+
+    .booking-hint {
         display: block;
         margin-top: 7px;
-        color: #7a838d;
+        color: var(--booking-muted);
         font-size: 11px;
+        line-height: 1.7;
+    }
+
+    .booking-error {
+        display: block;
+        margin-top: 7px;
+        color: #c92a3b;
+        font-size: 12px;
         line-height: 1.6;
     }
 
-    .bk-error {
-        display: block;
-        margin-top: 7px;
-        color: #c13e4c;
-        font-size: 12px;
-        line-height: 1.5;
+    .booking-price-box {
+        margin-top: 15px;
+        padding: 15px;
+        border: 1px solid var(--booking-line);
+        border-radius: 8px;
+        background: #f8faff;
     }
 
-    .bk-chips,
-    .bk-sub-chips {
+    .booking-price-row {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 10px;
-    }
-
-    .bk-chip {
-        padding: 7px 11px;
-        border: 1px solid #d8dfe6;
-        border-radius: 7px;
-        background: #f7f8fa;
-        color: #596775;
-        font: inherit;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 10px 0;
+        color: #626b75;
         font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background .18s, border-color .18s;
+        line-height: 1.6;
     }
 
-    .bk-chip:hover {
-        border-color: #b8c9d9;
-        background: #edf3f8;
-    }
+    .booking-price-row strong { color: #343a40; text-align: right; overflow-wrap: anywhere; }
+    .booking-price-total { margin-top: 5px; padding-top: 14px; border-top: 1px solid var(--booking-line); }
+    .booking-price-total span,
+    .booking-price-total strong { color: var(--booking-blue-dark); font-size: 14px; font-weight: 800; }
 
-    .bk-badge {
+    .booking-mechanics {
         display: grid;
-        min-width: 40px;
-        height: 30px;
-        padding: 0 7px;
-        flex-shrink: 0;
-        place-items: center;
-        border-radius: 7px;
-        font-size: 10px;
-        font-weight: 800;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px;
     }
 
-    .bk-mek-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
-        gap: 10px;
-    }
-
-    .bk-mek {
-        position: relative;
-        display: block;
-        cursor: pointer;
-    }
-
-    .bk-mek input {
+    .booking-mechanic { position: relative; display: block; min-width: 0; cursor: pointer; }
+    .booking-mechanic input {
         position: absolute;
         width: 1px;
         height: 1px;
         opacity: 0;
     }
 
-    .bk-mek-box {
+    .booking-mechanic-box {
         display: flex;
-        min-height: 66px;
         align-items: center;
         gap: 11px;
+        min-height: 72px;
         padding: 12px;
-        border: 1px solid #d9dee4;
-        border-radius: 10px;
+        border: 1px solid var(--booking-line-dark);
+        border-radius: 8px;
         background: #fff;
-        transition: border-color .18s, background .18s;
+        transition: border-color .2s ease, background .2s ease;
     }
 
-    .bk-mek:hover .bk-mek-box {
-        border-color: #b8c9d9;
-        background: #fafbfd;
+    .booking-mechanic input:checked + .booking-mechanic-box {
+        border-color: var(--booking-blue);
+        background: #f0f5ff;
     }
 
-    .bk-mek input:focus-visible + .bk-mek-box {
-        outline: 3px solid rgba(57, 117, 173, .15);
+    .booking-mechanic input:focus-visible + .booking-mechanic-box {
+        outline: 3px solid rgba(50, 100, 216, .16);
+        outline-offset: 2px;
     }
 
-    .bk-mek input:checked + .bk-mek-box {
-        border-color: #7198bc;
-        background: #f0f5f9;
-    }
-
-    .bk-mek-avatar {
+    .booking-avatar {
         display: grid;
-        width: 39px;
-        height: 39px;
-        flex-shrink: 0;
         place-items: center;
-        border: 1px solid #d6e0e9;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        border: 1px solid #d6e2ff;
         border-radius: 50%;
-        background: #edf3f8;
-        color: #3975ad;
+        background: #edf3ff;
+        color: #244fae;
         font-size: 15px;
         font-weight: 800;
     }
 
-    .bk-mek-any {
-        background: #f0f1f3;
-        color: #78818a;
-    }
+    .booking-avatar-neutral { border-color: #dee2e6; background: #f1f3f5; color: #6c757d; }
+    .booking-mechanic-info { flex: 1; min-width: 0; }
+    .booking-mechanic-info strong { display: block; color: #343a40; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+    .booking-mechanic-info small { display: block; margin-top: 3px; color: var(--booking-muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
 
-    .bk-mek-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .bk-mek-info strong {
-        display: block;
-        color: #414a53;
-        font-size: 13px;
-        overflow-wrap: anywhere;
-    }
-
-    .bk-mek-info small {
-        display: block;
-        margin-top: 4px;
-        color: #7b858f;
-        font-size: 11px;
-        line-height: 1.5;
-    }
-
-    .bk-tick {
+    .booking-check {
         display: grid;
+        place-items: center;
         width: 20px;
         height: 20px;
         flex-shrink: 0;
-        place-items: center;
-        border: 1px solid #d5dbe1;
         border-radius: 50%;
-        background: #fff;
+        background: var(--booking-blue);
         color: #fff;
         font-size: 11px;
-        opacity: .45;
-        transition: background .18s, opacity .18s;
+        opacity: 0;
+        transform: scale(.8);
+        transition: opacity .2s ease, transform .2s ease;
     }
 
-    .bk-mek input:checked + .bk-mek-box .bk-tick {
-        border-color: #3975ad;
-        background: #3975ad;
+    .booking-mechanic input:checked + .booking-mechanic-box .booking-check {
         opacity: 1;
+        transform: scale(1);
     }
 
-    .bk-cat-grid {
+    .booking-info {
+        margin-top: 14px;
+        padding: 11px 13px;
+        border: 1px solid #e0e4e9;
+        border-radius: 7px;
+        background: #f8f9fa;
+        color: #626b75;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .booking-payment-categories {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
 
-    .bk-cat {
+    .booking-payment-category {
         display: flex;
-        min-width: 0;
         align-items: center;
-        gap: 9px;
-        padding: 11px 10px;
-        border: 1px solid #d9dee4;
-        border-radius: 10px;
+        gap: 11px;
+        min-width: 0;
+        min-height: 63px;
+        padding: 11px 12px;
+        border: 1px solid var(--booking-line-dark);
+        border-radius: 8px;
         background: #fff;
-        color: #454e57;
-        font: inherit;
+        color: #343a40;
         text-align: left;
-        cursor: pointer;
-        transition: border-color .18s, background .18s;
-    }
-
-    .bk-cat:hover {
-        border-color: #b8c9d9;
-        background: #fafbfd;
-    }
-
-    .bk-cat.is-active {
-        border-color: #7198bc;
-        background: #f0f5f9;
-    }
-
-    .bk-cat-label {
         font-size: 12px;
         font-weight: 700;
-        line-height: 1.4;
+        cursor: pointer;
+        transition: border-color .2s ease, background .2s ease;
     }
 
-    .bk-sub {
-        margin-top: 14px;
+    .booking-payment-category:hover { border-color: #b8c9f4; background: #fafcff; }
+    .booking-payment-category.is-active { border-color: var(--booking-blue); background: #f0f5ff; }
+
+    .booking-payment-badge {
+        display: grid;
+        place-items: center;
+        min-width: 38px;
+        height: 34px;
+        padding: 0 7px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .booking-payment-arrow { margin-left: auto; color: #9aa2ad; font-size: 20px; line-height: 1; }
+
+    .booking-payment-options {
+        margin-top: 13px;
         padding: 14px;
-        border: 1px solid #dfe3e8;
-        border-radius: 10px;
+        border: 1px solid var(--booking-line);
+        border-radius: 8px;
         background: #f8f9fa;
     }
 
-    .bk-sub-title {
-        display: block;
-        margin-bottom: 10px;
-        color: #737d87;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .05em;
-        text-transform: uppercase;
-    }
+    .booking-payment-options > strong { display: block; margin-bottom: 11px; color: #495057; font-size: 12px; }
+    .booking-payment-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
-    .bk-opt {
-        padding: 9px 14px;
-        border: 1px solid #d5dbe1;
-        border-radius: 7px;
+    .booking-payment-option {
+        min-height: 36px;
+        padding: 8px 14px;
+        border: 1px solid var(--booking-line-dark);
+        border-radius: 6px;
         background: #fff;
-        color: #4b5560;
-        font: inherit;
+        color: #495057;
         font-size: 12px;
         font-weight: 700;
         cursor: pointer;
-        transition: border-color .18s, background .18s, color .18s;
+        transition: all .2s ease;
     }
 
-    .bk-opt:hover {
-        border-color: #aebfce;
-        background: #f4f7f9;
-    }
+    .booking-payment-option:hover { border-color: #aebedc; background: #f0f5ff; }
+    .booking-payment-option.is-active { border-color: var(--booking-blue); background: var(--booking-blue); color: #fff; }
+    .is-hidden { display: none !important; }
 
-    .bk-opt.is-active {
-        border-color: #7198bc;
-        background: #eaf1f7;
-        color: #315f88;
-    }
-
-    .is-hidden {
-        display: none !important;
-    }
-
-    .bk-actions {
-        display: flex;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .bk-btn {
+    .booking-btn {
         display: inline-flex;
-        min-height: 43px;
         align-items: center;
         justify-content: center;
-        gap: 7px;
-        padding: 12px 20px;
+        gap: 8px;
+        min-height: 43px;
+        padding: 11px 19px;
         border: 1px solid transparent;
-        border-radius: 9px;
-        font: inherit;
-        font-size: 13px;
+        border-radius: 7px;
+        font-size: 12px;
+        line-height: 1.5;
         font-weight: 700;
         text-align: center;
         text-decoration: none;
         cursor: pointer;
-        transition: background .18s, border-color .18s, transform .18s;
+        transition: background .2s ease, border-color .2s ease, transform .2s ease;
     }
 
-    .bk-btn:active {
-        transform: scale(.98);
+    .booking-btn:active { transform: translateY(1px); }
+    .booking-btn-primary { border-color: var(--booking-blue); background: var(--booking-blue); color: #fff; }
+    .booking-btn-primary:hover { border-color: var(--booking-blue-dark); background: var(--booking-blue-dark); color: #fff; }
+    .booking-btn-primary:disabled { cursor: not-allowed; opacity: .7; }
+    .booking-btn-outline { border-color: var(--booking-line-dark); background: #fff; color: #495057; }
+    .booking-btn-outline:hover { border-color: #b8c0ca; background: #f3f5f7; color: #343a40; }
+
+    .booking-btn:focus-visible,
+    .booking-payment-category:focus-visible,
+    .booking-payment-option:focus-visible {
+        outline: 3px solid rgba(50, 100, 216, .2);
+        outline-offset: 2px;
     }
 
-    .bk-btn-primary {
-        border-color: #3975ad;
-        background: #3975ad;
-        color: #fff;
-    }
+    .booking-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-    .bk-btn-primary:hover {
-        border-color: #2f6597;
-        background: #2f6597;
-    }
+    .booking-sidebar { position: sticky; top: 92px; min-width: 0; }
 
-    .bk-btn-ghost {
-        border-color: #d5dbe1;
-        background: #fff;
-        color: #59636d;
-    }
-
-    .bk-btn-ghost:hover {
-        background: #f3f5f7;
-        border-color: #c3cbd3;
-    }
-
-    .bk-btn:disabled {
-        cursor: wait;
-    }
-
-    .bk-side {
-        position: sticky;
-        top: 92px;
-        min-width: 0;
-    }
-
-    .bk-summary {
+    /* RINGKASAN */
+    .booking-summary {
+        position: relative;
+        overflow: hidden;
         padding: 20px;
+        border: 1px solid #cfdcf3;
+        border-top: 3px solid #6c91ff;
+        border-radius: 16px;
+        background: #eef3fd;
+        box-shadow: 0 10px 26px rgba(35, 61, 105, .09);
     }
 
-    .bk-summary h3 {
+    .booking-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .booking-summary-kicker { display: block; margin-bottom: 5px; color: #3264d8; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; }
+    .booking-summary h2 { margin: 0; color: #14213d; font-size: 18px; line-height: 1.4; font-weight: 800; }
+    .booking-summary-icon { display: grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border: 1px solid rgba(50, 100, 216, .18); border-radius: 11px; background: #fff; color: #3264d8; font-size: 16px; font-weight: 800; }
+    .booking-summary-description { margin: 8px 0 17px; color: #64748b; font-size: 12px; line-height: 1.7; }
+
+    .booking-summary-section {
+        margin-top: 14px;
+        padding: 14px;
+        border: 1px solid #d5e0f2;
+        border-radius: 12px;
+        background: #fff;
+    }
+
+    .booking-summary-section-title { margin: 0 0 10px; color: #334155; font-size: 11px; font-weight: 800; letter-spacing: .45px; text-transform: uppercase; }
+
+    .booking-summary-list {
         margin: 0;
-        color: #343a40;
-        font-size: 15px;
+        border: 1px solid #e3e9f3;
+        border-radius: 9px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .booking-summary-list > div {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 42px;
+        padding: 11px 12px;
+        border-bottom: 1px solid #e9eef6;
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .booking-summary-list > div:nth-child(even) { background: #f8faff; }
+    .booking-summary-list > div:last-child { border-bottom: 0; }
+    .booking-summary-list dt { flex: 0 0 40%; min-width: 0; color: #64748b; }
+    .booking-summary-list dd { flex: 1 1 auto; min-width: 0; margin: 0; color: #1e293b; font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+    .booking-summary-list .booking-summary-total { align-items: center; border-top: 1px solid #c9d8f7; background: #e8efff; }
+    .booking-summary-list .booking-summary-total dt,
+    .booking-summary-list .booking-summary-total dd { color: #244fae; font-size: 13px; font-weight: 800; }
+
+    .booking-summary-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        margin-top: 16px;
+        padding: 12px;
+        border: 1px solid #d5e0f2;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .booking-summary-note > span {
+        display: grid;
+        place-items: center;
+        width: 19px;
+        height: 19px;
+        flex-shrink: 0;
+        border: 1px solid #cbd5e1;
+        border-radius: 50%;
+        color: #64748b;
+        font-size: 11px;
         font-weight: 800;
     }
 
-    .bk-sum-sub {
-        margin: 6px 0 15px;
-        color: #7a838d;
-        font-size: 11px;
-        line-height: 1.6;
-    }
-
-    .bk-summary dl {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        margin: 0;
-    }
-
-    .bk-summary dl > div {
-        display: grid;
-        grid-template-columns: minmax(75px, .8fr) minmax(0, 1.2fr);
-        gap: 12px;
-        padding: 11px 0;
-        border-bottom: 1px solid #e7eaee;
-        font-size: 12px;
-    }
-
-    .bk-summary dt {
-        color: #7a838d;
-    }
-
-    .bk-summary dd {
-        margin: 0;
-        color: #414a53;
-        font-weight: 700;
-        text-align: right;
-        overflow-wrap: anywhere;
-    }
-
-    .bk-note {
-        margin-top: 15px;
-        padding: 12px;
-        border: 1px solid #dce5ed;
-        border-radius: 9px;
-        background: #f4f7fa;
-        color: #65788a;
-        font-size: 11px;
-        line-height: 1.7;
-    }
-
-    .bk-foot {
-        margin: 22px 0 0;
-        color: #9aa2aa;
-        font-size: 11px;
-        text-align: center;
-    }
-
-    @keyframes bkUp {
-        from {
-            opacity: 0;
-            transform: translateY(6px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+    .booking-summary-note p { margin: 0; color: #626b75; font-size: 11px; line-height: 1.8; }
+    .booking-footer { margin: 23px 0 0; color: #8b95a3; font-size: 11px; text-align: center; }
 
     @media (max-width: 1080px) {
-        .bk-layout {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        .bk-side {
-            position: static;
-            order: -1;
-        }
+        .booking-layout { grid-template-columns: minmax(0, 1fr); }
+        .booking-sidebar { position: static; order: 1; }
+        .booking-summary { padding: 17px; }
     }
 
     @media (max-width: 700px) {
-        .bk-head {
-            align-items: stretch;
-        }
+        .booking-page { width: min(100% - 20px, 100%); margin: 14px auto 28px; }
+        .booking-layout { gap: 16px; }
+        .booking-sidebar { min-width: 0; }
+        .booking-page input:not([type="radio"]):not([type="checkbox"]),
+        .booking-page select,
+        .booking-page textarea { width: 100%; max-width: 100%; font-size: 16px; }
+        .booking-page input[type="radio"],
+        .booking-page input[type="checkbox"] { flex-shrink: 0; }
+        .booking-page .booking-btn { min-height: 46px; }
+        .booking-header { padding: 18px; margin-bottom: 18px; }
+        .booking-header-content { align-items: flex-start; flex-direction: column; gap: 14px; }
+        .booking-header h1 { font-size: 23px; }
+        .booking-header p { font-size: 12px; }
+        .booking-card { padding: 17px 14px; }
+        .booking-card-heading { gap: 10px; padding-bottom: 14px; margin-bottom: 17px; }
+        .booking-step { width: 32px; height: 32px; }
+        .booking-card-heading h2 { font-size: 15px; }
+        .booking-card-heading p { font-size: 11px; }
+        .booking-fields { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+        .booking-field-full { grid-column: auto; }
+        .booking-mechanics { grid-template-columns: minmax(0, 1fr); }
+        .booking-payment-categories { gap: 8px; }
+        .booking-payment-category { gap: 8px; min-height: 58px; padding: 9px; font-size: 11px; }
+        .booking-payment-badge { min-width: 32px; height: 30px; padding: 0 5px; font-size: 9px; }
+        .booking-summary { padding: 14px 12px; }
+        .booking-summary-section { padding: 12px 10px; }
+        .booking-summary-list > div { padding: 10px 11px; }
+        .booking-actions { flex-direction: column-reverse; align-items: stretch; }
+        .booking-actions .booking-btn { width: 100%; }
+    }
 
-        .bk-head h1 {
-            font-size: 23px;
-        }
-
-        .bk-head > a {
-            width: 100%;
-        }
-
-        .bk-card {
-            padding: 16px 14px;
-            border-radius: 12px;
-        }
-
-        .bk-grid {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 15px;
-        }
-
-        .bk-span {
-            grid-column: auto;
-        }
-
-        .bk-cat-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .bk-mek-grid {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        .bk-actions {
-            flex-direction: column-reverse;
-        }
-
-        .bk-actions .bk-btn {
-            width: 100%;
-        }
-
-        .bk-summary {
-            padding: 16px;
-        }
+    @media (max-width: 480px) {
+        .booking-payment-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .booking-payment-category { min-width: 0; overflow-wrap: anywhere; }
     }
 
     @media (max-width: 380px) {
-        .bk-cat {
-            gap: 7px;
-            padding: 9px 7px;
-        }
-
-        .bk-cat-label {
-            font-size: 11px;
-        }
-
-        .bk-summary dl > div {
-            grid-template-columns: minmax(65px, .8fr) minmax(0, 1.2fr);
-            gap: 8px;
-        }
+        .booking-header { padding: 15px; }
+        .booking-header h1 { font-size: 21px; }
+        .booking-card { padding: 15px 12px; }
+        .booking-payment-category { gap: 6px; padding: 8px 7px; }
+        .booking-payment-badge { min-width: 28px; }
+        .booking-summary-list dt { flex-basis: 38%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .bk-card {
-            animation: none;
-        }
-
-        .bk-page * {
+        .booking-page *, .booking-page *::before, .booking-page *::after {
+            animation-duration: .01ms !important;
             transition-duration: .01ms !important;
         }
     }
@@ -1180,160 +1138,180 @@
 @push('scripts')
 <script>
 (function () {
-    const $ = (id) => document.getElementById(id);
+    'use strict';
 
-    const nama = $('nama_pelanggan');
-    const hp = $('no_hp');
-    const motor = $('nama_motor');
-    const plat = $('plat_nomor');
-    const servis = $('jenis_servis');
-    const tgl = $('tanggal_booking');
-    const jam = $('jam_booking');
-    const ket = $('ket_waktu');
+    const get = (id) => document.getElementById(id);
 
-    const bayarInput = $('metode_pembayaran');
-    const errBayar = $('errBayar');
-    const form = $('bookingForm');
+    const form = get('bookingForm');
+    if (!form) return;
 
-    if (!form || !bayarInput) {
-        return;
+    const nama = get('nama_pelanggan');
+    const hp = get('no_hp');
+    const motor = get('nama_motor');
+    const plat = get('plat_nomor');
+    const servis = get('service_id');
+    const tanggal = get('tanggal_booking');
+    const jam = get('jam_booking');
+    const metodeBayar = get('metode_pembayaran');
+    const pesanBayar = get('errBayar');
+    const tombolKirim = get('btnKirim');
+
+    function isiTeks(elemen, nilai, cadangan = '-') {
+        if (elemen) {
+            elemen.textContent = nilai && String(nilai).trim()
+                ? String(nilai).trim()
+                : cadangan;
+        }
     }
 
-    function teks(el, nilai) {
-        if (!el) return;
-        el.textContent = nilai && String(nilai).trim()
-            ? String(nilai).trim()
-            : '-';
+    function formatRupiah(nilai) {
+        return 'Rp' + Number(nilai || 0).toLocaleString('id-ID');
     }
 
-    function labelWaktu() {
-        if (!jam || !ket || !jam.value) {
-            if (ket) ket.textContent = '';
-            return '';
+    function perbaruiWaktu() {
+        const keterangan = get('ket_waktu');
+
+        if (!jam.value) {
+            keterangan.textContent = '';
+            return;
         }
 
-        const j = Number(jam.value.split(':')[0]);
-        const waktu = j < 11
-            ? 'Pagi'
-            : j < 15
-                ? 'Siang'
-                : j < 18
-                    ? 'Sore'
-                    : 'Malam';
+        const angkaJam = Number(jam.value.split(':')[0]);
+        const waktu = angkaJam < 11 ? 'Pagi'
+            : angkaJam < 15 ? 'Siang'
+            : angkaJam < 18 ? 'Sore'
+            : 'Malam';
 
-        ket.textContent = waktu;
-        return waktu;
+        keterangan.textContent = 'Waktu kedatangan: ' + waktu;
     }
 
-    function ringkasan() {
-        teks($('sumNama'), nama?.value);
-        teks($('sumHp'), hp?.value);
-        teks($('sumMotor'), motor?.value);
-        teks($('sumPlat'), plat?.value.toUpperCase());
-        teks($('sumServis'), servis?.value);
+    function perbaruiRingkasan() {
+        isiTeks(get('sumNama'), nama.value);
+        isiTeks(get('sumHp'), hp.value);
+        isiTeks(get('sumMotor'), motor.value);
+        isiTeks(get('sumPlat'), plat.value.toUpperCase());
+
+        const opsiLayanan = servis.selectedOptions[0];
+        const namaLayanan = opsiLayanan && opsiLayanan.value
+            ? opsiLayanan.dataset.nama
+            : '';
+
+        isiTeks(get('sumServis'), namaLayanan);
+
+        const hargaBarang = Number(opsiLayanan?.dataset.barang || 0);
+        const biayaJasa = Number(opsiLayanan?.dataset.jasa || 0);
+        const totalHarga = hargaBarang + biayaJasa;
+
+        get('harga-barang').textContent = formatRupiah(hargaBarang);
+        get('biaya-jasa').textContent = formatRupiah(biayaJasa);
+        get('total-harga').textContent = formatRupiah(totalHarga);
+
+        isiTeks(get('sumHargaBarang'), formatRupiah(hargaBarang));
+        isiTeks(get('sumBiayaJasa'), formatRupiah(biayaJasa));
+        isiTeks(get('sumTotalHarga'), formatRupiah(totalHarga));
 
         let jadwal = '-';
 
-        if (tgl?.value) {
-            const tanggal = new Date(tgl.value + 'T00:00:00');
+        if (tanggal.value) {
+            const tanggalDipilih = new Date(tanggal.value + 'T00:00:00');
 
-            jadwal = tanggal.toLocaleDateString('id-ID', {
+            jadwal = tanggalDipilih.toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'short',
                 year: 'numeric'
             });
 
-            if (jam?.value) {
+            if (jam.value) {
                 jadwal += ', ' + jam.value;
             }
-        } else if (jam?.value) {
+        } else if (jam.value) {
             jadwal = jam.value;
         }
 
-        teks($('sumJadwal'), jadwal);
-        teks($('sumBayar'), bayarInput.dataset.label || '-');
+        isiTeks(get('sumJadwal'), jadwal);
 
-        const mekanik = document.querySelector(
+        const kategoriAktif = document.querySelector(
+            '.booking-payment-category.is-active'
+        );
+
+        const panelAktif = document.querySelector(
+            '.booking-payment-options:not(.is-hidden)'
+        );
+
+        const chipAktif = panelAktif
+            ? panelAktif.querySelector('.booking-payment-option.is-active')
+            : null;
+
+        let labelPembayaran = metodeBayar.dataset.label || metodeBayar.value;
+
+        if (chipAktif) {
+            labelPembayaran = chipAktif.dataset.label;
+        } else if (kategoriAktif && kategoriAktif.dataset.nilai) {
+            labelPembayaran = kategoriAktif.dataset.label;
+        }
+
+        isiTeks(get('sumBayar'), labelPembayaran);
+
+        const mekanikDipilih = document.querySelector(
             'input[name="mechanic_id"]:checked'
         );
 
-        teks(
-            $('sumMekanik'),
-            mekanik?.dataset.label || 'Ditentukan admin'
+        isiTeks(
+            get('sumMekanik'),
+            mekanikDipilih?.dataset.label || 'Ditentukan admin'
         );
     }
 
-    if (hp) {
-        hp.addEventListener('input', function () {
-            hp.value = hp.value.replace(/[^0-9+\-\s]/g, '');
-            ringkasan();
+    // Nomor HP hanya menerima angka, tanda plus, strip, dan spasi.
+    hp.addEventListener('input', function () {
+        hp.value = hp.value.replace(/[^0-9+\-\s]/g, '');
+        perbaruiRingkasan();
+    });
+
+    // Nomor polisi otomatis menjadi huruf besar.
+    plat.addEventListener('input', function () {
+        const posisiKursor = plat.selectionStart;
+
+        plat.value = plat.value.toUpperCase();
+
+        if (posisiKursor !== null) {
+            plat.setSelectionRange(posisiKursor, posisiKursor);
+        }
+
+        perbaruiRingkasan();
+    });
+
+    [nama, motor, tanggal, jam, servis].forEach(function (elemen) {
+        elemen.addEventListener('input', function () {
+            perbaruiWaktu();
+            perbaruiRingkasan();
         });
-    }
 
-    if (plat) {
-        plat.addEventListener('input', function () {
-            const posisi = plat.selectionStart;
-            plat.value = plat.value.toUpperCase();
-
-            if (posisi !== null) {
-                plat.setSelectionRange(posisi, posisi);
-            }
-
-            ringkasan();
-        });
-    }
-
-    document.querySelectorAll('.bk-chip').forEach(function (tombol) {
-        tombol.addEventListener('click', function () {
-            const saran = tombol.dataset.saran;
-            const sekarang = servis.value.trim();
-
-            if (sekarang.toLowerCase().includes(saran.toLowerCase())) {
-                return;
-            }
-
-            servis.value = sekarang
-                ? sekarang + ', ' + saran.toLowerCase()
-                : saran;
-
-            servis.dispatchEvent(new Event('input', { bubbles: true }));
-            servis.focus();
-            ringkasan();
+        elemen.addEventListener('change', function () {
+            perbaruiWaktu();
+            perbaruiRingkasan();
         });
     });
 
-    [nama, hp, motor, plat, servis, tgl, jam]
-        .filter(Boolean)
-        .forEach(function (elemen) {
-            elemen.addEventListener('input', function () {
-                labelWaktu();
-                ringkasan();
-            });
+    function pilihMetodeBayar(nilai, label) {
+        metodeBayar.value = nilai;
+        metodeBayar.dataset.label = label;
 
-            elemen.addEventListener('change', function () {
-                labelWaktu();
-                ringkasan();
-            });
-        });
-
-    function setBayar(nilai, label) {
-        bayarInput.value = nilai;
-        bayarInput.dataset.label = label;
-
-        if (errBayar) {
-            errBayar.classList.add('is-hidden');
-        }
-
-        ringkasan();
+        pesanBayar.classList.add('is-hidden');
+        perbaruiRingkasan();
     }
 
-    document.querySelectorAll('.bk-cat').forEach(function (tombol) {
+    // Pilih kategori pembayaran.
+    document.querySelectorAll('.booking-payment-category').forEach(function (tombol) {
         tombol.addEventListener('click', function () {
-            document.querySelectorAll('.bk-cat').forEach(function (item) {
-                item.classList.toggle('is-active', item === tombol);
+            document.querySelectorAll('.booking-payment-category').forEach(function (kategori) {
+                const aktif = kategori === tombol;
+
+                kategori.classList.toggle('is-active', aktif);
+                kategori.setAttribute('aria-pressed', aktif ? 'true' : 'false');
             });
 
-            document.querySelectorAll('.bk-sub').forEach(function (panel) {
+            document.querySelectorAll('.booking-payment-options').forEach(function (panel) {
                 panel.classList.toggle(
                     'is-hidden',
                     panel.dataset.sub !== tombol.dataset.kat
@@ -1341,101 +1319,109 @@
             });
 
             if (tombol.dataset.nilai) {
-                document.querySelectorAll('.bk-opt').forEach(function (opsi) {
+                document.querySelectorAll('.booking-payment-option').forEach(function (opsi) {
                     opsi.classList.remove('is-active');
                 });
 
-                setBayar(
-                    tombol.dataset.nilai,
-                    tombol.dataset.label
-                );
-            } else {
-                const opsiAktif = document.querySelector(
-                    '.bk-sub[data-sub="' + tombol.dataset.kat + '"] .bk-opt.is-active'
-                );
+                pilihMetodeBayar(tombol.dataset.nilai, tombol.dataset.label);
+                return;
+            }
 
-                if (opsiAktif) {
-                    setBayar(
-                        opsiAktif.dataset.nilai,
-                        opsiAktif.dataset.label
-                    );
-                } else {
-                    bayarInput.value = '';
-                    bayarInput.dataset.label = '';
-                    ringkasan();
-                }
+            const panelAktif = document.querySelector(
+                '.booking-payment-options[data-sub="' + tombol.dataset.kat + '"]'
+            );
+
+            const opsiAktif = panelAktif
+                ? panelAktif.querySelector('.booking-payment-option.is-active')
+                : null;
+
+            if (opsiAktif) {
+                pilihMetodeBayar(opsiAktif.dataset.nilai, opsiAktif.dataset.label);
+            } else {
+                metodeBayar.value = '';
+                metodeBayar.dataset.label = '';
+                pesanBayar.classList.add('is-hidden');
+                perbaruiRingkasan();
             }
         });
     });
 
-    document.querySelectorAll('.bk-opt').forEach(function (opsi) {
-        opsi.addEventListener('click', function () {
-            const panel = opsi.closest('.bk-sub');
+    // Pilih e-wallet atau bank.
+    document.querySelectorAll('.booking-payment-option').forEach(function (tombol) {
+        tombol.addEventListener('click', function () {
+            const panel = tombol.closest('.booking-payment-options');
 
-            panel.querySelectorAll('.bk-opt').forEach(function (item) {
-                item.classList.toggle('is-active', item === opsi);
-            });
+            if (panel) {
+                panel.querySelectorAll('.booking-payment-option').forEach(function (opsi) {
+                    opsi.classList.toggle('is-active', opsi === tombol);
+                });
+            }
 
-            setBayar(opsi.dataset.nilai, opsi.dataset.label);
+            pilihMetodeBayar(tombol.dataset.nilai, tombol.dataset.label);
         });
     });
 
-    document.querySelectorAll('input[name="mechanic_id"]').forEach(function (radio) {
-        radio.addEventListener('change', ringkasan);
-    });
+    // Atur label metode pembayaran yang sudah tersimpan.
+    (function aturPembayaranAwal() {
+        const nilai = metodeBayar.value;
 
-    // Menampilkan metode pembayaran yang sudah tersimpan.
-    (function () {
-        const nilai = bayarInput.value;
-        const kategori = document.querySelector('.bk-cat.is-active');
+        const opsiAktif = document.querySelector(
+            '.booking-payment-options:not(.is-hidden) .booking-payment-option.is-active'
+        );
 
-        let label = '';
+        const kategoriAktif = document.querySelector(
+            '.booking-payment-category.is-active'
+        );
 
-        if (nilai.startsWith('Transfer ')) {
-            label = nilai;
-        } else if (nilai === 'QRIS') {
-            label = 'QRIS';
-        } else if (
-            ['OVO', 'GoPay', 'DANA', 'ShopeePay', 'LinkAja'].includes(nilai)
-        ) {
-            label = nilai;
-        } else if (nilai) {
-            label = 'Tunai (bayar di kasir)';
-        }
-
-        bayarInput.dataset.label = label;
-
-        if (!nilai && kategori && kategori.dataset.nilai) {
-            bayarInput.dataset.label = kategori.dataset.label;
+        if (opsiAktif) {
+            metodeBayar.dataset.label = opsiAktif.dataset.label;
+        } else if (kategoriAktif && kategoriAktif.dataset.nilai) {
+            metodeBayar.dataset.label = kategoriAktif.dataset.label;
+        } else {
+            metodeBayar.dataset.label = nilai;
         }
     })();
 
+    document.querySelectorAll('input[name="mechanic_id"]').forEach(function (radio) {
+        radio.addEventListener('change', perbaruiRingkasan);
+    });
+
+    // Validasi sebelum menyimpan perubahan.
     form.addEventListener('submit', function (event) {
-        if (!bayarInput.value) {
+        const kategoriAktif = document.querySelector(
+            '.booking-payment-category.is-active'
+        );
+
+        const kodeKategori = kategoriAktif?.dataset.kat;
+
+        if (
+            ['ewallet', 'bank'].includes(kodeKategori) &&
+            !metodeBayar.value
+        ) {
             event.preventDefault();
 
-            if (errBayar) {
-                errBayar.classList.remove('is-hidden');
-                errBayar.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-            }
+            pesanBayar.classList.remove('is-hidden');
+            pesanBayar.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
 
             return;
         }
 
-        const tombol = $('btnKirim');
-
-        if (tombol) {
-            tombol.disabled = true;
-            tombol.style.opacity = '.75';
-            tombol.textContent = 'Menyimpan...';
+        if (!servis.value) {
+            event.preventDefault();
+            servis.focus();
+            return;
         }
+
+        tombolKirim.disabled = true;
+        tombolKirim.textContent = 'Menyimpan...';
     });
 
-    labelWaktu();
-    ringkasan();
+    // Isi ringkasan menggunakan data lama saat halaman dibuka.
+    perbaruiWaktu();
+    perbaruiRingkasan();
 })();
 </script>
 @endpush

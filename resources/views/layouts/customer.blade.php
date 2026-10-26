@@ -8,6 +8,23 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- Cegah sidebar berkedip saat pindah halaman -->
+    <script>
+        (() => {
+            try {
+                const desktop = window.matchMedia('(min-width: 1001px)').matches;
+                const desktopCollapsed =
+                    sessionStorage.getItem('royalMotorSidebarDesktopCollapsed') === 'true';
+
+                if (desktop && desktopCollapsed) {
+                    document.documentElement.classList.add('sidebar-initial-hidden');
+                }
+            } catch (error) {
+                // Jika sessionStorage tidak tersedia, pakai kondisi CSS normal.
+            }
+        })();
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -49,7 +66,6 @@
         }
 
         /* SIDEBAR */
-
         .sidebar {
             position: fixed;
             inset: 0 auto 0 0;
@@ -108,10 +124,7 @@
             gap: 13px;
             color: #f1f4fa;
             font-size: 13px;
-            transition:
-                background .22s ease,
-                color .22s ease,
-                padding-left .22s ease;
+            transition: background .22s ease, color .22s ease, padding-left .22s ease;
             position: relative;
             overflow: hidden;
         }
@@ -194,7 +207,6 @@
         }
 
         /* MAIN */
-
         .main {
             margin-left: 278px;
             min-height: 100vh;
@@ -202,7 +214,6 @@
         }
 
         /* TOPBAR */
-
         .topbar {
             min-height: 72px;
             width: 100%;
@@ -218,8 +229,7 @@
             backdrop-filter: blur(12px);
         }
 
-        /* TOMBOL MENU HAMBURGER */
-
+        /* HAMBURGER */
         .mobile-menu,
         .desktop-menu {
             width: 40px;
@@ -233,10 +243,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition:
-                background .2s ease,
-                border-color .2s ease,
-                color .2s ease;
+            transition: background .2s ease, border-color .2s ease, color .2s ease;
         }
 
         .mobile-menu {
@@ -256,8 +263,6 @@
             outline-offset: 2px;
         }
 
-        /* Ikon hamburger: tiga garis sama panjang dan rata */
-
         .menu-icon {
             display: block;
             width: 20px;
@@ -276,8 +281,43 @@
             min-width: 0;
         }
 
-        /* JAM DIGITAL */
+        /* KONTAK */
+        .topbar-contact {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 12px;
+            border: 1px solid #dce5f1;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #263b5b;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background .2s ease, border-color .2s ease, color .2s ease;
+        }
 
+        .topbar-contact:hover {
+            background: #f0f5ff;
+            border-color: #c8d8f5;
+            color: #3264d8;
+        }
+
+        .topbar-contact:focus-visible {
+            outline: 3px solid #3264d833;
+            outline-offset: 2px;
+        }
+
+        .topbar-contact svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* JAM DIGITAL */
         .topbar-clock {
             display: flex;
             align-items: center;
@@ -327,7 +367,6 @@
         }
 
         /* PROFIL */
-
         .profile-wrap {
             position: relative;
             flex-shrink: 0;
@@ -400,7 +439,6 @@
         }
 
         /* DROPDOWN PROFIL */
-
         .profile-dropdown {
             display: none;
             position: absolute;
@@ -492,7 +530,6 @@
         }
 
         /* KONTEN */
-
         .content {
             padding: 20px 25px 28px;
             max-width: 1600px;
@@ -513,7 +550,6 @@
         }
 
         /* DESKTOP */
-
         @media (min-width: 1001px) {
             .sidebar.collapsed {
                 transform: translateX(-100%);
@@ -522,10 +558,18 @@
             .main.sidebar-collapsed {
                 margin-left: 0;
             }
+
+            /* Kondisi awal sebelum JavaScript sidebar jalan (anti kedip) */
+            html.sidebar-initial-hidden .sidebar {
+                transform: translateX(-100%);
+            }
+
+            html.sidebar-initial-hidden .main {
+                margin-left: 0;
+            }
         }
 
         /* TABLET */
-
         @media (max-width: 1000px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -551,7 +595,6 @@
         }
 
         /* HP */
-
         @media (max-width: 700px) {
             .topbar {
                 min-height: 64px;
@@ -572,6 +615,17 @@
             .menu-icon {
                 width: 19px;
                 height: 15px;
+            }
+
+            .topbar-contact {
+                width: 36px;
+                min-height: 36px;
+                padding: 0;
+                gap: 0;
+            }
+
+            .topbar-contact-label {
+                display: none;
             }
 
             .topbar-clock {
@@ -701,56 +755,56 @@
         <a href="{{ route('dashboard') }}"
            class="menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
            onclick="tutupSidebarMobile()">
-
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 11 12 4l9 7"/>
                 <path d="M5 10v10h14V10"/>
                 <path d="M9 20v-6h6v6"/>
             </svg>
-
             <span>Dashboard</span>
         </a>
 
         <a href="{{ route('booking.create') }}"
            class="menu-link {{ request()->routeIs('booking.create') ? 'active' : '' }}"
            onclick="tutupSidebarMobile()">
-
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="17" rx="2"/>
                 <path d="M8 2v4M16 2v4M3 10h18"/>
                 <path d="M12 13v5M9.5 15.5h5"/>
             </svg>
-
             <span>Booking Servis</span>
         </a>
 
         <a href="{{ route('booking.index') }}"
            class="menu-link {{ request()->routeIs('booking.index') ? 'active' : '' }}"
            onclick="tutupSidebarMobile()">
-
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="4" y="3" width="16" height="18" rx="2"/>
                 <path d="M8 8h8M8 12h8M8 16h5"/>
             </svg>
-
             <span>Riwayat Booking</span>
+        </a>
+
+        <a href="{{ route('layanan.index') }}"
+           class="menu-link {{ request()->routeIs('layanan.*') ? 'active' : '' }}"
+           onclick="tutupSidebarMobile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 5h16v14H4z"/>
+                <path d="M8 9h8M8 13h5"/>
+                <path d="M8 2v3M16 2v3"/>
+            </svg>
+            <span>Layanan &amp; Harga</span>
         </a>
     </nav>
 
     <div class="sidebar-footer">
         <div class="sidebar-footer-card">
             <span class="footer-status"></span>
-
             <div class="footer-text">
                 <strong>Bengkel Royal Motor</strong>
                 <small>Layanan booking servis online</small>
             </div>
         </div>
     </div>
-
 </aside>
 
 <!-- MAIN -->
@@ -758,48 +812,66 @@
 
     <header class="topbar">
 
-        <!-- HAMBURGER HP -->
         <button type="button"
                 class="mobile-menu"
                 onclick="toggleSidebar()"
-                aria-label="Buka menu"
+                aria-label="Buka atau tutup menu"
                 aria-controls="sidebar">
-
-            <svg class="menu-icon"
-                 viewBox="0 0 20 16"
-                 fill="none"
-                 aria-hidden="true">
+            <svg class="menu-icon" viewBox="0 0 20 16" fill="none" aria-hidden="true">
                 <line x1="1" y1="2" x2="19" y2="2"/>
                 <line x1="1" y1="8" x2="19" y2="8"/>
                 <line x1="1" y1="14" x2="19" y2="14"/>
             </svg>
         </button>
 
-        <!-- HAMBURGER DESKTOP -->
         <button type="button"
                 class="desktop-menu"
                 onclick="toggleSidebar()"
                 aria-label="Tampilkan atau sembunyikan menu"
                 aria-controls="sidebar">
-
-            <svg class="menu-icon"
-                 viewBox="0 0 20 16"
-                 fill="none"
-                 aria-hidden="true">
+            <svg class="menu-icon" viewBox="0 0 20 16" fill="none" aria-hidden="true">
                 <line x1="1" y1="2" x2="19" y2="2"/>
                 <line x1="1" y1="8" x2="19" y2="8"/>
                 <line x1="1" y1="14" x2="19" y2="14"/>
             </svg>
         </button>
 
+        <!-- KONTAK: tidak memaksa sidebar terbuka saat pindah halaman -->
+        <a href="{{ route('kontak') }}"
+           class="topbar-contact"
+           aria-label="Buka halaman kontak"
+           title="Kontak">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+                <path d="M22 16.9v3a2 2 0 0 1-2.2 2
+                        19.8 19.8 0 0 1-8.6-3.1
+                        19.5 19.5 0 0 1-6-6
+                        A19.8 19.8 0 0 1 2.1 4.2
+                        2 2 0 0 1 4.1 2h3
+                        a2 2 0 0 1 2 1.7
+                        c.1 1 .4 1.9.7 2.8
+                        a2 2 0 0 1-.5 2.1L8 9.9
+                        a16 16 0 0 0 6 6l1.3-1.3
+                        a2 2 0 0 1 2.1-.4
+                        c.9.3 1.8.6 2.8.7
+                        a2 2 0 0 1 1.7 2z"/>
+            </svg>
+
+            <span class="topbar-contact-label">Kontak</span>
+        </a>
+
         <div class="topbar-spacer"></div>
 
         <!-- JAM DAN TANGGAL -->
         <div class="topbar-clock">
-
             <div class="clock-icon">
-                <svg viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="1.8">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <circle cx="12" cy="12" r="9"/>
                     <path d="M12 7v5l3 2"/>
                 </svg>
@@ -809,12 +881,10 @@
                 <div class="clock-date" id="topbarDate">Memuat tanggal...</div>
                 <div class="clock-time" id="topbarTime">00:00:00</div>
             </div>
-
         </div>
 
         <!-- PROFIL -->
         <div class="profile-wrap" id="profileWrap">
-
             <button type="button"
                     class="profile-trigger"
                     id="profileTrigger"
@@ -824,8 +894,7 @@
 
                 <div class="avatar">
                     @if(auth()->user()->profile_photo_url)
-                        <img src="{{ auth()->user()->profile_photo_url }}"
-                             alt="Foto profil">
+                        <img src="{{ auth()->user()->profile_photo_url }}" alt="Foto profil">
                     @else
                         {{ strtoupper(substr($namaPelanggan, 0, 1)) }}
                     @endif
@@ -836,70 +905,48 @@
                     <small>Pelanggan</small>
                 </div>
 
-                <svg class="chevron" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="m6 9 6 6 6-6"/>
                 </svg>
-
             </button>
 
             <div class="profile-dropdown" id="profileDropdown">
-
                 <div class="dropdown-heading">
                     <strong>{{ $namaPelanggan }}</strong>
-                    <small>Pengaturan akun pelanggan</small>
+                    <small>akun pelanggan</small>
                 </div>
 
                 <a href="{{ route('profile.edit') }}" class="dropdown-link">
-                    <svg viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="8" r="4"/>
                         <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
                     </svg>
                     Profil Akun
                 </a>
 
-                <a href="{{ route('profile.edit') }}#update-password"
-                   class="dropdown-link">
-
-                    <svg viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
-                        <rect x="4" y="10" width="16" height="11" rx="2"/>
-                        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-                    </svg>
-
-                    Ganti Password
-                </a>
-
                 <div class="dropdown-divider"></div>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <button type="submit" class="dropdown-link logout">
-                        <svg viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M10 17l5-5-5-5M15 12H3"/>
                             <path d="M21 19V5a2 2 0 0 0-2-2h-6"/>
                         </svg>
                         Logout
                     </button>
                 </form>
-
             </div>
         </div>
-
     </header>
 
     <main class="content">
         @yield('content')
     </main>
-
 </div>
 
 <script>
     /* JAM DIGITAL */
-
     function updateTopbarClock() {
         const dateElement = document.getElementById('topbarDate');
         const timeElement = document.getElementById('topbarTime');
@@ -928,8 +975,35 @@
     updateTopbarClock();
     setInterval(updateTopbarClock, 1000);
 
+    /* SIDEBAR: SIMPAN KONDISI SAAT PINDAH HALAMAN */
+    const SIDEBAR_DESKTOP_KEY = 'royalMotorSidebarDesktopCollapsed';
+    const SIDEBAR_MOBILE_KEY = 'royalMotorSidebarMobileOpen';
 
-    /* SIDEBAR */
+    function terapkanKondisiSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const main = document.querySelector('.main');
+        const overlay = document.getElementById('overlay');
+
+        if (!sidebar || !main || !overlay) return;
+
+        if (window.innerWidth <= 1000) {
+            const isOpen = sessionStorage.getItem(SIDEBAR_MOBILE_KEY) === 'true';
+
+            sidebar.classList.remove('collapsed');
+            main.classList.remove('sidebar-collapsed');
+            sidebar.classList.toggle('open', isOpen);
+            overlay.classList.toggle('show', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        } else {
+            const isCollapsed = sessionStorage.getItem(SIDEBAR_DESKTOP_KEY) === 'true';
+
+            sidebar.classList.remove('open');
+            sidebar.classList.toggle('collapsed', isCollapsed);
+            main.classList.toggle('sidebar-collapsed', isCollapsed);
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
 
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
@@ -937,43 +1011,49 @@
         const overlay = document.getElementById('overlay');
 
         if (window.innerWidth <= 1000) {
-            const isOpen = sidebar.classList.toggle('open');
+            const isOpen = !sidebar.classList.contains('open');
 
+            sidebar.classList.toggle('open', isOpen);
             overlay.classList.toggle('show', isOpen);
             document.body.style.overflow = isOpen ? 'hidden' : '';
+            sessionStorage.setItem(SIDEBAR_MOBILE_KEY, isOpen ? 'true' : 'false');
         } else {
-            const isCollapsed = sidebar.classList.toggle('collapsed');
+            const isCollapsed = !sidebar.classList.contains('collapsed');
 
+            sidebar.classList.toggle('collapsed', isCollapsed);
             main.classList.toggle('sidebar-collapsed', isCollapsed);
+            sessionStorage.setItem(SIDEBAR_DESKTOP_KEY, isCollapsed ? 'true' : 'false');
         }
     }
 
+    /* Tutup sidebar hanya di HP/tablet. Di desktop tidak melakukan apa-apa,
+       jadi klik menu tidak lagi menyembunyikan sidebar. */
     function tutupSidebarMobile() {
-        if (window.innerWidth <= 1000) {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('overlay').classList.remove('show');
-            document.body.style.overflow = '';
-        }
-    }
+        if (window.innerWidth > 1000) return;
 
-    window.addEventListener('resize', function () {
         const sidebar = document.getElementById('sidebar');
-        const main = document.querySelector('.main');
         const overlay = document.getElementById('overlay');
 
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+        sessionStorage.setItem(SIDEBAR_MOBILE_KEY, 'false');
+    }
+
+    /* TERAPKAN KONDISI SIDEBAR SAAT HALAMAN DIBUKA */
+    terapkanKondisiSidebar();
+    document.documentElement.classList.remove('sidebar-initial-hidden');
+
+    /* SESUAIKAN SIDEBAR SAAT UKURAN LAYAR BERUBAH */
+    window.addEventListener('resize', function () {
+        terapkanKondisiSidebar();
+
         if (window.innerWidth > 1000) {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('show');
             document.body.style.overflow = '';
-        } else {
-            sidebar.classList.remove('collapsed');
-            main.classList.remove('sidebar-collapsed');
         }
     });
 
-
     /* DROPDOWN PROFIL */
-
     function toggleProfileDropdown() {
         const dropdown = document.getElementById('profileDropdown');
         const trigger = document.getElementById('profileTrigger');

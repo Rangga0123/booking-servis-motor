@@ -11,6 +11,9 @@
         color: var(--dash-text);
     }
 
+    .dash-page,
+    .dash-page * { box-sizing: border-box; }
+
     .page-heading {
         gap: 20px;
         margin-bottom: 26px;
@@ -249,6 +252,7 @@
         margin-top: 5px;
         color: #91a0b7;
         font-size: 11px;
+        line-height: 1.6;
         overflow-wrap: anywhere;
     }
 
@@ -280,7 +284,7 @@
     .dash-page .status.process { background: #eaf0ff; color: #3864d2; }
     .dash-page .status.done    { background: #e0f7eb; color: #138453; }
 
-    .dash-page .today-more { padding: 0 21px 6px; color: #8996aa; font-size: 12px; }
+    .dash-page .today-more { padding: 0 21px 16px; color: #8996aa; font-size: 12px; }
 
     .dash-page .empty-state {
         padding: 34px 15px;
@@ -308,6 +312,7 @@
 
     @media (max-width: 1100px) {
         .dash-page .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .dash-page .kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
         .dash-page .dash-grid { grid-template-columns: minmax(0, 1fr); }
         .dash-page .today-panel { grid-column: auto; }
     }
@@ -329,7 +334,16 @@
         .dash-page .summary-content { padding: 15px; }
         .dash-page .summary-item { padding: 13px; }
         .dash-page .today-list { padding: 14px; }
+        .dash-page .today-more { padding: 0 14px 14px; }
         .dash-page .panel-footer { padding: 15px; }
+        .dash-page .today-badge { white-space: normal; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .dash-page .kpi,
+        .dash-page .summary-item,
+        .dash-page .summary-link,
+        .dash-page .today-item { transition: none; }
     }
 </style>
 @endpush
@@ -374,6 +388,25 @@
 
     $jadwalTampil = $jadwalHariIni->take(8);
     $jadwalSisa = $jadwalHariIni->count() - $jadwalTampil->count();
+
+    // Warna label status
+    $kelasStatus = function ($status) {
+        return match (strtolower(trim((string) $status))) {
+            'selesai' => 'done',
+            'disetujui', 'diterima', 'proses', 'diproses',
+            'sedang dikerjakan', 'dikerjakan' => 'process',
+            default => 'waiting',
+        };
+    };
+
+    // Link ke halaman jadwal servis (dicek dulu agar tidak error bila nama route berbeda)
+    $linkJadwal = '#';
+    foreach (['admin.jadwal-servis', 'admin.jadwal'] as $namaRoute) {
+        if (\Illuminate\Support\Facades\Route::has($namaRoute)) {
+            $linkJadwal = route($namaRoute);
+            break;
+        }
+    }
 @endphp
 
 <section class="page-heading">
@@ -385,10 +418,12 @@
 </section>
 
 <div class="dash-page">
+
+    {{-- KARTU RINGKASAN ATAS --}}
     <section class="kpi-grid">
         <div class="kpi">
             <div class="kpi-icon tone-blue">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
                 </svg>
             </div>
@@ -401,7 +436,7 @@
 
         <div class="kpi">
             <div class="kpi-icon tone-orange">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
                 </svg>
             </div>
@@ -414,7 +449,7 @@
 
         <div class="kpi">
             <div class="kpi-icon tone-green">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/>
                 </svg>
             </div>
@@ -427,12 +462,13 @@
     </section>
 
     <section class="dash-grid">
+
         {{-- RINGKASAN BOOKING --}}
         <section class="panel">
             <div class="panel-header">
                 <div class="panel-heading">
                     <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
                         </svg>
                     </div>
@@ -446,7 +482,7 @@
             <div class="summary-content">
                 <div class="summary-item">
                     <div class="summary-icon tone-blue">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
                         </svg>
                     </div>
@@ -459,7 +495,7 @@
 
                 <div class="summary-item">
                     <div class="summary-icon tone-orange">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
                         </svg>
                     </div>
@@ -471,7 +507,7 @@
                 </div>
 
                 <a href="{{ route('admin.pelanggan-pesanan') }}" class="summary-link">
-                    Lihat Daftar Pesanan <span>→</span>
+                    Lihat Daftar Pesanan <span aria-hidden="true">→</span>
                 </a>
             </div>
         </section>
@@ -481,7 +517,7 @@
             <div class="panel-header">
                 <div class="panel-heading">
                     <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>
                         </svg>
                     </div>
@@ -495,7 +531,7 @@
             <div class="summary-content">
                 <div class="summary-item">
                     <div class="summary-icon tone-green">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="m5 12 4 4L19 6"/>
                         </svg>
                     </div>
@@ -508,7 +544,7 @@
 
                 <div class="summary-item">
                     <div class="summary-icon tone-red">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M6 6l12 12M18 6 6 18"/>
                         </svg>
                     </div>
@@ -520,9 +556,88 @@
                 </div>
 
                 <a href="{{ route('admin.mekanik.index') }}" class="summary-link">
-                    Lihat Data Mekanik <span>→</span>
+                    Lihat Data Mekanik <span aria-hidden="true">→</span>
                 </a>
             </div>
         </section>
 
+        {{-- JADWAL SERVIS HARI INI --}}
+        <section class="panel today-panel">
+            <div class="panel-header">
+                <div class="panel-header-top">
+                    <div class="panel-heading">
+                        <div class="panel-heading-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="panel-title">Jadwal Servis Hari Ini</div>
+                            <div class="panel-subtitle">Urut dari jam paling awal. Pesanan ditolak dan dibatalkan tidak ditampilkan.</div>
+                        </div>
+                    </div>
+
+                    <span class="today-badge">
+                        {{ $jadwalHariIni->count() }} Jadwal · {{ now()->format('d M Y') }}
+                    </span>
+                </div>
+            </div>
+
+            @if ($jadwalHariIni->isEmpty())
+                <div class="empty-state">
+                    Belum ada jadwal servis untuk hari ini.
+                </div>
+            @else
+                <div class="today-list">
+                    @foreach ($jadwalTampil as $item)
+                        @php
+                            $jam = substr(str_replace(',', ':', (string) $item->jam_booking), 0, 5);
+                            $namaMekanik = $item->mechanic?->nama_mekanik;
+                            $namaServis = $item->service?->nama_servis ?? $item->jenis_servis;
+                        @endphp
+
+                        <div class="today-item">
+                            <div class="today-time">
+                                {{ $jam ?: '-' }}
+                                <small>WIB</small>
+                            </div>
+
+                            <div>
+                                <span class="customer-name">{{ $item->nama_pelanggan ?: '-' }}</span>
+                                <span class="customer-detail">
+                                    {{ $item->nama_motor ?: '-' }}
+                                    · {{ $item->plat_nomor ?: '-' }}
+                                    @if ($namaServis)
+                                        · {{ $namaServis }}
+                                    @endif
+                                </span>
+                            </div>
+
+                            <div class="today-mech">
+                                <small>Mekanik</small>
+                                <strong class="{{ $namaMekanik ? '' : 'muted' }}">
+                                    {{ $namaMekanik ?: 'Belum ditentukan' }}
+                                </strong>
+                            </div>
+
+                            <span class="status {{ $kelasStatus($item->status) }}">
+                                {{ ucfirst($item->status ?? 'Menunggu') }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if ($jadwalSisa > 0)
+                    <div class="today-more">+ {{ $jadwalSisa }} jadwal lainnya hari ini</div>
+                @endif
+            @endif
+
+            <div class="panel-footer">
+                <span>Data diambil dari booking dengan tanggal hari ini.</span>
+                <a href="{{ $linkJadwal }}">Lihat jadwal lengkap →</a>
+            </div>
+        </section>
+
+    </section>
+</div>
 @endsection

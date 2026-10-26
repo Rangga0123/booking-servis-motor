@@ -3,7 +3,11 @@
 @section('title', 'Pelanggan & Pesanan')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <style>
+    .order-page,
+    .order-page * { box-sizing: border-box; }
     .order-page { color: #192740; }
     .page-heading { gap: 20px; margin-bottom: 26px; align-items: center; }
 
@@ -30,81 +34,131 @@
     }
     .order-page .panel-title { color: #1a2943; font-size: 15px; font-weight: 800; }
     .order-page .panel-subtitle { margin-top: 5px; color: #8794a9; font-size: 12px; }
+    .order-page .panel-tag {
+        flex-shrink: 0; padding: 7px 10px; color: #3264d8; background: #edf3ff;
+        border: 1px solid #dce7ff; border-radius: 7px; font-size: 11px; font-weight: 750;
+    }
 
     .order-page .filter-select {
-        width: 200px; max-width: 100%; padding: 11px 36px 11px 13px;
-        border: 1px solid #dfe6f1; border-radius: 11px; background: #fff;
-        color: #40516e; font-size: 12px; font-weight: 700; outline: none;
+        width: 170px; max-width: 100%; padding: 10px 13px; border: 1px solid #dfe6f1; border-radius: 10px;
+        background: #fff; color: #40516e; font-family: inherit; font-size: 12px; font-weight: 700; outline: none;
     }
+    .order-page .filter-select:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
 
-    /* TABEL */
-    .order-page .table-wrapper { width: 100%; overflow-x: auto; padding: 20px 21px 6px; }
-    .order-page table {
-        width: 100%; min-width: 900px; table-layout: fixed;
-        border-collapse: collapse; border: 1px solid #dee2e6;
-    }
-    .order-page th:nth-child(1) { width: 50px; }
-    .order-page th:nth-child(2) { width: 22%; }
-    .order-page th:nth-child(3) { width: 14%; }
-    .order-page th:nth-child(4) { width: 20%; }
-    .order-page th:nth-child(5) { width: 14%; }
-    .order-page th:nth-child(6) { width: 12%; }
-    .order-page th:nth-child(7) { width: 100px; }
+    /* ===== TABEL (sama dengan riwayat pelanggan) ===== */
+    .order-page .table-wrapper { width: 100%; padding: 18px 22px 20px; }
+    .order-page .ord-strong { color: #14213d; font-size: 13px; font-weight: 750; line-height: 1.6; overflow-wrap: anywhere; }
+    .order-page .ord-small { margin-top: 4px; color: #8491a8; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
 
-    .order-page table thead th {
-        padding: 13px 14px; background: #fff; color: #212529;
-        border: 1px solid #dee2e6; border-bottom: 2px solid #dee2e6;
-        font-size: 13px; font-weight: 800; text-align: left; vertical-align: middle;
+    .order-page table.order-table {
+        width: 100%; border-collapse: collapse; border-spacing: 0;
+        border: 1px solid #e2e9f3; text-align: left; background: #fff;
     }
-    .order-page table tbody td {
-        padding: 12px 14px; color: #3c4858; border: 1px solid #dee2e6;
-        font-size: 13px; line-height: 1.6; vertical-align: middle; overflow-wrap: anywhere;
+    .order-page table.order-table thead th {
+        padding: 15px 14px; color: #60708a; background: #f5f8fd;
+        border-bottom: 1px solid #e2e9f3; border-right: 1px solid #e2e9f3;
+        font-size: 11px; font-weight: 800; letter-spacing: .35px;
+        text-transform: uppercase; white-space: nowrap;
     }
-    .order-page table tbody tr:hover { background: #f2f4f7; }
-    .order-page .col-no { color: #3c4858; text-align: center !important; }
+    .order-page table.order-table tbody td {
+        padding: 11px 14px; color: #52647b; border-bottom: 1px solid #e2e9f3; border-right: 1px solid #e2e9f3;
+        font-size: 12px; line-height: 1.7; vertical-align: middle; white-space: nowrap;
+    }
+    .order-page table.order-table tbody td.col-wrap { white-space: normal; }
+    .order-page table.order-table .col-pemesan { min-width: 200px; }
+    .order-page table.order-table .col-keluhan { min-width: 240px; }
+    .order-page table.order-table .col-servis { min-width: 170px; }
+    .order-page table.order-table thead th:last-child,
+    .order-page table.order-table tbody td:last-child { border-right: none; }
+    .order-page table.order-table tbody tr:nth-child(even) { background: #fbfcff; }
+    .order-page table.order-table tbody tr:hover { background: #f2f6ff; }
+    .order-page table.dataTable.no-footer { border-bottom: 1px solid #e2e9f3; }
 
-    .order-page .customer-name { display: block; color: #263650; font-weight: 800; }
-    .order-page .customer-detail { display: block; margin-top: 4px; color: #8b9ab1; font-size: 10px; }
-    .order-page .vehicle-plate {
-        display: inline-block; margin-top: 4px; padding: 2px 7px;
-        background: #f0f3f8; border: 1px solid #e6ebf3; border-radius: 5px;
-        color: #52627b; font-size: 10px; font-weight: 700;
+    .order-page .dataTables_wrapper { font-size: 12px; color: #52647b; }
+    .order-page .ord-dt-top,
+    .order-page .ord-dt-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+    .order-page .ord-dt-top { margin-bottom: 14px; }
+    .order-page .ord-dt-bottom { margin-top: 14px; }
+    .order-page .dt-buttons { display: flex; flex-wrap: wrap; gap: 0; float: none; margin: 0; }
+    .order-page .dt-button {
+        margin: 0 !important; padding: 8px 15px !important; color: #fff !important;
+        background: #3b4752 !important; background-image: none !important;
+        border: 1px solid #2f3a45 !important; border-radius: 0 !important;
+        font-size: 12px !important; font-weight: 700 !important; box-shadow: none !important;
     }
-    .order-page .booking-date { color: #52627b; font-size: 11px; font-weight: 600; line-height: 1.8; }
+    .order-page .dt-button:first-child { border-radius: 7px 0 0 7px !important; }
+    .order-page .dt-button:last-child { border-radius: 0 7px 7px 0 !important; }
+    .order-page .dt-button:only-child { border-radius: 7px !important; }
+    .order-page .dt-button:hover { background: #2b343d !important; background-image: none !important; }
+    .order-page .dataTables_filter,
+    .order-page .dataTables_length { float: none; margin: 0; }
+    .order-page .dataTables_filter input,
+    .order-page .dataTables_length select {
+        padding: 7px 10px; color: #14213d; border: 1px solid #d3dcea; border-radius: 7px; font-size: 12px; outline: none;
+    }
+    .order-page .dataTables_filter input:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
+    .order-page .dataTables_info { float: none; padding: 0; color: #7182a3; }
+    .order-page .dataTables_paginate { float: none; padding: 0; }
+    .order-page .dataTables_paginate .paginate_button {
+        padding: 6px 12px !important; margin: 0 0 0 -1px !important; color: #52647b !important;
+        background: #fff !important; background-image: none !important;
+        border: 1px solid #d3dcea !important; border-radius: 0 !important; box-shadow: none !important;
+    }
+    .order-page .dataTables_paginate .paginate_button:first-child { border-radius: 7px 0 0 7px !important; }
+    .order-page .dataTables_paginate .paginate_button:last-child { border-radius: 0 7px 7px 0 !important; }
+    .order-page .dataTables_paginate .paginate_button.current { color: #fff !important; background: #3264d8 !important; border-color: #3264d8 !important; }
+    .order-page .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) { background: #eef3fc !important; }
+    .order-page .dataTables_paginate .paginate_button.disabled { color: #a7b2c4 !important; }
+    div.dt-button-background { background: transparent !important; }
+    div.dt-button-collection { padding: 6px 0; border: 1px solid #dce5f1; border-radius: 8px; box-shadow: 0 8px 24px rgba(39,61,99,.15); }
+    div.dt-button-collection .dt-button { display: block; width: 100%; color: #14213d !important; background: #fff !important; border: none !important; border-radius: 0 !important; text-align: left; }
+    div.dt-button-collection .dt-button.active,
+    div.dt-button-collection .dt-button.dt-button-active { color: #fff !important; background: #3264d8 !important; }
 
-    /* STATUS */
+    /* STATUS (sama dengan riwayat pelanggan) */
     .order-page .status {
-        display: inline-flex; align-items: center; padding: 7px 10px;
-        border-radius: 8px; font-size: 10px; font-weight: 800; white-space: nowrap;
+        display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px;
+        border: 1px solid transparent; border-radius: 7px; font-size: 10px; font-weight: 800;
+        line-height: 1.5; white-space: nowrap;
     }
-    .order-page .status.waiting  { background: #fff3dc; color: #b9790b; }
-    .order-page .status.process  { background: #eaf0ff; color: #3864d2; }
-    .order-page .status.done     { background: #e0f7eb; color: #138453; }
-    .order-page .status.rejected { background: #ffe8eb; color: #c5344c; }
+    .order-page .status.waiting  { color: #956000; background: #fff5dc; border-color: #ffe3a0; }
+    .order-page .status.process  { color: #2457bd; background: #e7efff; border-color: #cbdcff; }
+    .order-page .status.done     { color: #087647; background: #e1f8eb; border-color: #bcebd0; }
+    .order-page .status.rejected { color: #bb2942; background: #ffedf0; border-color: #ffd0d8; }
 
     .order-page .detail-btn {
-        padding: 9px 12px; border: 0; border-radius: 9px; background: #263650;
-        color: #fff; font-size: 11px; font-weight: 800; cursor: pointer; transition: .2s ease;
+        min-height: 32px; padding: 7px 12px; border: 1px solid #d2e2ff; border-radius: 7px; background: #eaf2ff;
+        color: #1854b4; font-family: inherit; font-size: 10px; font-weight: 800; white-space: nowrap; cursor: pointer; transition: .2s ease;
     }
-    .order-page .detail-btn:hover { background: #4775ef; }
+    .order-page .detail-btn:hover { background: #d9e7ff; transform: translateY(-1px); }
 
-    .order-page .table-footer {
-        display: flex; justify-content: space-between; align-items: center;
-        flex-wrap: wrap; gap: 12px; padding: 14px 21px 22px;
-        color: #3c4858; font-size: 13px;
+    .order-page .empty-state { padding: 44px 15px; color: #8a97ab; text-align: center; font-size: 13px; }
+
+    /* ===== KARTU MOBILE ===== */
+    .order-page .ord-mobile { display: none; padding: 14px; }
+    .order-page .ord-card {
+        padding: 15px; margin-bottom: 12px; background: #fff; border: 1px solid #dce5f1;
+        border-left: 3px solid #3264d8; border-radius: 11px; box-shadow: 0 3px 10px rgba(39,61,99,.035);
     }
-    .order-page .pager { display: flex; }
-    .order-page .pager a,
-    .order-page .pager span {
-        padding: 7px 13px; margin-left: -1px; background: #fff;
-        border: 1px solid #dee2e6; color: #3264d8; font-size: 13px; text-decoration: none;
+    .order-page .ord-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .order-page .ord-card-grid {
+        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px;
+        margin-top: 14px; padding-top: 14px; border-top: 1px solid #e8edf5;
     }
-    .order-page .pager a:hover { background: #eef2fb; }
-    .order-page .pager .disabled { color: #8a94a3; }
-    .order-page .pager .active { background: #3264d8; border-color: #3264d8; color: #fff; }
-    .order-page .pager > :first-child { margin-left: 0; border-radius: 5px 0 0 5px; }
-    .order-page .pager > :last-child { border-radius: 0 5px 5px 0; }
-    .order-page .empty-state { padding: 32px 15px; color: #8a97ab; text-align: center; font-size: 12px; }
+    .order-page .ord-card-grid .full { grid-column: 1 / -1; }
+    .order-page .ord-card-label { color: #8491a8; font-size: 11px; line-height: 1.5; }
+    .order-page .ord-card-value { margin-top: 5px; color: #263752; font-size: 12px; font-weight: 700; line-height: 1.7; overflow-wrap: anywhere; }
+    .order-page .ord-card-actions { margin-top: 14px; padding-top: 13px; border-top: 1px solid #e8edf5; }
+    .order-page .ord-m-search {
+        width: 100%; margin-bottom: 12px; padding: 11px 13px; color: #14213d; background: #fff;
+        border: 1px solid #d3dcea; border-radius: 9px; font-family: inherit; font-size: 16px; outline: none;
+    }
+    .order-page .ord-m-search:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
+    .order-page .ord-m-more {
+        display: none; width: 100%; min-height: 44px; margin-top: 12px; color: #3264d8; background: #edf3ff;
+        border: 1px solid #dce7ff; border-radius: 9px; font-family: inherit; font-size: 13px; font-weight: 750; cursor: pointer;
+    }
+    .order-page .ord-m-empty { display: none; padding: 22px 10px; color: #7182a3; font-size: 13px; text-align: center; }
 
     /* MODAL DETAIL */
     .order-page .modal {
@@ -114,14 +168,14 @@
     }
     .order-page .modal.show { display: flex; }
     .order-page .modal-box {
-        width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+        width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto;
         background: #fff; border-radius: 19px; box-shadow: 0 25px 80px #0003;
     }
     .order-page .modal-header {
         display: flex; align-items: center; justify-content: space-between;
         padding: 20px 23px; border-bottom: 1px solid #e8edf5;
     }
-    .order-page .modal-header h3 { color: #1d2c45; font-size: 16px; font-weight: 800; }
+    .order-page .modal-header h3 { margin: 0; color: #1d2c45; font-size: 16px; font-weight: 800; }
     .order-page .close-modal {
         width: 36px; height: 36px; border: 1px solid #e7ebf3; border-radius: 10px;
         background: #f5f7fb; color: #53637c; cursor: pointer;
@@ -132,11 +186,12 @@
         padding: 15px; overflow-wrap: anywhere; background: #f7f9fd;
         border: 1px solid #e9edf5; border-radius: 12px;
     }
+    .order-page .detail-item.full { grid-column: 1 / -1; }
     .order-page .detail-item small {
         display: block; margin-bottom: 7px; color: #8996aa; font-size: 10px;
         font-weight: 700; text-transform: uppercase;
     }
-    .order-page .detail-item strong { color: #263650; font-size: 12px; line-height: 1.7; }
+    .order-page .detail-item strong { color: #263650; font-size: 12px; line-height: 1.7; white-space: pre-line; }
 
     /* JAM */
     .clock-box {
@@ -150,17 +205,98 @@
     .clock-date { margin-bottom: 4px; color: #7c8ba4; font-size: 11px; font-weight: 600; }
     .clock-time { color: #1b2941; font-size: 17px; font-weight: 800; white-space: nowrap; }
 
+    @media (max-width: 800px) {
+        .order-page .table-wrapper { display: none; }
+        .order-page .ord-mobile { display: block; }
+    }
+
     @media (max-width: 650px) {
         .page-heading { align-items: stretch; }
         .clock-box { width: 100%; min-width: 0; }
         .order-page .panel-header { padding: 16px; }
-        .order-page .filter-select { width: 100%; }
+        .order-page .panel-tag { display: none; }
+        .order-page .filter-select { width: 100%; font-size: 16px; }
+        .order-page .ord-mobile { padding: 10px; }
+        .order-page .ord-card { padding: 13px; }
         .order-page .detail-grid { grid-template-columns: minmax(0, 1fr); }
     }
 </style>
 @endpush
 
 @section('content')
+@php
+    $rp = fn ($n) => 'Rp' . number_format((float) $n, 0, ',', '.');
+
+    $daftar = $bookings->map(function ($item) use ($rp) {
+        $status = strtolower($item->status ?? '');
+
+        $jam = $item->jam_booking
+            ? substr(str_replace(',', ':', trim($item->jam_booking)), 0, 5)
+            : '';
+
+        $tanggalRaw = $item->tanggal_booking
+            ? \Carbon\Carbon::parse($item->tanggal_booking)
+            : null;
+
+        $tanggal = $tanggalRaw ? $tanggalRaw->format('d M Y') : '-';
+
+        $metode = $item->metode_pembayaran ?: '-';
+        if (in_array(strtolower($metode), ['tunai', 'tunai / bayar di kasir', 'tunai (bayar di kasir)'])) {
+            $metode = 'Tunai (bayar di kasir)';
+        }
+
+        $d = [
+            'item'        => $item,
+            'kelasStatus' => match ($status) {
+                'selesai' => 'done',
+                'ditolak', 'dibatalkan', 'batal' => 'rejected',
+                'disetujui', 'diterima', 'proses', 'diproses', 'sedang dikerjakan', 'dikerjakan' => 'process',
+                default => 'waiting',
+            },
+            'labelStatus' => ucfirst($item->status ?? 'Menunggu'),
+            'pemesan'     => $item->nama_pelanggan ?? $item->user?->name ?? 'Pelanggan',
+            'email'       => $item->user?->email ?? 'Email tidak tersedia',
+            'hp'          => $item->no_hp ?: '-',
+            'motor'       => $item->nama_motor ?: '-',
+            'plat'        => $item->plat_nomor ?: '-',
+            'keluhan'     => $item->keluhan ?: '-',
+            'tanggal'     => $tanggal,
+            'jam'         => $jam,
+            'tanggalSort' => ($tanggalRaw ? $tanggalRaw->format('Y-m-d') : '') . ' ' . $jam,
+            'servis'      => $item->service?->nama_servis ?? $item->jenis_servis ?? '-',
+            'mekanik'     => $item->mechanic?->nama_mekanik ?? 'Belum dipilih',
+            'barang'      => (float) ($item->harga_barang ?? 0),
+            'jasa'        => (float) ($item->biaya_jasa ?? 0),
+            'total'       => (float) ($item->harga ?? 0),
+            'metode'      => $metode,
+        ];
+
+        // Data untuk modal detail
+        $d['attrs'] = [
+            'customer'  => $d['pemesan'],
+            'email'     => $item->user?->email ?? '-',
+            'phone'     => $d['hp'],
+            'motor'     => $d['motor'],
+            'plate'     => $d['plat'],
+            'service'   => $d['servis'],
+            'complaint' => $d['keluhan'],
+            'date'      => $tanggal,
+            'time'      => $jam,
+            'status'    => $d['labelStatus'],
+            'mechanic'  => $d['mekanik'],
+            'barang'    => $rp($d['barang']),
+            'jasa'      => $rp($d['jasa']),
+            'total'     => $rp($d['total']),
+            'payment'   => $metode,
+            'reason'    => $item->alasan_penolakan ?? '',
+        ];
+
+        return $d;
+    });
+
+    $totalData = $daftar->count();
+@endphp
+
 <section class="page-heading">
     <div>
         <div class="breadcrumb">Admin / Pelanggan / Daftar Pesanan</div>
@@ -170,7 +306,7 @@
 
     <div class="clock-box">
         <div class="clock-icon">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <rect x="3" y="4" width="18" height="17" rx="2"/>
                 <path d="M8 2v4M16 2v4M3 10h18"/>
             </svg>
@@ -188,7 +324,7 @@
             <div class="panel-header-top">
                 <div class="panel-heading">
                     <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <rect x="4" y="3" width="16" height="18" rx="2"/>
                             <path d="M8 7h8M8 11h8M8 15h5"/>
                         </svg>
@@ -199,130 +335,143 @@
                     </div>
                 </div>
 
-                {{-- Filter status (diproses di server, jadi cocok dengan pagination) --}}
-                <form method="GET">
-                    <select name="status" class="filter-select" onchange="this.form.submit()" aria-label="Filter status booking">
+                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px">
+                    <select id="filterStatus" class="filter-select" aria-label="Filter status booking">
+                        <option value="^(menunggu|pending|disetujui|diterima|proses|diproses|sedang dikerjakan|dikerjakan)$" selected>Belum selesai</option>
                         <option value="">Semua Status</option>
-                        @foreach(['menunggu' => 'Menunggu', 'disetujui' => 'Disetujui', 'selesai' => 'Selesai', 'ditolak' => 'Ditolak'] as $val => $label)
-                            <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
+                        <option value="^(menunggu|pending)$">Menunggu</option>
+                        <option value="^(disetujui|diterima)$">Disetujui</option>
+                        <option value="^(proses|diproses|sedang dikerjakan|dikerjakan)$">Diproses</option>
+                        <option value="^selesai$">Selesai</option>
+                        <option value="^ditolak$">Ditolak</option>
+                        <option value="^(dibatalkan|batal)$">Dibatalkan</option>
                     </select>
-                </form>
+                    <span class="panel-tag">{{ $totalData }} Pesanan</span>
+                </div>
             </div>
         </div>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-no">No</th>
-                        <th>Nama Pelanggan</th>
-                        <th>Kendaraan</th>
-                        <th>Keluhan</th>
-                        <th>Tanggal Booking</th>
-                        <th>Status</th>
-                        <th style="text-align:center">Aksi</th>
-                    </tr>
-                </thead>
+        @if($daftar->isEmpty())
+            <div class="empty-state">Belum ada pesanan servis.</div>
+        @else
 
-                <tbody>
-                    @forelse($bookings as $index => $item)
-                        @php
-                            $status = strtolower($item->status ?? '');
-                            $jamBooking = $item->jam_booking ? str_replace(',', ':', trim($item->jam_booking)) : '';
-                            $tanggalBooking = $item->tanggal_booking
-                                ? \Carbon\Carbon::parse($item->tanggal_booking)->format('d M Y')
-                                : '-';
-                        @endphp
-
+            {{-- TABEL DESKTOP (DataTables) --}}
+            <div class="table-wrapper">
+                <table id="tabelPesanan" class="order-table display">
+                    <thead>
                         <tr>
-                            <td class="col-no">{{ $bookings->firstItem() + $index }}</td>
+                            <th>No</th>
+                            <th>Pemesan</th>
+                            <th>No. HP</th>
+                            <th>Kendaraan</th>
+                            <th>Jadwal</th>
+                            <th>Layanan Servis</th>
+                            <th>Mekanik</th>
+                            <th>Total Biaya</th>
+                            <th>Pembayaran</th>
+                            <th>Keluhan</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($daftar as $d)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td class="col-wrap col-pemesan">
+                                    <div class="ord-strong">{{ $d['pemesan'] }}</div>
+                                    <div class="ord-small">{{ $d['email'] }}</div>
+                                </td>
+                                <td>{{ $d['hp'] }}</td>
+                                <td>
+                                    <div class="ord-strong">{{ $d['motor'] }}</div>
+                                    <div class="ord-small">{{ $d['plat'] }}</div>
+                                </td>
+                                <td data-order="{{ $d['tanggalSort'] }}">
+                                    <div class="ord-strong">{{ $d['tanggal'] }}</div>
+                                    <div class="ord-small">{{ $d['jam'] ? $d['jam'] . ' WIB' : '-' }}</div>
+                                </td>
+                                <td class="col-wrap col-servis"><div class="ord-strong">{{ $d['servis'] }}</div></td>
+                                <td>{{ $d['mekanik'] }}</td>
+                                <td data-order="{{ $d['total'] }}">
+                                    <div class="ord-strong" title="Barang {{ $rp($d['barang']) }} + Jasa {{ $rp($d['jasa']) }}">{{ $rp($d['total']) }}</div>
+                                </td>
+                                <td>{{ $d['metode'] }}</td>
+                                <td class="col-wrap col-keluhan">{{ $d['keluhan'] }}</td>
+                                <td><span class="status {{ $d['kelasStatus'] }}">{{ $d['labelStatus'] }}</span></td>
+                                <td style="text-align:center">
+                                    <button type="button" class="detail-btn" onclick="openDetail(this)"
+                                        @foreach($d['attrs'] as $k => $v) data-{{ $k }}="{{ $v }}" @endforeach
+                                    >Detail</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
-                            <td>
-                                <span class="customer-name">{{ $item->user->name ?? 'Pelanggan' }}</span>
-                                <span class="customer-detail">{{ $item->user->email ?? 'Email tidak tersedia' }}</span>
-                                <span class="vehicle-plate">{{ $item->plat_nomor ?? '-' }}</span>
-                            </td>
+            {{-- KARTU MOBILE --}}
+            <div class="ord-mobile">
+                <input type="search" id="ordMobileSearch" class="ord-m-search"
+                       placeholder="Cari pemesan / motor / plat / layanan / status" autocomplete="off">
 
-                            <td>{{ $item->nama_motor ?? '-' }}</td>
-                            <td>{{ $item->keluhan ?? '-' }}</td>
+                @foreach($daftar as $d)
+                    <article class="ord-card"
+                             data-status="{{ strtolower($d['item']->status ?? 'menunggu') }}"
+                             data-search="{{ strtolower($d['pemesan'].' '.$d['motor'].' '.$d['plat'].' '.$d['servis'].' '.$d['mekanik'].' '.$d['labelStatus'].' '.$d['tanggal']) }}">
+                        <div class="ord-card-top">
+                            <div>
+                                <div class="ord-strong">{{ $d['pemesan'] }}</div>
+                                <div class="ord-small">{{ $d['hp'] }}</div>
+                            </div>
+                            <span class="status {{ $d['kelasStatus'] }}">{{ $d['labelStatus'] }}</span>
+                        </div>
 
-                            <td>
-                                <div class="booking-date">
-                                    {{ $tanggalBooking }}
-                                    @if($jamBooking)<br>{{ $jamBooking }}@endif
+                        <div class="ord-card-grid">
+                            <div>
+                                <div class="ord-card-label">Motor</div>
+                                <div class="ord-card-value">{{ $d['motor'] }}</div>
+                            </div>
+                            <div>
+                                <div class="ord-card-label">Nomor Polisi</div>
+                                <div class="ord-card-value">{{ $d['plat'] }}</div>
+                            </div>
+                            <div>
+                                <div class="ord-card-label">Jadwal</div>
+                                <div class="ord-card-value">
+                                    {{ $d['tanggal'] }}<br>{{ $d['jam'] ? $d['jam'] . ' WIB' : '-' }}
                                 </div>
-                            </td>
+                            </div>
+                            <div>
+                                <div class="ord-card-label">Layanan Servis</div>
+                                <div class="ord-card-value">{{ $d['servis'] }}</div>
+                            </div>
+                            <div class="full">
+                                <div class="ord-card-label">Mekanik</div>
+                                <div class="ord-card-value">{{ $d['mekanik'] }}</div>
+                            </div>
+                            <div>
+                                <div class="ord-card-label">Total Biaya</div>
+                                <div class="ord-card-value">{{ $rp($d['total']) }}</div>
+                            </div>
+                            <div>
+                                <div class="ord-card-label">Pembayaran</div>
+                                <div class="ord-card-value">{{ $d['metode'] }}</div>
+                            </div>
+                        </div>
 
-                            <td>
-                                @if(in_array($status, ['menunggu', 'pending']))
-                                    <span class="status waiting">● Menunggu</span>
-                                @elseif($status === 'disetujui')
-                                    <span class="status process">● Disetujui</span>
-                                @elseif($status === 'selesai')
-                                    <span class="status done">● Selesai</span>
-                                @elseif($status === 'ditolak')
-                                    <span class="status rejected">● Ditolak</span>
-                                @else
-                                    <span class="status process">{{ ucfirst($item->status ?? '-') }}</span>
-                                @endif
-                            </td>
+                        <div class="ord-card-actions">
+                            <button type="button" class="detail-btn" onclick="openDetail(this)"
+                                @foreach($d['attrs'] as $k => $v) data-{{ $k }}="{{ $v }}" @endforeach
+                            >Detail</button>
+                        </div>
+                    </article>
+                @endforeach
 
-                            <td style="text-align:center">
-                                <button
-                                    type="button"
-                                    class="detail-btn"
-                                    onclick="openDetail(this)"
-                                    data-customer="{{ $item->user->name ?? 'Pelanggan' }}"
-                                    data-email="{{ $item->user->email ?? '-' }}"
-                                    data-motor="{{ $item->nama_motor ?? '-' }}"
-                                    data-plate="{{ $item->plat_nomor ?? '-' }}"
-                                    data-service="{{ $item->jenis_servis ?? '-' }}"
-                                    data-complaint="{{ $item->keluhan ?? '-' }}"
-                                    data-date="{{ $tanggalBooking }}"
-                                    data-time="{{ $jamBooking }}"
-                                    data-status="{{ $item->status ?? '-' }}"
-                                    data-mechanic="{{ $item->mechanic->nama_mekanik ?? 'Belum dipilih' }}"
-                                    data-reason="{{ $item->alasan_penolakan ?? '' }}"
-                                >◉ Detail</button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7"><div class="empty-state">Belum ada pesanan servis.</div></td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div class="table-footer">
-            <span>Menampilkan {{ $bookings->firstItem() ?? 0 }} sampai {{ $bookings->lastItem() ?? 0 }} dari {{ $bookings->total() }} data</span>
-
-            @if($bookings->hasPages())
-                <nav class="pager" aria-label="Halaman">
-                    @if($bookings->onFirstPage())
-                        <span class="disabled">Sebelumnya</span>
-                    @else
-                        <a href="{{ $bookings->previousPageUrl() }}">Sebelumnya</a>
-                    @endif
-
-                    @foreach($bookings->getUrlRange(max(1, $bookings->currentPage() - 2), min($bookings->lastPage(), $bookings->currentPage() + 2)) as $page => $url)
-                        @if($page == $bookings->currentPage())
-                            <span class="active">{{ $page }}</span>
-                        @else
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        @endif
-                    @endforeach
-
-                    @if($bookings->hasMorePages())
-                        <a href="{{ $bookings->nextPageUrl() }}">Berikutnya</a>
-                    @else
-                        <span class="disabled">Berikutnya</span>
-                    @endif
-                </nav>
-            @endif
-        </div>
+                <div class="ord-m-empty" id="ordMobileEmpty">Data tidak ditemukan</div>
+                <button type="button" class="ord-m-more" id="ordMobileMore">Tampilkan lebih banyak</button>
+            </div>
+        @endif
     </section>
 
     {{-- MODAL DETAIL --}}
@@ -337,6 +486,7 @@
                 <div class="detail-grid">
                     <div class="detail-item"><small>Pelanggan</small><strong id="detailCustomer">-</strong></div>
                     <div class="detail-item"><small>Email</small><strong id="detailEmail">-</strong></div>
+                    <div class="detail-item"><small>No. HP</small><strong id="detailPhone">-</strong></div>
                     <div class="detail-item"><small>Kendaraan</small><strong id="detailMotor">-</strong></div>
                     <div class="detail-item"><small>Plat Nomor</small><strong id="detailPlate">-</strong></div>
                     <div class="detail-item"><small>Jenis Servis</small><strong id="detailService">-</strong></div>
@@ -344,8 +494,12 @@
                     <div class="detail-item"><small>Jam</small><strong id="detailTime">-</strong></div>
                     <div class="detail-item"><small>Mekanik</small><strong id="detailMechanic">-</strong></div>
                     <div class="detail-item"><small>Status</small><strong id="detailStatus">-</strong></div>
-                    <div class="detail-item"><small>Keluhan</small><strong id="detailComplaint">-</strong></div>
-                    <div class="detail-item" id="reasonBox" style="display:none">
+                    <div class="detail-item"><small>Harga Barang</small><strong id="detailBarang">-</strong></div>
+                    <div class="detail-item"><small>Biaya Jasa</small><strong id="detailJasa">-</strong></div>
+                    <div class="detail-item"><small>Total Biaya</small><strong id="detailTotal">-</strong></div>
+                    <div class="detail-item"><small>Pembayaran</small><strong id="detailPayment">-</strong></div>
+                    <div class="detail-item full"><small>Keluhan</small><strong id="detailComplaint">-</strong></div>
+                    <div class="detail-item full" id="reasonBox" style="display:none">
                         <small>Alasan Penolakan</small><strong id="detailReason">-</strong>
                     </div>
                 </div>
@@ -386,6 +540,7 @@
 
         set('detailCustomer', d.customer);
         set('detailEmail', d.email);
+        set('detailPhone', d.phone);
         set('detailMotor', d.motor);
         set('detailPlate', d.plate);
         set('detailService', d.service);
@@ -394,6 +549,10 @@
         set('detailTime', d.time ? d.time + ' WIB' : '-');
         set('detailStatus', d.status);
         set('detailMechanic', d.mechanic);
+        set('detailBarang', d.barang);
+        set('detailJasa', d.jasa);
+        set('detailTotal', d.total);
+        set('detailPayment', d.payment);
 
         document.getElementById('reasonBox').style.display = d.reason ? '' : 'none';
         set('detailReason', d.reason);
@@ -417,4 +576,121 @@
         if (event.key === 'Escape') closeDetail();
     });
 </script>
+
+@if(! $daftar->isEmpty())
+<script>
+// Kartu di HP: pencarian + tampil 5 data dulu
+(function () {
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.ord-mobile .ord-card'));
+    if (!cards.length) return;
+    var input = document.getElementById('ordMobileSearch');
+    var more = document.getElementById('ordMobileMore');
+    var empty = document.getElementById('ordMobileEmpty');
+    var step = 5, limit = step;
+    var select = document.getElementById('filterStatus');
+
+    function render() {
+        var q = (input.value || '').toLowerCase().trim();
+        var pola = select && select.value ? new RegExp(select.value, 'i') : null;
+        var matched = cards.filter(function (c) {
+            var cocokStatus = !pola || pola.test(c.getAttribute('data-status'));
+            return cocokStatus && c.getAttribute('data-search').indexOf(q) !== -1;
+        });
+        cards.forEach(function (c) { c.style.display = 'none'; });
+        matched.slice(0, limit).forEach(function (c) { c.style.display = ''; });
+        more.style.display = matched.length > limit ? 'block' : 'none';
+        empty.style.display = matched.length ? 'none' : 'block';
+    }
+
+    input.addEventListener('input', function () { limit = step; render(); });
+    if (select) select.addEventListener('change', function () { limit = step; render(); });
+    more.addEventListener('click', function () { limit += step; render(); });
+    render();
+})();
+</script>
+
+<script>
+// Tabel desktop: Copy, Column visibility, cari, urutkan, pagination
+(function () {
+    function loadScript(src, cb) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload = cb;
+        document.body.appendChild(s);
+    }
+
+    function chain(list, done) {
+        if (!list.length) return done();
+        loadScript(list[0], function () { chain(list.slice(1), done); });
+    }
+
+    var STATUS_COL = 10;
+
+    function initTable() {
+        var table = jQuery('#tabelPesanan').DataTable({
+            dom: "<'ord-dt-top'<'ord-dt-btns'B><'ord-dt-search'f>>rt<'ord-dt-bottom'<'ord-dt-info'i><'ord-dt-page'p>>",
+            stateSave: true,
+            pageLength: 10,
+            order: [],                       // urutan awal = pesanan terbaru dari server
+            autoWidth: false,
+            scrollX: true,
+            stateLoadParams: function (settings, data) {
+                // filter status tidak diingat agar dropdown selalu sinkron
+                (data.columns || []).forEach(function (c) { c.search.search = ''; });
+            },
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: { columns: ':visible:not(:last-child)' }
+                },
+                {
+                    extend: 'colvis',
+                    text: 'Column visibility',
+                    background: false,
+                    columns: ':not(:last-child)'
+                }
+            ],
+            columnDefs: [
+                { targets: [2, 9], visible: false },     // No. HP dan Keluhan disembunyikan awalnya
+                { targets: 0, width: '40px' },
+                { targets: -1, orderable: false, searchable: false }
+            ],
+            language: {
+                search: 'Cari :',
+                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                infoEmpty: 'Tidak ada data',
+                infoFiltered: '(dari _MAX_ data)',
+                zeroRecords: 'Tidak ada pesanan pada filter ini',
+                paginate: { previous: 'Sebelumnya', next: 'Berikutnya' },
+                buttons: { copyTitle: 'Tersalin', copySuccess: { _: '%d baris tersalin' } }
+            }
+        });
+
+        // Filter status
+        var select = document.getElementById('filterStatus');
+        function terapkanFilter() {
+            table.column(STATUS_COL).search(select.value, true, false).draw();
+        }
+        select.addEventListener('change', terapkanFilter);
+        terapkanFilter(); // filter awal: Belum selesai
+    }
+
+    function start() {
+        chain([
+            'https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js',
+            'https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js',
+            'https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js',
+            'https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js'
+        ], initTable);
+    }
+
+    if (window.jQuery) {
+        start();
+    } else {
+        loadScript('https://code.jquery.com/jquery-3.7.1.min.js', start);
+    }
+})();
+</script>
+@endif
 @endpush

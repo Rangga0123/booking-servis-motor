@@ -688,7 +688,7 @@
             <div class="profile-dropdown" id="profileDropdown">
                 <div class="dropdown-heading">
                     <strong>{{ $namaAdmin }}</strong>
-                    <small>Pengaturan akun</small>
+                    <small>Akun Administrator</small>
                 </div>
 
                 <a href="{{ route('profile.edit') }}" class="dropdown-link">
@@ -697,23 +697,6 @@
                         <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
                     </svg>
                     Profil Akun
-                </a>
-
-                <a href="{{ route('profile.edit') }}#profile-photo" class="dropdown-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="16" rx="2"/>
-                        <circle cx="9" cy="10" r="2"/>
-                        <path d="m21 15-5-5L5 20"/>
-                    </svg>
-                    Ganti Foto Profil
-                </a>
-
-                <a href="{{ route('profile.edit') }}#update-password" class="dropdown-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="4" y="10" width="16" height="11" rx="2"/>
-                        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-                    </svg>
-                    Ganti Password
                 </a>
 
                 <div class="dropdown-divider"></div>
