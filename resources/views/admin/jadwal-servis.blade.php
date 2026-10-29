@@ -4,120 +4,74 @@
 
 @push('styles')
 <style>
-    .order-page { color: #192740; }
+    .order-page,
+    .order-page * { box-sizing: border-box; }
+    .order-page { color: #212529; }
     .page-heading { gap: 20px; margin-bottom: 26px; align-items: center; }
 
-    .order-page .panel {
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e3e9f2;
-        border-radius: 18px;
-        box-shadow: 0 5px 22px rgba(31, 52, 88, .045);
-    }
-    .order-page .panel-header {
-        padding: 21px 23px;
-        background: linear-gradient(135deg, #fff, #f8faff);
-        border-bottom: 1px solid #edf1f7;
-    }
-    .order-page .panel-header-top {
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 16px;
-    }
-    .order-page .panel-heading { display: flex; align-items: center; gap: 14px; }
-    .order-page .panel-heading-icon {
-        width: 45px; height: 45px; display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 14px; background: linear-gradient(145deg, #527fff, #3158cb); color: #fff;
-    }
-    .order-page .panel-title { color: #1a2943; font-size: 15px; font-weight: 800; }
-    .order-page .panel-subtitle { margin-top: 5px; color: #8794a9; font-size: 12px; }
-    .order-page .today-badge {
-        padding: 8px 13px; border: 1px solid #e0e9ff; border-radius: 10px;
-        background: #edf3ff; color: #456cce; font-size: 11px; font-weight: 800;
-    }
+    /* ===== CARD ===== */
+    .order-page .panel { overflow: hidden; background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .order-page .panel-header { padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .order-page .panel-header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .order-page .panel-title { color: #212529; font-size: 16px; font-weight: 400; }
+    .order-page .panel-subtitle { margin-top: 3px; color: #6c757d; font-size: 12px; }
+    .order-page .today-badge { padding: 6px 10px; color: #004085; background: #e7f1ff; border: 1px solid #b8daff; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 
-    /* KARTU JADWAL */
-    .order-page .schedule-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 16px; padding: 20px; background: #fafbfe;
-    }
-    .order-page .schedule-card {
-        min-width: 0; padding: 19px; background: #fff;
-        border: 1px solid #e4eaf3; border-radius: 15px;
-    }
-    .order-page .schedule-card-top {
-        display: flex; justify-content: space-between; align-items: flex-start;
-        flex-wrap: wrap; gap: 10px; margin-bottom: 18px; padding-bottom: 15px;
-        border-bottom: 1px solid #edf1f7;
-    }
-    .order-page .order-title { color: #24334e; font-size: 13px; font-weight: 800; }
-    .order-page .order-title span { display: inline-block; margin-top: 6px; color: #8190a7; font-size: 12px; font-weight: 500; }
+    /* ===== KARTU JADWAL ===== */
+    .order-page .schedule-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px; padding: 20px; background: #f8f9fa; }
+    .order-page .schedule-card { min-width: 0; padding: 18px; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; }
+    .order-page .schedule-card-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #e9ecef; }
+    .order-page .order-title { color: #212529; font-size: 14px; font-weight: 700; }
+    .order-page .order-title span { display: inline-block; margin-top: 4px; color: #6c757d; font-size: 12px; font-weight: 400; }
 
-    .order-page .status {
-        display: inline-flex; align-items: center; padding: 7px 10px;
-        border-radius: 8px; font-size: 10px; font-weight: 800; white-space: nowrap;
-    }
-    .order-page .status.waiting { background: #fff3dc; color: #b9790b; }
-    .order-page .status.process { background: #eaf0ff; color: #3864d2; }
-    .order-page .status.done    { background: #e0f7eb; color: #138453; }
+    .order-page .status { display: inline-flex; align-items: center; padding: 5px 9px; border: 1px solid transparent; border-radius: 4px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .order-page .status.waiting { color: #856404; background: #fff3cd; border-color: #ffeeba; }
+    .order-page .status.process { color: #0c5460; background: #d1ecf1; border-color: #bee5eb; }
+    .order-page .status.done    { color: #155724; background: #d4edda; border-color: #c3e6cb; }
 
-    /* FORM */
+    /* ===== FORM ===== */
     .order-page .form-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .order-page .field { min-width: 0; margin-bottom: 14px; }
-    .order-page .field label { display: block; margin-bottom: 7px; color: #64748d; font-size: 11px; font-weight: 800; }
-    .order-page .form-control {
-        width: 100%; min-width: 0; padding: 11px 12px;
-        border: 1px solid #dfe6f0; border-radius: 10px; background: #fbfcff;
-        color: #34445e; font-size: 12px; outline: none;
-    }
-    .order-page .form-control:focus { border-color: #6487f2; background: #fff; box-shadow: 0 0 0 4px #4775ef12; }
+    .order-page .field label { display: block; margin-bottom: 6px; color: #212529; font-size: 13px; font-weight: 600; }
+    .order-page .form-control { display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 38px; padding: 7px 12px; color: #495057; background: #fff; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 14px; outline: none; transition: border-color .15s, box-shadow .15s; }
+    .order-page .form-control:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
 
-    .order-page .action-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 5px; }
-    .order-page .btn {
-        display: inline-flex; align-items: center; justify-content: center;
-        min-height: 39px; padding: 10px 13px; border: 0; border-radius: 9px;
-        color: #fff; font-size: 11px; font-weight: 800; cursor: pointer; transition: .2s ease;
-    }
-    .order-page .btn:hover { filter: brightness(.94); }
-    .order-page .btn-green { background: #15986d; }
-    .order-page .btn-red   { background: #e34e60; }
-    .order-page .btn-blue  { background: #4775ef; }
-    .order-page .btn-dark  { background: #263650; }
+    .order-page .action-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+    .order-page .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 8px 12px; border: 1px solid transparent; border-radius: 4px; color: #fff; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: filter .15s ease; }
+    .order-page .btn:hover { filter: brightness(.92); }
+    .order-page .btn-green { background: #28a745; border-color: #28a745; }
+    .order-page .btn-red   { background: #dc3545; border-color: #dc3545; }
+    .order-page .btn-blue  { background: #007bff; border-color: #007bff; }
+    .order-page .btn-dark  { background: #6c757d; border-color: #6c757d; }
     .order-page .btn-block { width: 100%; }
-    .order-page .btn-gap   { margin-top: 9px; }
+    .order-page .btn-gap   { margin-top: 8px; }
 
-    .order-page .empty-state {
-        grid-column: 1 / -1; padding: 32px 15px;
-        color: #8a97ab; text-align: center; font-size: 12px;
-    }
-    .order-page .pagination-wrap { padding: 15px 21px; border-top: 1px solid #edf1f6; background: #fafbfe; }
+    .order-page .empty-state { grid-column: 1 / -1; padding: 32px 15px; color: #6c757d; text-align: center; font-size: 13px; }
+    .order-page .pagination-wrap { padding: 14px 20px; border-top: 1px solid #e9ecef; background: #f8f9fa; overflow-x: auto; }
+
+    /* ===== MODAL ALASAN PENOLAKAN ===== */
+    #rejectModal { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; padding: 18px; background: rgba(0,0,0,.55); }
+    #rejectModal.show { display: flex; }
+    #rejectModal .reject-box { width: 100%; max-width: 460px; max-height: 92vh; overflow-y: auto; background: #fff; border-radius: 6px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,.25); }
+    #rejectModal .reject-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    #rejectModal .reject-head h3 { margin: 0; color: #212529; font-size: 16px; font-weight: 600; }
+    #rejectModal .reject-head button { width: 32px; height: 32px; color: #495057; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; }
+    #rejectModal label { display: block; margin-bottom: 8px; color: #212529; font-size: 13px; font-weight: 600; line-height: 1.5; }
+    #rejectModal textarea { display: block; width: 100%; margin-bottom: 14px; padding: 10px 12px; color: #495057; resize: vertical; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 14px; outline: none; }
+    #rejectModal textarea:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
 
     @media (max-width: 650px) {
         .page-heading { align-items: stretch; }
-        .order-page .panel-header { padding: 16px; }
-        .order-page .schedule-list { grid-template-columns: minmax(0, 1fr); padding: 12px; }
-        .order-page .form-two { grid-template-columns: minmax(0, 1fr); }
+        .order-page .panel-header { padding: 12px 14px; }
+        .order-page .schedule-list { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 12px; }
+        .order-page .schedule-card { padding: 14px; }
+        .order-page .form-two { grid-template-columns: minmax(0, 1fr); gap: 0; }
+        .order-page .form-control { font-size: 16px; min-height: 42px; }
+        .order-page .btn { min-height: 42px; }
+        .order-page .pagination-wrap { padding: 12px; }
+        #rejectModal { padding: 10px; align-items: flex-end; }
+        #rejectModal textarea { font-size: 16px; }
     }
-
-    /* MODAL ALASAN PENOLAKAN */
-    #rejectModal {
-        display: none; position: fixed; inset: 0; z-index: 2000;
-        align-items: center; justify-content: center; padding: 18px;
-        background: rgba(12, 23, 43, .68);
-    }
-    #rejectModal.show { display: flex; }
-    #rejectModal .reject-box { width: 100%; max-width: 460px; background: #fff; border-radius: 16px; padding: 22px; }
-    #rejectModal .reject-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    #rejectModal .reject-head h3 { font-size: 16px; font-weight: 800; color: #1d2c45; }
-    #rejectModal .reject-head button {
-        width: 34px; height: 34px; border: 1px solid #e7ebf3; border-radius: 9px; background: #f5f7fb; cursor: pointer;
-    }
-    #rejectModal label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: #64748d; }
-    #rejectModal textarea {
-        width: 100%; margin-bottom: 14px; padding: 12px; resize: vertical;
-        border: 1px solid #dfe6f0; border-radius: 10px; font-size: 13px; outline: none;
-    }
-    #rejectModal textarea:focus { border-color: #6487f2; }
 </style>
 @endpush
 
@@ -141,17 +95,9 @@
     <section class="panel">
         <div class="panel-header">
             <div class="panel-header-top">
-                <div class="panel-heading">
-                    <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="17" rx="2"/>
-                            <path d="M8 2v4M16 2v4M3 10h18"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="panel-title">Pengaturan Jadwal Servis</div>
-                        <div class="panel-subtitle">Setujui, tolak, ubah jadwal, atau tandai selesai.</div>
-                    </div>
+                <div>
+                    <div class="panel-title">Pengaturan Jadwal Servis</div>
+                    <div class="panel-subtitle">Setujui, tolak, ubah jadwal, atau tandai selesai.</div>
                 </div>
                 <span class="today-badge">{{ now()->translatedFormat('d M Y') }}</span>
             </div>

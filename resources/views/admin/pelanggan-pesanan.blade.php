@@ -8,202 +8,111 @@
 <style>
     .order-page,
     .order-page * { box-sizing: border-box; }
-    .order-page { color: #192740; }
+    .order-page { color: #212529; }
     .page-heading { gap: 20px; margin-bottom: 26px; align-items: center; }
 
-    .order-page .panel {
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e3e9f2;
-        border-radius: 18px;
-        box-shadow: 0 5px 22px rgba(31, 52, 88, .045);
-    }
-    .order-page .panel-header {
-        padding: 21px 23px;
-        background: linear-gradient(135deg, #fff, #f8faff);
-        border-bottom: 1px solid #edf1f7;
-    }
-    .order-page .panel-header-top {
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 16px;
-    }
-    .order-page .panel-heading { display: flex; align-items: center; gap: 14px; }
-    .order-page .panel-heading-icon {
-        width: 45px; height: 45px; display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 14px; background: linear-gradient(145deg, #527fff, #3158cb); color: #fff;
-    }
-    .order-page .panel-title { color: #1a2943; font-size: 15px; font-weight: 800; }
-    .order-page .panel-subtitle { margin-top: 5px; color: #8794a9; font-size: 12px; }
-    .order-page .panel-tag {
-        flex-shrink: 0; padding: 7px 10px; color: #3264d8; background: #edf3ff;
-        border: 1px solid #dce7ff; border-radius: 7px; font-size: 11px; font-weight: 750;
-    }
+    /* ===== CARD ===== */
+    .order-page .panel { overflow: hidden; background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .order-page .panel-header { padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .order-page .panel-header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .order-page .panel-title { color: #212529; font-size: 16px; font-weight: 400; }
+    .order-page .panel-subtitle { margin-top: 3px; color: #6c757d; font-size: 12px; }
+    .order-page .panel-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .order-page .panel-tag { flex-shrink: 0; padding: 6px 10px; color: #004085; background: #e7f1ff; border: 1px solid #b8daff; border-radius: 4px; font-size: 12px; font-weight: 600; }
 
-    .order-page .filter-select {
-        width: 170px; max-width: 100%; padding: 10px 13px; border: 1px solid #dfe6f1; border-radius: 10px;
-        background: #fff; color: #40516e; font-family: inherit; font-size: 12px; font-weight: 700; outline: none;
-    }
-    .order-page .filter-select:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
+    .order-page .filter-select { width: 170px; max-width: 100%; min-height: 36px; padding: 6px 10px; color: #495057; background: #fff; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 14px; outline: none; }
+    .order-page .filter-select:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
 
-    /* ===== TABEL (sama dengan riwayat pelanggan) ===== */
-    .order-page .table-wrapper { width: 100%; padding: 18px 22px 20px; }
-    .order-page .ord-strong { color: #14213d; font-size: 13px; font-weight: 750; line-height: 1.6; overflow-wrap: anywhere; }
-    .order-page .ord-small { margin-top: 4px; color: #8491a8; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+    .order-page .empty-state { padding: 44px 15px; color: #6c757d; text-align: center; font-size: 13px; }
 
-    .order-page table.order-table {
-        width: 100%; border-collapse: collapse; border-spacing: 0;
-        border: 1px solid #e2e9f3; text-align: left; background: #fff;
-    }
-    .order-page table.order-table thead th {
-        padding: 15px 14px; color: #60708a; background: #f5f8fd;
-        border-bottom: 1px solid #e2e9f3; border-right: 1px solid #e2e9f3;
-        font-size: 11px; font-weight: 800; letter-spacing: .35px;
-        text-transform: uppercase; white-space: nowrap;
-    }
-    .order-page table.order-table tbody td {
-        padding: 11px 14px; color: #52647b; border-bottom: 1px solid #e2e9f3; border-right: 1px solid #e2e9f3;
-        font-size: 12px; line-height: 1.7; vertical-align: middle; white-space: nowrap;
-    }
+    /* ===== TABEL ===== */
+    .order-page .table-wrapper { width: 100%; padding: 20px; overflow-x: auto; }
+    .order-page .ord-strong { color: #212529; font-size: 14px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+    .order-page .ord-small { margin-top: 2px; color: #6c757d; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+
+    .order-page table.order-table { width: 100% !important; margin: 0 !important; border-collapse: collapse; border: 1px solid #dee2e6; background: #fff; }
+    .order-page table.order-table thead th,
+    .order-page table.order-table tfoot th { padding: 14px 12px; color: #212529; background: #fff; border: 1px solid #dee2e6; font-size: 14px; font-weight: 700; text-align: left; white-space: nowrap; }
+    .order-page table.order-table thead th { border-bottom: 2px solid #dee2e6; }
+    .order-page table.order-table tfoot th { border-top: 2px solid #dee2e6; }
+    .order-page table.order-table tbody td { padding: 12px; color: #212529; border: 1px solid #dee2e6; font-size: 14px; vertical-align: middle; white-space: nowrap; }
     .order-page table.order-table tbody td.col-wrap { white-space: normal; }
     .order-page table.order-table .col-pemesan { min-width: 200px; }
     .order-page table.order-table .col-keluhan { min-width: 240px; }
     .order-page table.order-table .col-servis { min-width: 170px; }
-    .order-page table.order-table thead th:last-child,
-    .order-page table.order-table tbody td:last-child { border-right: none; }
-    .order-page table.order-table tbody tr:nth-child(even) { background: #fbfcff; }
-    .order-page table.order-table tbody tr:hover { background: #f2f6ff; }
-    .order-page table.dataTable.no-footer { border-bottom: 1px solid #e2e9f3; }
+    .order-page table.order-table tbody tr:hover { background: #f1f1f1; }
+    .order-page table.dataTable.no-footer { border-bottom: 1px solid #dee2e6; }
 
-    .order-page .dataTables_wrapper { font-size: 12px; color: #52647b; }
+    /* ===== DATATABLES ===== */
+    .order-page .dataTables_wrapper { font-size: 14px; color: #212529; }
     .order-page .ord-dt-top,
     .order-page .ord-dt-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
     .order-page .ord-dt-top { margin-bottom: 14px; }
     .order-page .ord-dt-bottom { margin-top: 14px; }
-    .order-page .dt-buttons { display: flex; flex-wrap: wrap; gap: 0; float: none; margin: 0; }
-    .order-page .dt-button {
-        margin: 0 !important; padding: 8px 15px !important; color: #fff !important;
-        background: #3b4752 !important; background-image: none !important;
-        border: 1px solid #2f3a45 !important; border-radius: 0 !important;
-        font-size: 12px !important; font-weight: 700 !important; box-shadow: none !important;
-    }
-    .order-page .dt-button:first-child { border-radius: 7px 0 0 7px !important; }
-    .order-page .dt-button:last-child { border-radius: 0 7px 7px 0 !important; }
-    .order-page .dt-button:only-child { border-radius: 7px !important; }
-    .order-page .dt-button:hover { background: #2b343d !important; background-image: none !important; }
+    .order-page .dt-buttons { display: flex; flex-wrap: wrap; float: none; margin: 0; }
+    .order-page .dt-button { margin: 0 !important; padding: 8px 12px !important; color: #fff !important; background: #6c757d !important; background-image: none !important; border: none !important; border-radius: 0 !important; font-size: 14px !important; box-shadow: none !important; }
+    .order-page .dt-button:first-child { border-radius: 4px 0 0 4px !important; }
+    .order-page .dt-button:last-child { border-radius: 0 4px 4px 0 !important; }
+    .order-page .dt-button:only-child { border-radius: 4px !important; }
+    .order-page .dt-button:hover { background: #5a6268 !important; background-image: none !important; }
     .order-page .dataTables_filter,
     .order-page .dataTables_length { float: none; margin: 0; }
-    .order-page .dataTables_filter input,
-    .order-page .dataTables_length select {
-        padding: 7px 10px; color: #14213d; border: 1px solid #d3dcea; border-radius: 7px; font-size: 12px; outline: none;
-    }
-    .order-page .dataTables_filter input:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
-    .order-page .dataTables_info { float: none; padding: 0; color: #7182a3; }
+    .order-page .dataTables_filter input { margin-left: 6px; width: 180px; padding: 6px 10px; color: #495057; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; outline: none; }
+    .order-page .dataTables_filter input:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
+    .order-page .dataTables_info { float: none; padding: 0; color: #212529; }
     .order-page .dataTables_paginate { float: none; padding: 0; }
-    .order-page .dataTables_paginate .paginate_button {
-        padding: 6px 12px !important; margin: 0 0 0 -1px !important; color: #52647b !important;
-        background: #fff !important; background-image: none !important;
-        border: 1px solid #d3dcea !important; border-radius: 0 !important; box-shadow: none !important;
-    }
-    .order-page .dataTables_paginate .paginate_button:first-child { border-radius: 7px 0 0 7px !important; }
-    .order-page .dataTables_paginate .paginate_button:last-child { border-radius: 0 7px 7px 0 !important; }
-    .order-page .dataTables_paginate .paginate_button.current { color: #fff !important; background: #3264d8 !important; border-color: #3264d8 !important; }
-    .order-page .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) { background: #eef3fc !important; }
-    .order-page .dataTables_paginate .paginate_button.disabled { color: #a7b2c4 !important; }
+    .order-page .dataTables_paginate .paginate_button { padding: 6px 12px !important; margin: 0 0 0 -1px !important; color: #6c757d !important; background: #fff !important; background-image: none !important; border: 1px solid #dee2e6 !important; border-radius: 0 !important; box-shadow: none !important; }
+    .order-page .dataTables_paginate .paginate_button:first-child { border-radius: 4px 0 0 4px !important; }
+    .order-page .dataTables_paginate .paginate_button:last-child { border-radius: 0 4px 4px 0 !important; }
+    .order-page .dataTables_paginate .paginate_button.current { color: #fff !important; background: #007bff !important; border-color: #007bff !important; }
+    .order-page .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) { color: #0056b3 !important; background: #e9ecef !important; }
+    .order-page .dataTables_paginate .paginate_button.disabled { color: #adb5bd !important; cursor: default; }
     div.dt-button-background { background: transparent !important; }
-    div.dt-button-collection { padding: 6px 0; border: 1px solid #dce5f1; border-radius: 8px; box-shadow: 0 8px 24px rgba(39,61,99,.15); }
-    div.dt-button-collection .dt-button { display: block; width: 100%; color: #14213d !important; background: #fff !important; border: none !important; border-radius: 0 !important; text-align: left; }
+    div.dt-button-collection { padding: 6px 0; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+    div.dt-button-collection .dt-button { display: block; width: 100%; color: #212529 !important; background: #fff !important; border: none !important; border-radius: 0 !important; text-align: left; }
     div.dt-button-collection .dt-button.active,
-    div.dt-button-collection .dt-button.dt-button-active { color: #fff !important; background: #3264d8 !important; }
+    div.dt-button-collection .dt-button.dt-button-active { color: #fff !important; background: #007bff !important; }
 
-    /* STATUS (sama dengan riwayat pelanggan) */
-    .order-page .status {
-        display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px;
-        border: 1px solid transparent; border-radius: 7px; font-size: 10px; font-weight: 800;
-        line-height: 1.5; white-space: nowrap;
-    }
-    .order-page .status.waiting  { color: #956000; background: #fff5dc; border-color: #ffe3a0; }
-    .order-page .status.process  { color: #2457bd; background: #e7efff; border-color: #cbdcff; }
-    .order-page .status.done     { color: #087647; background: #e1f8eb; border-color: #bcebd0; }
-    .order-page .status.rejected { color: #bb2942; background: #ffedf0; border-color: #ffd0d8; }
+    /* ===== STATUS & TOMBOL ===== */
+    .order-page .status { display: inline-flex; align-items: center; justify-content: center; padding: 5px 9px; border: 1px solid transparent; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.5; white-space: nowrap; }
+    .order-page .status.waiting  { color: #856404; background: #fff3cd; border-color: #ffeeba; }
+    .order-page .status.process  { color: #0c5460; background: #d1ecf1; border-color: #bee5eb; }
+    .order-page .status.done     { color: #155724; background: #d4edda; border-color: #c3e6cb; }
+    .order-page .status.rejected { color: #721c24; background: #f8d7da; border-color: #f5c6cb; }
 
-    .order-page .detail-btn {
-        min-height: 32px; padding: 7px 12px; border: 1px solid #d2e2ff; border-radius: 7px; background: #eaf2ff;
-        color: #1854b4; font-family: inherit; font-size: 10px; font-weight: 800; white-space: nowrap; cursor: pointer; transition: .2s ease;
-    }
-    .order-page .detail-btn:hover { background: #d9e7ff; transform: translateY(-1px); }
-
-    .order-page .empty-state { padding: 44px 15px; color: #8a97ab; text-align: center; font-size: 13px; }
+    .order-page .detail-btn { min-height: 30px; padding: 4px 10px; color: #fff; background: #17a2b8; border: 1px solid #17a2b8; border-radius: 4px; font-family: inherit; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: filter .15s ease; }
+    .order-page .detail-btn:hover { filter: brightness(.92); }
 
     /* ===== KARTU MOBILE ===== */
     .order-page .ord-mobile { display: none; padding: 14px; }
-    .order-page .ord-card {
-        padding: 15px; margin-bottom: 12px; background: #fff; border: 1px solid #dce5f1;
-        border-left: 3px solid #3264d8; border-radius: 11px; box-shadow: 0 3px 10px rgba(39,61,99,.035);
-    }
-    .order-page .ord-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-    .order-page .ord-card-grid {
-        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px;
-        margin-top: 14px; padding-top: 14px; border-top: 1px solid #e8edf5;
-    }
-    .order-page .ord-card-grid .full { grid-column: 1 / -1; }
-    .order-page .ord-card-label { color: #8491a8; font-size: 11px; line-height: 1.5; }
-    .order-page .ord-card-value { margin-top: 5px; color: #263752; font-size: 12px; font-weight: 700; line-height: 1.7; overflow-wrap: anywhere; }
-    .order-page .ord-card-actions { margin-top: 14px; padding-top: 13px; border-top: 1px solid #e8edf5; }
-    .order-page .ord-m-search {
-        width: 100%; margin-bottom: 12px; padding: 11px 13px; color: #14213d; background: #fff;
-        border: 1px solid #d3dcea; border-radius: 9px; font-family: inherit; font-size: 16px; outline: none;
-    }
-    .order-page .ord-m-search:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
-    .order-page .ord-m-more {
-        display: none; width: 100%; min-height: 44px; margin-top: 12px; color: #3264d8; background: #edf3ff;
-        border: 1px solid #dce7ff; border-radius: 9px; font-family: inherit; font-size: 13px; font-weight: 750; cursor: pointer;
-    }
-    .order-page .ord-m-empty { display: none; padding: 22px 10px; color: #7182a3; font-size: 13px; text-align: center; }
+    .order-page .ord-card { padding: 15px; margin-bottom: 12px; background: #fff; border: 1px solid #ced4da; border-left: 3px solid #007bff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .order-page .ord-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #ced4da; }
+    .order-page .ord-card-grid { display: block; margin-top: 2px; }
+    .order-page .ord-card-grid > div { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid #e9ecef; }
+    .order-page .ord-card-grid > div:last-child { border-bottom: none; }
+    .order-page .ord-card-label { flex: 0 0 auto; color: #6c757d; font-size: 12px; line-height: 1.6; }
+    .order-page .ord-card-value { min-width: 0; margin-top: 0; color: #212529; font-size: 13px; font-weight: 600; line-height: 1.6; text-align: right; overflow-wrap: anywhere; }
+    .order-page .ord-card-actions { margin-top: 4px; padding-top: 14px; border-top: 1px solid #ced4da; }
+    .order-page .ord-card-actions .detail-btn { width: 100%; min-height: 40px; font-size: 13px; }
+    .order-page .ord-m-search { width: 100%; margin-bottom: 12px; padding: 10px 12px; color: #495057; background: #fff; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 16px; outline: none; }
+    .order-page .ord-m-search:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
+    .order-page .ord-m-more { display: none; width: 100%; min-height: 44px; margin-top: 12px; color: #fff; background: #007bff; border: 1px solid #007bff; border-radius: 4px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .order-page .ord-m-empty { display: none; padding: 22px 10px; color: #6c757d; font-size: 13px; text-align: center; }
 
-    /* MODAL DETAIL */
-    .order-page .modal {
-        display: none; position: fixed; inset: 0; z-index: 2000;
-        align-items: center; justify-content: center; padding: 18px;
-        background: rgba(12, 23, 43, .68); backdrop-filter: blur(5px);
-    }
+    /* ===== MODAL DETAIL ===== */
+    .order-page .modal { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; padding: 18px; background: rgba(0,0,0,.55); }
     .order-page .modal.show { display: flex; }
-    .order-page .modal-box {
-        width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto;
-        background: #fff; border-radius: 19px; box-shadow: 0 25px 80px #0003;
-    }
-    .order-page .modal-header {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 20px 23px; border-bottom: 1px solid #e8edf5;
-    }
-    .order-page .modal-header h3 { margin: 0; color: #1d2c45; font-size: 16px; font-weight: 800; }
-    .order-page .close-modal {
-        width: 36px; height: 36px; border: 1px solid #e7ebf3; border-radius: 10px;
-        background: #f5f7fb; color: #53637c; cursor: pointer;
-    }
-    .order-page .modal-content { padding: 23px; }
-    .order-page .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .order-page .detail-item {
-        padding: 15px; overflow-wrap: anywhere; background: #f7f9fd;
-        border: 1px solid #e9edf5; border-radius: 12px;
-    }
+    .order-page .modal-box { width: 100%; max-width: 640px; max-height: 90vh; max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; background: #fff; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,.25); }
+    .order-page .modal-header { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .order-page .modal-header h3 { margin: 0; color: #212529; font-size: 16px; font-weight: 600; }
+    .order-page .close-modal { width: 32px; height: 32px; color: #495057; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; }
+    .order-page .close-modal:hover { background: #e9ecef; }
+    .order-page .modal-content { padding: 20px; }
+    .order-page .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .order-page .detail-item { padding: 12px 14px; overflow-wrap: anywhere; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; }
     .order-page .detail-item.full { grid-column: 1 / -1; }
-    .order-page .detail-item small {
-        display: block; margin-bottom: 7px; color: #8996aa; font-size: 10px;
-        font-weight: 700; text-transform: uppercase;
-    }
-    .order-page .detail-item strong { color: #263650; font-size: 12px; line-height: 1.7; white-space: pre-line; }
-
-    /* JAM */
-    .clock-box {
-        min-width: 240px; display: flex; align-items: center; gap: 12px; padding: 13px 16px;
-        background: #fff; border: 1px solid #e2e8f1; border-radius: 15px;
-    }
-    .clock-icon {
-        width: 42px; height: 42px; display: grid; place-items: center; flex-shrink: 0;
-        border-radius: 13px; background: #eaf0ff; color: #426fe7;
-    }
-    .clock-date { margin-bottom: 4px; color: #7c8ba4; font-size: 11px; font-weight: 600; }
-    .clock-time { color: #1b2941; font-size: 17px; font-weight: 800; white-space: nowrap; }
+    .order-page .detail-item small { display: block; margin-bottom: 5px; color: #6c757d; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    .order-page .detail-item strong { color: #212529; font-size: 13px; line-height: 1.6; white-space: pre-line; }
 
     @media (max-width: 800px) {
         .order-page .table-wrapper { display: none; }
@@ -212,12 +121,16 @@
 
     @media (max-width: 650px) {
         .page-heading { align-items: stretch; }
-        .clock-box { width: 100%; min-width: 0; }
-        .order-page .panel-header { padding: 16px; }
+        .order-page .panel-header { padding: 12px 14px; }
+        .order-page .panel-tools { width: 100%; }
         .order-page .panel-tag { display: none; }
-        .order-page .filter-select { width: 100%; font-size: 16px; }
+        .order-page .filter-select { width: 100%; font-size: 16px; min-height: 42px; }
         .order-page .ord-mobile { padding: 10px; }
-        .order-page .ord-card { padding: 13px; }
+    .order-page .ord-card { padding: 13px; }
+        .order-page .modal { padding: 10px; align-items: flex-end; }
+        .order-page .modal-box { max-height: 92vh; max-height: 92dvh; }
+        .order-page .modal-header { padding: 12px 14px; }
+        .order-page .modal-content { padding: 14px; }
         .order-page .detail-grid { grid-template-columns: minmax(0, 1fr); }
     }
 </style>
@@ -303,42 +216,21 @@
         <h1 class="page-title">Daftar Pesanan</h1>
         <p class="page-description">Lihat pelanggan, booking masuk, dan status pesanan servis.</p>
     </div>
-
-    <div class="clock-box">
-        <div class="clock-icon">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <rect x="3" y="4" width="18" height="17" rx="2"/>
-                <path d="M8 2v4M16 2v4M3 10h18"/>
-            </svg>
-        </div>
-        <div>
-            <div id="liveDate" class="clock-date">Memuat tanggal...</div>
-            <div id="liveTime" class="clock-time">--:--:-- WIB</div>
-        </div>
-    </div>
 </section>
 
 <div class="order-page">
     <section class="panel">
         <div class="panel-header">
             <div class="panel-header-top">
-                <div class="panel-heading">
-                    <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <rect x="4" y="3" width="16" height="18" rx="2"/>
-                            <path d="M8 7h8M8 11h8M8 15h5"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="panel-title">Daftar Pesanan Servis Masuk</div>
-                        <div class="panel-subtitle">Lihat detail pesanan, tanggal booking, dan status pelanggan.</div>
-                    </div>
+                <div>
+                    <div class="panel-title">Daftar Pesanan Servis Masuk</div>
+                    <div class="panel-subtitle">Lihat detail pesanan, tanggal booking, dan status pelanggan.</div>
                 </div>
 
-                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px">
+                <div class="panel-tools">
                     <select id="filterStatus" class="filter-select" aria-label="Filter status booking">
-                        <option value="^(menunggu|pending|disetujui|diterima|proses|diproses|sedang dikerjakan|dikerjakan)$" selected>Belum selesai</option>
                         <option value="">Semua Status</option>
+                        <option value="^(menunggu|pending|disetujui|diterima|proses|diproses|sedang dikerjakan|dikerjakan)$" selected>Belum selesai</option>
                         <option value="^(menunggu|pending)$">Menunggu</option>
                         <option value="^(disetujui|diterima)$">Disetujui</option>
                         <option value="^(proses|diproses|sedang dikerjakan|dikerjakan)$">Diproses</option>
@@ -407,6 +299,22 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>No</th>
+                            <th>Pemesan</th>
+                            <th>No. HP</th>
+                            <th>Kendaraan</th>
+                            <th>Jadwal</th>
+                            <th>Layanan Servis</th>
+                            <th>Mekanik</th>
+                            <th>Total Biaya</th>
+                            <th>Pembayaran</th>
+                            <th>Keluhan</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
 
@@ -511,28 +419,6 @@
 
 @push('scripts')
 <script>
-    // Jam & tanggal live
-    function updateClock() {
-        const now = new Date();
-        const dateEl = document.getElementById('liveDate');
-        const timeEl = document.getElementById('liveTime');
-
-        if (dateEl) {
-            dateEl.textContent = now.toLocaleDateString('id-ID', {
-                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-                timeZone: 'Asia/Jakarta'
-            });
-        }
-        if (timeEl) {
-            timeEl.textContent = now.toLocaleTimeString('id-ID', {
-                hour: '2-digit', minute: '2-digit', second: '2-digit',
-                hour12: false, timeZone: 'Asia/Jakarta'
-            }) + ' WIB';
-        }
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
     // Modal detail
     function openDetail(button) {
         const d = button.dataset;
@@ -610,7 +496,7 @@
 </script>
 
 <script>
-// Tabel desktop: Copy, Column visibility, cari, urutkan, pagination
+// Tabel desktop: Copy, PDF, Column visibility, cari, urutkan, pagination
 (function () {
     function loadScript(src, cb) {
         var s = document.createElement('script');
@@ -627,29 +513,22 @@
     var STATUS_COL = 10;
 
     function initTable() {
+        var exportCols = { columns: ':visible:not(:last-child)' };
+
         var table = jQuery('#tabelPesanan').DataTable({
             dom: "<'ord-dt-top'<'ord-dt-btns'B><'ord-dt-search'f>>rt<'ord-dt-bottom'<'ord-dt-info'i><'ord-dt-page'p>>",
-            stateSave: true,
-            pageLength: 10,
+            stateSave: false,
+            pageLength: 5,
             order: [],                       // urutan awal = pesanan terbaru dari server
             autoWidth: false,
-            scrollX: true,
             stateLoadParams: function (settings, data) {
                 // filter status tidak diingat agar dropdown selalu sinkron
                 (data.columns || []).forEach(function (c) { c.search.search = ''; });
             },
             buttons: [
-                {
-                    extend: 'copy',
-                    text: 'Copy',
-                    exportOptions: { columns: ':visible:not(:last-child)' }
-                },
-                {
-                    extend: 'colvis',
-                    text: 'Column visibility',
-                    background: false,
-                    columns: ':not(:last-child)'
-                }
+                { extend: 'copy', text: 'Copy', exportOptions: exportCols },
+                { extend: 'pdf',  text: 'PDF',  title: 'Daftar Pesanan Servis', orientation: 'landscape', pageSize: 'A4', exportOptions: exportCols },
+                { extend: 'colvis', text: 'Column visibility', background: false, columns: ':not(:last-child)' }
             ],
             columnDefs: [
                 { targets: [2, 9], visible: false },     // No. HP dan Keluhan disembunyikan awalnya
@@ -657,12 +536,12 @@
                 { targets: -1, orderable: false, searchable: false }
             ],
             language: {
-                search: 'Cari :',
+                search: 'Search:',
                 info: 'Showing _START_ to _END_ of _TOTAL_ entries',
-                infoEmpty: 'Tidak ada data',
-                infoFiltered: '(dari _MAX_ data)',
-                zeroRecords: 'Tidak ada pesanan pada filter ini',
-                paginate: { previous: 'Sebelumnya', next: 'Berikutnya' },
+                infoEmpty: 'Belum ada data',
+                infoFiltered: '(dari total _MAX_ data)',
+                zeroRecords: 'Pesanan tidak ditemukan',
+                paginate: { previous: 'Previous', next: 'Next' },
                 buttons: { copyTitle: 'Tersalin', copySuccess: { _: '%d baris tersalin' } }
             }
         });
@@ -680,6 +559,8 @@
         chain([
             'https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js',
             'https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js',
             'https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js',
             'https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js'
         ], initTable);

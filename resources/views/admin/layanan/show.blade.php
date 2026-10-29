@@ -4,436 +4,142 @@
 
 @push('styles')
 <style>
-    .detail-page {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding-bottom: 30px;
-        color: #1e293b;
-    }
+    .fm-page,
+    .fm-page * { box-sizing: border-box; }
+    .fm-page { color: #212529; }
 
-    /* Header halaman */
-    .detail-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
-    }
+    /* ===== CARD ===== */
+    .fm-page .panel { background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 18px; overflow: hidden; }
+    .fm-page .panel-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .fm-page .panel-title { margin: 0; color: #212529; font-size: 16px; font-weight: 400; }
+    .fm-page .panel-body { padding: 20px; }
 
-    .detail-breadcrumb {
-        margin-bottom: 9px;
-        color: #64748b;
-        font-size: 12px;
-    }
+    /* ===== TOMBOL ===== */
+    .fm-page .fm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 6px 14px; border: 1px solid transparent; border-radius: 4px; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.5; white-space: nowrap; text-decoration: none; cursor: pointer; transition: filter .15s ease; }
+    .fm-page .fm-btn:hover { filter: brightness(.92); }
+    .fm-page .fm-btn-primary { color: #fff; background: #007bff; border-color: #007bff; }
+    .fm-page .fm-btn-secondary { color: #fff; background: #6c757d; border-color: #6c757d; }
+    .fm-page .fm-btn-warning { color: #212529; background: #ffc107; border-color: #ffc107; }
 
-    .detail-breadcrumb span {
-        color: #2563eb;
-        font-weight: 600;
-    }
+    /* ===== NOTIFIKASI ===== */
+    .fm-page .fm-notice { padding: 13px 16px; margin-bottom: 16px; color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 6px; font-size: 13px; line-height: 1.6; }
+    .fm-page .fm-notice ul { padding-left: 20px; margin: 6px 0 0; }
 
-    .detail-header h1 {
-        margin: 0 0 7px;
-        color: #172033;
-        font-size: 25px;
-        font-weight: 750;
-    }
+    /* ===== FORM ===== */
+    .fm-page .fm-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .fm-page .fm-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .fm-page .fm-group.full { grid-column: 1 / -1; }
+    .fm-page .fm-group label { color: #212529; font-size: 14px; font-weight: 600; }
+    .fm-page .fm-group label .required { color: #dc3545; }
+    .fm-page .fm-control { display: block; width: 100%; min-height: 38px; padding: 7px 12px; color: #495057; background: #fff; border: 1px solid #ced4da; border-radius: 4px; font: inherit; font-size: 14px; transition: border-color .15s, box-shadow .15s; }
+    .fm-page .fm-control:focus { outline: none; border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
+    .fm-page .fm-control::placeholder { color: #adb5bd; }
+    .fm-page .fm-control.is-invalid { border-color: #dc3545; }
+    .fm-page textarea.fm-control { min-height: 110px; resize: vertical; line-height: 1.6; }
+    .fm-page .fm-help { color: #6c757d; font-size: 12px; line-height: 1.5; }
+    .fm-page .fm-error { color: #dc3545; font-size: 12px; }
+    .fm-page .fm-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 24px; padding-top: 18px; border-top: 1px solid #e9ecef; }
 
-    .detail-header p {
-        margin: 0;
-        color: #64748b;
-        font-size: 14px;
-        line-height: 1.6;
-    }
+    /* ===== RINCIAN HARGA ===== */
+    .fm-page .fm-section { grid-column: 1 / -1; padding: 18px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; }
+    .fm-page .fm-section-title { margin: 0 0 4px; color: #212529; font-size: 15px; font-weight: 700; }
+    .fm-page .fm-section-desc { margin: 0 0 16px; color: #6c757d; font-size: 12px; line-height: 1.6; }
+    .fm-page .fm-total { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 18px; background: #e7f1ff; border: 1px solid #b8daff; border-radius: 6px; }
+    .fm-page .fm-total-label { color: #004085; font-size: 14px; font-weight: 700; }
+    .fm-page .fm-total-note { margin-top: 3px; color: #6c757d; font-size: 12px; }
+    .fm-page .fm-total-value { color: #007bff; font-size: 22px; font-weight: 800; white-space: nowrap; }
+    .fm-page .fm-section .fm-total { margin-top: 16px; }
 
-    /* Tombol */
-    .detail-btn {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 40px;
-        padding: 10px 16px;
-        border: 1px solid transparent;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        transition: .2s ease;
-        box-sizing: border-box;
-    }
+    /* ===== DETAIL ===== */
+    .fm-page .fm-name { margin: 0 0 16px; padding-bottom: 14px; color: #212529; border-bottom: 1px solid #dee2e6; font-size: 22px; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; }
+    .fm-page .fm-desc-box { padding: 14px 16px; margin-bottom: 20px; background: #f8f9fa; border: 1px solid #dee2e6; border-left: 3px solid #6c757d; border-radius: 4px; }
+    .fm-page .fm-desc-label { margin: 0 0 6px; color: #212529; font-size: 13px; font-weight: 700; }
+    .fm-page .fm-desc { margin: 0; color: #495057; font-size: 14px; line-height: 1.8; white-space: pre-line; overflow-wrap: anywhere; }
+    .fm-page .fm-section-heading { margin: 0 0 12px; color: #212529; font-size: 15px; font-weight: 700; }
+    .fm-page .fm-info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 16px; border: 1px solid #dee2e6; border-radius: 4px; overflow: hidden; }
+    .fm-page .fm-info-item { min-width: 0; padding: 14px 16px; border-bottom: 1px solid #dee2e6; }
+    .fm-page .fm-info-item:nth-child(odd) { border-right: 1px solid #dee2e6; }
+    .fm-page .fm-info-item:nth-last-child(-n + 2) { border-bottom: none; }
+    .fm-page .fm-info-item dt { margin: 0 0 4px; color: #6c757d; font-size: 12px; font-weight: 600; }
+    .fm-page .fm-info-item dd { margin: 0; color: #212529; font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
 
-    .detail-btn-back {
-        color: #475569;
-        background: #f1f5f9;
-        border-color: #dbe2ea;
-    }
-
-    .detail-btn-back:hover {
-        background: #e2e8f0;
-    }
-
-    .detail-btn-edit {
-        color: #fff;
-        background: #2563eb;
-    }
-
-    .detail-btn-edit:hover {
-        background: #1d4ed8;
-    }
-
-    /* Kartu utama */
-    .detail-card {
-        overflow: hidden;
-        border: 1px solid #d8dee8;
-        border-radius: 12px;
-        background: #fff;
-        box-shadow: 0 5px 18px rgba(15, 23, 42, .05);
-    }
-
-    /* Bagian informasi layanan */
-    .detail-card-header {
-        padding: 25px;
-        background: linear-gradient(135deg, #eef2f7, #f8fafc);
-        border-bottom: 1px solid #d5dce6;
-    }
-
-    .detail-label {
-        display: inline-block;
-        margin-bottom: 12px;
-        padding: 5px 10px;
-        color: #475569;
-        background: rgba(148, 163, 184, .15);
-        border: 1px solid #d5dce6;
-        border-radius: 5px;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: .5px;
-        text-transform: uppercase;
-    }
-
-    .detail-service-name {
-        margin: 0 0 20px;
-        padding-bottom: 17px;
-        color: #172033;
-        border-bottom: 1px solid #cbd5e1;
-        font-size: 25px;
-        font-weight: 750;
-        line-height: 1.4;
-        overflow-wrap: anywhere;
-    }
-
-    .detail-description-box {
-        padding: 16px 18px;
-        background: rgba(255, 255, 255, .65);
-        border: 1px solid #dce3ec;
-        border-left: 4px solid #64748b;
-        border-radius: 7px;
-    }
-
-    .detail-description-label {
-        margin: 0 0 10px;
-        padding-bottom: 9px;
-        color: #334155;
-        border-bottom: 1px solid #e2e8f0;
-        font-size: 13px;
-        font-weight: 750;
-    }
-
-    .detail-description {
-        margin: 0;
-        color: #475569;
-        font-size: 14px;
-        line-height: 1.9;
-        white-space: pre-line;
-        overflow-wrap: anywhere;
-    }
-
-    /* Bagian rincian */
-    .detail-card-body {
-        padding: 25px;
-        background: #fff;
-    }
-
-    .detail-section-title {
-        margin: 0 0 17px;
-        padding-bottom: 13px;
-        border-bottom: 1px solid #e2e8f0;
-        color: #172033;
-        font-size: 16px;
-        font-weight: 750;
-    }
-
-    .detail-info-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0;
-        overflow: hidden;
-        border: 1px solid #dce3ec;
-        border-radius: 9px;
-    }
-
-    .detail-info-item {
-        min-width: 0;
-        padding: 20px;
-        border-bottom: 1px solid #dce3ec;
-    }
-
-    /* Warna abu-abu selang-seling */
-    .detail-info-item:nth-child(4n + 1),
-    .detail-info-item:nth-child(4n + 4) {
-        background: #f1f5f9;
-    }
-
-    .detail-info-item:nth-child(4n + 2),
-    .detail-info-item:nth-child(4n + 3) {
-        background: #fff;
-    }
-
-    .detail-info-item:nth-child(odd) {
-        border-right: 1px solid #dce3ec;
-    }
-
-    .detail-info-item:nth-last-child(-n + 2) {
-        border-bottom: none;
-    }
-
-    .detail-info-item dt {
-        margin-bottom: 10px;
-        color: #64748b;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.5;
-    }
-
-    .detail-info-item dd {
-        margin: 0;
-        color: #1e293b;
-        font-size: 17px;
-        font-weight: 750;
-        line-height: 1.6;
-        overflow-wrap: anywhere;
-    }
-
-    /* Total harga */
-    .detail-total {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
-        margin-top: 20px;
-        padding: 22px 24px;
-        border: 1px solid #bfdbfe;
-        border-left: 4px solid #3b82f6;
-        border-radius: 9px;
-        background: linear-gradient(
-            110deg,
-            rgba(219, 234, 254, .65),
-            rgba(239, 246, 255, .9)
-        );
-    }
-
-    .detail-total-label {
-        margin: 0 0 7px;
-        color: #1e40af;
-        font-size: 14px;
-        font-weight: 750;
-    }
-
-    .detail-total-description {
-        margin: 0;
-        color: #64748b;
-        font-size: 12px;
-        line-height: 1.7;
-    }
-
-    .detail-total-price {
-        color: #1d4ed8;
-        font-size: 27px;
-        font-weight: 850;
-        text-align: right;
-        overflow-wrap: anywhere;
-    }
-
-    /* Tombol bawah */
-    .detail-footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 24px;
-        padding-top: 20px;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    @media (max-width: 640px) {
-        .detail-header {
-            align-items: flex-start;
-        }
-
-        .detail-header h1 {
-            font-size: 22px;
-        }
-
-        .detail-header > .detail-btn {
-            width: 100%;
-        }
-
-        .detail-card-header,
-        .detail-card-body {
-            padding: 17px;
-        }
-
-        .detail-service-name {
-            font-size: 21px;
-        }
-
-        .detail-description-box {
-            padding: 14px;
-        }
-
-        .detail-info-grid {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        .detail-info-item,
-        .detail-info-item:nth-child(odd) {
-            border-right: none;
-            border-bottom: 1px solid #dce3ec;
-        }
-
-        .detail-info-item:nth-child(odd) {
-            background: #f1f5f9;
-        }
-
-        .detail-info-item:nth-child(even) {
-            background: #fff;
-        }
-
-        .detail-info-item:last-child {
-            border-bottom: none;
-        }
-
-        .detail-total {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 12px;
-            padding: 18px;
-        }
-
-        .detail-total-price {
-            font-size: 24px;
-            text-align: left;
-        }
-
-        .detail-footer {
-            flex-direction: column-reverse;
-        }
-
-        .detail-footer .detail-btn {
-            width: 100%;
-        }
+    @media (max-width: 700px) {
+        .fm-page .panel-header { padding: 12px 14px; }
+        .fm-page .panel-body { padding: 14px; }
+        .fm-page .fm-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+        .fm-page .fm-group.full, .fm-page .fm-section { grid-column: auto; }
+        .fm-page .fm-control { font-size: 16px; }
+        .fm-page .fm-section { padding: 14px; }
+        .fm-page .fm-total { align-items: flex-start; flex-direction: column; gap: 8px; }
+        .fm-page .fm-total-value { font-size: 20px; }
+        .fm-page .fm-actions { align-items: stretch; flex-direction: column-reverse; }
+        .fm-page .fm-actions .fm-btn { width: 100%; min-height: 42px; }
+        .fm-page .panel-header .fm-btn { width: 100%; }
+        .fm-page .fm-name { font-size: 19px; }
+        .fm-page .fm-info { grid-template-columns: minmax(0, 1fr); }
+        .fm-page .fm-info-item:nth-child(odd) { border-right: none; }
+        .fm-page .fm-info-item:nth-last-child(2) { border-bottom: 1px solid #dee2e6; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="detail-page">
+<div class="content fm-page">
 
-    {{-- Header halaman --}}
-    <div class="detail-header">
+    <section class="page-heading">
         <div>
-            <div class="detail-breadcrumb">
-                Admin / Data Master / Kelola Layanan /
-                <span>Detail Layanan</span>
-            </div>
+            <div class="breadcrumb">Admin / Data Master / Kelola Layanan / Detail Layanan</div>
+            <h1 class="page-title">Detail Layanan</h1>
+            <p class="page-description">Informasi lengkap layanan Bengkel Royal Motor.</p>
+        </div>
+    </section>
 
-            <h1>Detail Layanan</h1>
-
-            <p>
-                Informasi lengkap layanan Bengkel Royal Motor.
-            </p>
+    <section class="panel">
+        <div class="panel-header">
+            <h2 class="panel-title">Informasi Layanan</h2>
+            <a href="{{ route('admin.layanan.index') }}" class="fm-btn fm-btn-secondary">← Kembali ke Daftar</a>
         </div>
 
-        <a
-            href="{{ route('admin.layanan.index') }}"
-            class="detail-btn detail-btn-back"
-        >
-            Kembali ke Daftar
-        </a>
-    </div>
+        <div class="panel-body">
 
-    <div class="detail-card">
+            <h3 class="fm-name">{{ $service->nama_servis }}</h3>
 
-        {{-- Nama dan deskripsi --}}
-        <div class="detail-card-header">
-
-            <span class="detail-label">Informasi Layanan</span>
-
-            <h2 class="detail-service-name">
-                {{ $service->nama_servis }}
-            </h2>
-
-            <div class="detail-description-box">
-                <h3 class="detail-description-label">
-                    Deskripsi Layanan
-                </h3>
-
-                <p class="detail-description">
-                    {{ $service->deskripsi ?: 'Belum ada deskripsi layanan.' }}
-                </p>
+            <div class="fm-desc-box">
+                <h4 class="fm-desc-label">Deskripsi Layanan</h4>
+                <p class="fm-desc">{{ $service->deskripsi ?: 'Belum ada deskripsi layanan.' }}</p>
             </div>
 
-        </div>
+            <h4 class="fm-section-heading">Rincian Layanan</h4>
 
-        {{-- Rincian harga dan waktu --}}
-        <div class="detail-card-body">
-
-            <h3 class="detail-section-title">
-                Rincian Layanan
-            </h3>
-
-            <dl class="detail-info-grid">
-
-                <div class="detail-info-item">
+            <dl class="fm-info">
+                <div class="fm-info-item">
                     <dt>Nama Layanan</dt>
                     <dd>{{ $service->nama_servis }}</dd>
                 </div>
 
-                <div class="detail-info-item">
+                <div class="fm-info-item">
                     <dt>Estimasi Pengerjaan</dt>
                     <dd>{{ $service->estimasi_waktu }} menit</dd>
                 </div>
 
-                <div class="detail-info-item">
+                <div class="fm-info-item">
                     <dt>Harga Barang / Suku Cadang</dt>
-                    <dd>
-                        Rp{{ number_format($service->harga_barang ?? 0, 0, ',', '.') }}
-                    </dd>
+                    <dd>Rp{{ number_format($service->harga_barang ?? 0, 0, ',', '.') }}</dd>
                 </div>
 
-                <div class="detail-info-item">
+                <div class="fm-info-item">
                     <dt>Biaya Jasa Servis</dt>
-                    <dd>
-                        Rp{{ number_format($service->biaya_jasa ?? 0, 0, ',', '.') }}
-                    </dd>
+                    <dd>Rp{{ number_format($service->biaya_jasa ?? 0, 0, ',', '.') }}</dd>
                 </div>
-
             </dl>
 
-            {{-- Total harga --}}
-            <div class="detail-total">
+            <div class="fm-total">
                 <div>
-                    <p class="detail-total-label">
-                        Total Harga Layanan
-                    </p>
-
-                    <p class="detail-total-description">
-                        Harga barang ditambah biaya jasa servis.
-                    </p>
+                    <div class="fm-total-label">Total Harga Layanan</div>
+                    <div class="fm-total-note">Harga barang ditambah biaya jasa servis.</div>
                 </div>
 
-                <div class="detail-total-price">
+                <div class="fm-total-value">
                     Rp{{ number_format(
                         $service->harga ?? (($service->harga_barang ?? 0) + ($service->biaya_jasa ?? 0)),
                         0,
@@ -443,24 +149,12 @@
                 </div>
             </div>
 
-            {{-- Tombol aksi --}}
-            <div class="detail-footer">
-                <a
-                    href="{{ route('admin.layanan.index') }}"
-                    class="detail-btn detail-btn-back"
-                >
-                    Kembali
-                </a>
-
-                <a
-                    href="{{ route('admin.layanan.edit', $service->id) }}"
-                    class="detail-btn detail-btn-edit"
-                >
-                    Edit Layanan
-                </a>
+            <div class="fm-actions">
+                <a href="{{ route('admin.layanan.index') }}" class="fm-btn fm-btn-secondary">Kembali</a>
+                <a href="{{ route('admin.layanan.edit', $service->id) }}" class="fm-btn fm-btn-warning">Edit Layanan</a>
             </div>
 
         </div>
-    </div>
+    </section>
 </div>
 @endsection

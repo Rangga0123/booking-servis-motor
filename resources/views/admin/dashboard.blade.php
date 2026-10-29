@@ -4,312 +4,71 @@
 
 @push('styles')
 <style>
-    .dash-page {
-        --dash-card: #ffffff;
-        --dash-text: #17243c;
-        --dash-border: #e2e8f1;
-        color: var(--dash-text);
-    }
+    .page-heading { gap: 20px; margin-bottom: 26px; align-items: center; }
 
     .dash-page,
     .dash-page * { box-sizing: border-box; }
+    .dash-page { color: #212529; }
 
-    .page-heading {
-        gap: 20px;
-        margin-bottom: 26px;
-        align-items: center;
-    }
+    /* ===== KARTU RINGKASAN ATAS ===== */
+    .dash-page .kpi-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .dash-page .kpi { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 18px 20px; background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .dash-page .kpi-icon { width: 50px; height: 50px; display: grid; place-items: center; flex-shrink: 0; border-radius: 8px; }
+    .dash-page .kpi-title { color: #6c757d; font-size: 13px; font-weight: 600; }
+    .dash-page .kpi-number { margin-top: 4px; color: #212529; font-size: clamp(24px, 2.5vw, 30px); font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+    .dash-page .kpi-desc { margin-top: 4px; color: #6c757d; font-size: 11px; }
 
-    /* KARTU RINGKASAN ATAS */
-    .dash-page .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
-        margin-bottom: 22px;
-    }
+    .dash-page .tone-blue   { background: #e7f1ff; color: #007bff; }
+    .dash-page .tone-orange { background: #fff3cd; color: #d39e00; }
+    .dash-page .tone-green  { background: #d4edda; color: #28a745; }
+    .dash-page .tone-red    { background: #f8d7da; color: #dc3545; }
 
-    .dash-page .kpi {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 17px;
-        min-width: 0;
-        padding: 24px 22px;
-        overflow: hidden;
-        background: var(--dash-card);
-        border: 1px solid var(--dash-border);
-        border-radius: 18px;
-        box-shadow: 0 5px 20px rgba(31, 52, 88, .045);
-        transition: transform .2s ease, box-shadow .2s ease;
-    }
-
-    .dash-page .kpi:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 28px rgba(31, 52, 88, .09);
-    }
-
-    .dash-page .kpi::after {
-        content: "";
-        position: absolute;
-        right: -25px;
-        top: -35px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: currentColor;
-        opacity: .035;
-        pointer-events: none;
-    }
-
-    .dash-page .kpi-icon {
-        width: 58px;
-        height: 58px;
-        display: grid;
-        place-items: center;
-        flex-shrink: 0;
-        border-radius: 17px;
-    }
-
-    .dash-page .kpi-title { font-size: 13px; font-weight: 700; color: #75839a; }
-
-    .dash-page .kpi-number {
-        margin-top: 7px;
-        font-size: clamp(25px, 2.5vw, 32px);
-        line-height: 1.15;
-        font-weight: 800;
-        letter-spacing: -1px;
-        color: #17243c;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .dash-page .kpi-desc { margin-top: 7px; font-size: 11px; color: #94a0b2; }
-
-    .dash-page .tone-blue   { background: #e9efff; color: #4978f5; }
-    .dash-page .tone-orange { background: #fff2df; color: #e69a28; }
-    .dash-page .tone-green  { background: #e1f7ec; color: #17a875; }
-    .dash-page .tone-red    { background: #ffe8ec; color: #e34e65; }
-
-    /* PANEL */
-    .dash-page .dash-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-        align-items: start;
-    }
-
+    /* ===== PANEL ===== */
+    .dash-page .dash-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
     .dash-page .today-panel { grid-column: 1 / -1; }
+    .dash-page .panel { min-width: 0; margin-bottom: 0; overflow: hidden; background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .dash-page .panel-header { padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .dash-page .panel-header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .dash-page .panel-title { color: #212529; font-size: 16px; font-weight: 400; }
+    .dash-page .panel-subtitle { margin-top: 3px; color: #6c757d; font-size: 12px; line-height: 1.6; }
 
-    .dash-page .panel {
-        min-width: 0;
-        margin-bottom: 0;
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e3e9f2;
-        border-radius: 18px;
-        box-shadow: 0 5px 22px rgba(31, 52, 88, .045);
-    }
+    .dash-page .today-badge { padding: 6px 10px; color: #004085; background: #e7f1ff; border: 1px solid #b8daff; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 
-    .dash-page .panel-header {
-        padding: 21px 23px;
-        background: linear-gradient(135deg, #ffffff, #f9fbff);
-        border-bottom: 1px solid #edf1f7;
-    }
+    /* ===== RINGKASAN ===== */
+    .dash-page .summary-content { padding: 18px 20px 20px; }
+    .dash-page .summary-item { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; padding: 14px 16px; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; }
+    .dash-page .summary-item:hover { background: #f8f9fa; }
+    .dash-page .summary-icon { width: 44px; height: 44px; display: grid; place-items: center; flex-shrink: 0; border-radius: 8px; }
+    .dash-page .summary-label { color: #6c757d; font-size: 13px; font-weight: 600; }
+    .dash-page .summary-number { margin-top: 3px; color: #212529; font-size: 24px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+    .dash-page .summary-desc { margin-top: 3px; color: #6c757d; font-size: 11px; }
+    .dash-page .summary-link { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; margin-top: 16px; padding: 8px 14px; color: #fff; background: #007bff; border: 1px solid #007bff; border-radius: 4px; font-size: 14px; font-weight: 600; text-decoration: none; transition: filter .15s ease; }
+    .dash-page .summary-link:hover { filter: brightness(.92); }
 
-    .dash-page .panel-header-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 14px;
-    }
-
-    .dash-page .panel-heading { display: flex; align-items: center; gap: 14px; min-width: 0; }
-
-    .dash-page .panel-heading-icon {
-        width: 45px;
-        height: 45px;
-        display: grid;
-        place-items: center;
-        flex-shrink: 0;
-        border-radius: 14px;
-        background: linear-gradient(145deg, #527fff, #3158cb);
-        color: white;
-        box-shadow: 0 5px 12px #3f6fe52a;
-    }
-
-    .dash-page .panel-title { color: #1a2943; font-size: 15px; font-weight: 800; }
-    .dash-page .panel-subtitle { margin-top: 5px; color: #8794a9; font-size: 12px; line-height: 1.6; }
-
-    .dash-page .today-badge {
-        padding: 8px 13px;
-        border: 1px solid #e0e9ff;
-        border-radius: 10px;
-        background: #edf3ff;
-        color: #456cce;
-        font-size: 11px;
-        font-weight: 800;
-        white-space: nowrap;
-    }
-
-    /* RINGKASAN */
-    .dash-page .summary-content { padding: 21px; }
-
-    .dash-page .summary-item {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 13px;
-        padding: 17px;
-        background: #fafbfe;
-        border: 1px solid #e9edf5;
-        border-radius: 14px;
-        transition: background .2s ease, border-color .2s ease;
-    }
-
-    .dash-page .summary-item:hover { background: #f5f8ff; border-color: #dbe5ff; }
-
-    .dash-page .summary-icon {
-        width: 49px;
-        height: 49px;
-        display: grid;
-        place-items: center;
-        flex-shrink: 0;
-        border-radius: 14px;
-    }
-
-    .dash-page .summary-label { color: #697a95; font-size: 13px; font-weight: 700; }
-
-    .dash-page .summary-number {
-        margin-top: 5px;
-        color: #192740;
-        font-size: 26px;
-        font-weight: 800;
-        line-height: 1.2;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .dash-page .summary-desc { margin-top: 5px; color: #95a0b2; font-size: 11px; }
-
-    .dash-page .summary-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-top: 17px;
-        padding: 14px 16px;
-        color: #426ee4;
-        background: #edf3ff;
-        border: 1px solid #e1eaff;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: 800;
-        text-decoration: none;
-        transition: .2s ease;
-    }
-
-    .dash-page .summary-link:hover { background: #e1eaff; transform: translateX(2px); }
-
-    /* JADWAL SERVIS HARI INI */
-    .dash-page .today-list { padding: 18px 21px; display: grid; gap: 12px; }
-
-    .dash-page .today-item {
-        display: grid;
-        grid-template-columns: 90px minmax(0, 1.6fr) minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 16px;
-        padding: 14px 16px;
-        background: #fafbfe;
-        border: 1px solid #e9edf5;
-        border-radius: 14px;
-        transition: background .2s ease, border-color .2s ease;
-    }
-
-    .dash-page .today-item:hover { background: #f5f8ff; border-color: #dbe5ff; }
-
-    .dash-page .today-time {
-        padding: 10px 8px;
-        border-radius: 11px;
-        background: #e9efff;
-        color: #3864d2;
-        font-size: 17px;
-        font-weight: 800;
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-    }
-
+    /* ===== JADWAL SERVIS HARI INI ===== */
+    .dash-page .today-list { padding: 16px 20px; display: grid; gap: 10px; }
+    .dash-page .today-item { display: grid; grid-template-columns: 84px minmax(0, 1.6fr) minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 12px 14px; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; }
+    .dash-page .today-item:hover { background: #f8f9fa; }
+    .dash-page .today-time { padding: 8px; color: #004085; background: #e7f1ff; border-radius: 6px; font-size: 16px; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
     .dash-page .today-time small { display: block; margin-top: 2px; font-size: 9px; font-weight: 700; letter-spacing: .5px; }
+    .dash-page .customer-name { display: block; color: #212529; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
+    .dash-page .customer-detail { display: block; margin-top: 3px; color: #6c757d; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+    .dash-page .today-mech small { display: block; margin-bottom: 3px; color: #6c757d; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+    .dash-page .today-mech strong { color: #212529; font-size: 13px; overflow-wrap: anywhere; }
+    .dash-page .today-mech strong.muted { color: #6c757d; font-weight: 500; }
 
-    .dash-page .customer-name {
-        display: block;
-        color: #263650;
-        font-size: 13px;
-        font-weight: 800;
-        overflow-wrap: anywhere;
-    }
+    .dash-page .status { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border: 1px solid transparent; border-radius: 4px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .dash-page .status.waiting { color: #856404; background: #fff3cd; border-color: #ffeeba; }
+    .dash-page .status.process { color: #0c5460; background: #d1ecf1; border-color: #bee5eb; }
+    .dash-page .status.done    { color: #155724; background: #d4edda; border-color: #c3e6cb; }
 
-    .dash-page .customer-detail {
-        display: block;
-        margin-top: 5px;
-        color: #91a0b7;
-        font-size: 11px;
-        line-height: 1.6;
-        overflow-wrap: anywhere;
-    }
-
-    .dash-page .today-mech small {
-        display: block;
-        margin-bottom: 4px;
-        color: #91a0b7;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .4px;
-    }
-
-    .dash-page .today-mech strong { color: #3c4a63; font-size: 12px; overflow-wrap: anywhere; }
-    .dash-page .today-mech strong.muted { color: #9aa6b8; font-weight: 600; }
-
-    .dash-page .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 7px 10px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 800;
-        white-space: nowrap;
-    }
-
-    .dash-page .status.waiting { background: #fff3dc; color: #b9790b; }
-    .dash-page .status.process { background: #eaf0ff; color: #3864d2; }
-    .dash-page .status.done    { background: #e0f7eb; color: #138453; }
-
-    .dash-page .today-more { padding: 0 21px 16px; color: #8996aa; font-size: 12px; }
-
-    .dash-page .empty-state {
-        padding: 34px 15px;
-        color: #8a97ab;
-        text-align: center;
-        font-size: 13px;
-        line-height: 1.7;
-    }
-
-    .dash-page .panel-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 16px 21px;
-        background: #fafbfe;
-        border-top: 1px solid #edf1f6;
-        color: #8996aa;
-        font-size: 12px;
-    }
-
-    .dash-page .panel-footer a { color: #416fe8; font-weight: 800; text-decoration: none; }
+    .dash-page .today-more { padding: 0 20px 14px; color: #6c757d; font-size: 12px; }
+    .dash-page .empty-state { padding: 34px 15px; color: #6c757d; text-align: center; font-size: 13px; line-height: 1.7; }
+    .dash-page .panel-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 14px 20px; background: #f8f9fa; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 12px; }
+    .dash-page .panel-footer a { color: #007bff; font-weight: 700; text-decoration: none; }
     .dash-page .panel-footer a:hover { text-decoration: underline; }
 
+    /* ===== RESPONSIF ===== */
     @media (max-width: 1100px) {
         .dash-page .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .dash-page .kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
@@ -317,33 +76,34 @@
         .dash-page .today-panel { grid-column: auto; }
     }
 
+    /* Jadwal di HP: jam + status di baris atas, lalu nama, lalu mekanik */
     @media (max-width: 760px) {
         .dash-page .today-item {
-            grid-template-columns: 80px minmax(0, 1fr);
-            gap: 12px;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas: "time status" "info info" "mech mech";
+            gap: 10px 12px;
         }
-        .dash-page .today-mech,
-        .dash-page .today-item .status { grid-column: 2; justify-self: start; }
+        .dash-page .today-time { grid-area: time; justify-self: start; padding: 6px 12px; font-size: 15px; }
+        .dash-page .today-time small { display: inline; margin: 0 0 0 5px; }
+        .dash-page .today-info { grid-area: info; }
+        .dash-page .today-mech { grid-area: mech; padding-top: 10px; border-top: 1px dashed #dee2e6; }
+        .dash-page .today-item .status { grid-area: status; justify-self: end; }
     }
 
     @media (max-width: 650px) {
         .page-heading { align-items: stretch; }
-        .dash-page .kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-        .dash-page .kpi { padding: 18px; }
-        .dash-page .panel-header { padding: 17px; }
-        .dash-page .summary-content { padding: 15px; }
-        .dash-page .summary-item { padding: 13px; }
-        .dash-page .today-list { padding: 14px; }
-        .dash-page .today-more { padding: 0 14px 14px; }
-        .dash-page .panel-footer { padding: 15px; }
+        .dash-page .kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+        .dash-page .kpi:last-child:nth-child(odd) { grid-column: auto; }
+        .dash-page .kpi { padding: 14px 16px; gap: 12px; }
+        .dash-page .kpi-icon { width: 44px; height: 44px; }
+        .dash-page .panel-header { padding: 12px 14px; }
+        .dash-page .summary-content { padding: 14px; }
+        .dash-page .summary-item { padding: 12px; }
+        .dash-page .summary-link { min-height: 42px; }
+        .dash-page .today-list { padding: 12px; }
+        .dash-page .today-more { padding: 0 14px 12px; }
+        .dash-page .panel-footer { padding: 12px 14px; }
         .dash-page .today-badge { white-space: normal; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .dash-page .kpi,
-        .dash-page .summary-item,
-        .dash-page .summary-link,
-        .dash-page .today-item { transition: none; }
     }
 </style>
 @endpush
@@ -423,7 +183,7 @@
     <section class="kpi-grid">
         <div class="kpi">
             <div class="kpi-icon tone-blue">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
                 </svg>
             </div>
@@ -436,7 +196,7 @@
 
         <div class="kpi">
             <div class="kpi-icon tone-orange">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
                 </svg>
             </div>
@@ -449,7 +209,7 @@
 
         <div class="kpi">
             <div class="kpi-icon tone-green">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/>
                 </svg>
             </div>
@@ -466,23 +226,14 @@
         {{-- RINGKASAN BOOKING --}}
         <section class="panel">
             <div class="panel-header">
-                <div class="panel-heading">
-                    <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="panel-title">Ringkasan Booking</div>
-                        <div class="panel-subtitle">Informasi booking pelanggan untuk memantau operasional bengkel.</div>
-                    </div>
-                </div>
+                <div class="panel-title">Ringkasan Booking</div>
+                <div class="panel-subtitle">Informasi booking pelanggan untuk memantau operasional bengkel.</div>
             </div>
 
             <div class="summary-content">
                 <div class="summary-item">
                     <div class="summary-icon tone-blue">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
                         </svg>
                     </div>
@@ -495,7 +246,7 @@
 
                 <div class="summary-item">
                     <div class="summary-icon tone-orange">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
                         </svg>
                     </div>
@@ -515,23 +266,14 @@
         {{-- RINGKASAN MEKANIK --}}
         <section class="panel">
             <div class="panel-header">
-                <div class="panel-heading">
-                    <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="panel-title">Ringkasan Mekanik</div>
-                        <div class="panel-subtitle">Pantau jumlah mekanik berdasarkan statusnya.</div>
-                    </div>
-                </div>
+                <div class="panel-title">Ringkasan Mekanik</div>
+                <div class="panel-subtitle">Pantau jumlah mekanik berdasarkan statusnya.</div>
             </div>
 
             <div class="summary-content">
                 <div class="summary-item">
                     <div class="summary-icon tone-green">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="m5 12 4 4L19 6"/>
                         </svg>
                     </div>
@@ -544,7 +286,7 @@
 
                 <div class="summary-item">
                     <div class="summary-icon tone-red">
-                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M6 6l12 12M18 6 6 18"/>
                         </svg>
                     </div>
@@ -565,16 +307,9 @@
         <section class="panel today-panel">
             <div class="panel-header">
                 <div class="panel-header-top">
-                    <div class="panel-heading">
-                        <div class="panel-heading-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="panel-title">Jadwal Servis Hari Ini</div>
-                            <div class="panel-subtitle">Urut dari jam paling awal. Pesanan ditolak dan dibatalkan tidak ditampilkan.</div>
-                        </div>
+                    <div>
+                        <div class="panel-title">Jadwal Servis Hari Ini</div>
+                        <div class="panel-subtitle">Urut dari jam paling awal. Pesanan ditolak dan dibatalkan tidak ditampilkan.</div>
                     </div>
 
                     <span class="today-badge">
@@ -602,7 +337,7 @@
                                 <small>WIB</small>
                             </div>
 
-                            <div>
+                            <div class="today-info">
                                 <span class="customer-name">{{ $item->nama_pelanggan ?: '-' }}</span>
                                 <span class="customer-detail">
                                     {{ $item->nama_motor ?: '-' }}

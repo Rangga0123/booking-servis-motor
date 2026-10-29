@@ -4,312 +4,85 @@
 
 @push('styles')
 <style>
-    .service-form-page {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding-bottom: 30px;
-    }
+    .fm-page,
+    .fm-page * { box-sizing: border-box; }
+    .fm-page { color: #212529; }
 
-    .service-form-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-    }
+    /* ===== CARD ===== */
+    .fm-page .panel { background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 18px; overflow: hidden; }
+    .fm-page .panel-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .fm-page .panel-title { margin: 0; color: #212529; font-size: 16px; font-weight: 400; }
+    .fm-page .panel-body { padding: 20px; }
 
-    .service-form-heading h1 {
-        margin: 0 0 7px;
-        color: #172033;
-        font-size: 25px;
-        font-weight: 750;
-    }
+    /* ===== TOMBOL ===== */
+    .fm-page .fm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 6px 14px; border: 1px solid transparent; border-radius: 4px; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.5; white-space: nowrap; text-decoration: none; cursor: pointer; transition: filter .15s ease; }
+    .fm-page .fm-btn:hover { filter: brightness(.92); }
+    .fm-page .fm-btn-primary { color: #fff; background: #007bff; border-color: #007bff; }
+    .fm-page .fm-btn-secondary { color: #fff; background: #6c757d; border-color: #6c757d; }
+    .fm-page .fm-btn-warning { color: #212529; background: #ffc107; border-color: #ffc107; }
 
-    .service-form-heading p {
-        margin: 0;
-        color: #64748b;
-        font-size: 14px;
-    }
+    /* ===== NOTIFIKASI ===== */
+    .fm-page .fm-notice { padding: 13px 16px; margin-bottom: 16px; color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 6px; font-size: 13px; line-height: 1.6; }
+    .fm-page .fm-notice ul { padding-left: 20px; margin: 6px 0 0; }
 
-    .service-breadcrumb {
-        margin-bottom: 10px;
-        color: #64748b;
-        font-size: 12px;
-    }
+    /* ===== FORM ===== */
+    .fm-page .fm-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .fm-page .fm-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .fm-page .fm-group.full { grid-column: 1 / -1; }
+    .fm-page .fm-group label { color: #212529; font-size: 14px; font-weight: 600; }
+    .fm-page .fm-group label .required { color: #dc3545; }
+    .fm-page .fm-control { display: block; width: 100%; min-height: 38px; padding: 7px 12px; color: #495057; background: #fff; border: 1px solid #ced4da; border-radius: 4px; font: inherit; font-size: 14px; transition: border-color .15s, box-shadow .15s; }
+    .fm-page .fm-control:focus { outline: none; border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
+    .fm-page .fm-control::placeholder { color: #adb5bd; }
+    .fm-page .fm-control.is-invalid { border-color: #dc3545; }
+    .fm-page textarea.fm-control { min-height: 110px; resize: vertical; line-height: 1.6; }
+    .fm-page .fm-help { color: #6c757d; font-size: 12px; line-height: 1.5; }
+    .fm-page .fm-error { color: #dc3545; font-size: 12px; }
+    .fm-page .fm-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 24px; padding-top: 18px; border-top: 1px solid #e9ecef; }
 
-    .service-breadcrumb span {
-        color: #2563eb;
-        font-weight: 600;
-    }
+    /* ===== RINCIAN HARGA ===== */
+    .fm-page .fm-section { grid-column: 1 / -1; padding: 18px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; }
+    .fm-page .fm-section-title { margin: 0 0 4px; color: #212529; font-size: 15px; font-weight: 700; }
+    .fm-page .fm-section-desc { margin: 0 0 16px; color: #6c757d; font-size: 12px; line-height: 1.6; }
+    .fm-page .fm-total { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 18px; background: #e7f1ff; border: 1px solid #b8daff; border-radius: 6px; }
+    .fm-page .fm-total-label { color: #004085; font-size: 14px; font-weight: 700; }
+    .fm-page .fm-total-note { margin-top: 3px; color: #6c757d; font-size: 12px; }
+    .fm-page .fm-total-value { color: #007bff; font-size: 22px; font-weight: 800; white-space: nowrap; }
+    .fm-page .fm-section .fm-total { margin-top: 16px; }
 
-    .service-form-panel {
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
-    }
-
-    .service-panel-heading {
-        padding: 22px 25px;
-        border-bottom: 1px solid #e5e7eb;
-        background: #fafbfc;
-    }
-
-    .service-panel-heading h2 {
-        margin: 0 0 6px;
-        color: #172033;
-        font-size: 17px;
-        font-weight: 700;
-    }
-
-    .service-panel-heading p {
-        margin: 0;
-        color: #64748b;
-        font-size: 13px;
-    }
-
-    .service-form-body {
-        padding: 25px;
-    }
-
-    .service-form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-    }
-
-    .service-field {
-        display: flex;
-        min-width: 0;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .service-field-full {
-        grid-column: 1 / -1;
-    }
-
-    .service-field label {
-        color: #334155;
-        font-size: 13px;
-        font-weight: 650;
-    }
-
-    .service-field label .required {
-        color: #dc2626;
-    }
-
-    .service-input,
-    .service-textarea {
-        width: 100%;
-        box-sizing: border-box;
-        border: 1px solid #d8dee8;
-        border-radius: 9px;
-        background: #fff;
-        padding: 12px 14px;
-        color: #172033;
-        font: inherit;
-        font-size: 14px;
-        transition: border-color .2s, box-shadow .2s;
-    }
-
-    .service-input:focus,
-    .service-textarea:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
-    }
-
-    .service-textarea {
-        min-height: 115px;
-        resize: vertical;
-        line-height: 1.6;
-    }
-
-    .service-field small {
-        color: #64748b;
-        font-size: 12px;
-        line-height: 1.5;
-    }
-
-    .service-field-error {
-        color: #dc2626 !important;
-        font-size: 12px;
-    }
-
-    .service-section-title {
-        grid-column: 1 / -1;
-        margin: 6px 0 -5px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #e5e7eb;
-        color: #172033;
-        font-size: 15px;
-        font-weight: 750;
-    }
-
-    .service-total-box {
-        grid-column: 1 / -1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        padding: 19px 21px;
-        border: 1px solid #bfdbfe;
-        border-radius: 12px;
-        background: #eff6ff;
-    }
-
-    .service-total-label {
-        color: #1e40af;
-        font-size: 13px;
-        font-weight: 650;
-    }
-
-    .service-total-note {
-        display: block;
-        margin-top: 5px;
-        color: #64748b;
-        font-size: 12px;
-        font-weight: 400;
-    }
-
-    .service-total-value {
-        color: #1d4ed8;
-        font-size: 25px;
-        font-weight: 800;
-        white-space: nowrap;
-    }
-
-    .service-form-actions {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 28px;
-        padding-top: 22px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .service-btn {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        gap: 7px;
-        min-height: 40px;
-        box-sizing: border-box;
-        padding: 10px 17px;
-        border: 1px solid transparent;
-        border-radius: 9px;
-        font-size: 13px;
-        font-weight: 650;
-        text-decoration: none;
-        cursor: pointer;
-        transition: background .2s, border-color .2s;
-    }
-
-    .service-btn-light {
-        border-color: #d8dee8;
-        background: #fff;
-        color: #475569;
-    }
-
-    .service-btn-light:hover {
-        background: #f8fafc;
-    }
-
-    .service-btn-primary {
-        background: #2563eb;
-        color: #fff;
-    }
-
-    .service-btn-primary:hover {
-        background: #1d4ed8;
-    }
-
-    .service-alert-error {
-        margin-bottom: 20px;
-        padding: 15px 18px;
-        border: 1px solid #fecaca;
-        border-radius: 10px;
-        background: #fef2f2;
-        color: #991b1b;
-        font-size: 13px;
-    }
-
-    .service-alert-error ul {
-        margin: 8px 0 0;
-        padding-left: 20px;
-    }
-
-    @media (max-width: 640px) {
-        .service-form-heading h1 {
-            font-size: 21px;
-        }
-
-        .service-form-body {
-            padding: 18px;
-        }
-
-        .service-panel-heading {
-            padding: 18px;
-        }
-
-        .service-form-grid {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 18px;
-        }
-
-        .service-field-full,
-        .service-section-title,
-        .service-total-box {
-            grid-column: auto;
-        }
-
-        .service-total-box {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .service-total-value {
-            font-size: 23px;
-        }
-
-        .service-form-actions {
-            flex-direction: column-reverse;
-            align-items: stretch;
-        }
-
-        .service-form-actions .service-btn {
-            width: 100%;
-        }
+    @media (max-width: 700px) {
+        .fm-page .panel-header { padding: 12px 14px; }
+        .fm-page .panel-body { padding: 14px; }
+        .fm-page .fm-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+        .fm-page .fm-group.full, .fm-page .fm-section { grid-column: auto; }
+        .fm-page .fm-control { font-size: 16px; }
+        .fm-page .fm-section { padding: 14px; }
+        .fm-page .fm-total { align-items: flex-start; flex-direction: column; gap: 8px; }
+        .fm-page .fm-total-value { font-size: 20px; }
+        .fm-page .fm-actions { align-items: stretch; flex-direction: column-reverse; }
+        .fm-page .fm-actions .fm-btn { width: 100%; min-height: 42px; }
+        .fm-page .panel-header .fm-btn { width: 100%; }
+        .fm-page .fm-name { font-size: 19px; }
+        .fm-page .fm-info { grid-template-columns: minmax(0, 1fr); }
+        .fm-page .fm-info-item:nth-child(odd) { border-right: none; }
+        .fm-page .fm-info-item:nth-last-child(2) { border-bottom: 1px solid #dee2e6; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="service-form-page">
+<div class="content fm-page">
 
-    <div class="service-form-heading">
+    <section class="page-heading">
         <div>
-            <div class="service-breadcrumb">
-                Admin / Data Master / Kelola Layanan / <span>Edit Layanan</span>
-            </div>
-
-            <h1>Edit Layanan</h1>
-            <p>Perbarui informasi layanan dan rincian harga servis motor.</p>
+            <div class="breadcrumb">Admin / Data Master / Kelola Layanan / Edit Layanan</div>
+            <h1 class="page-title">Edit Layanan</h1>
+            <p class="page-description">Perbarui informasi layanan dan rincian harga servis motor.</p>
         </div>
-
-        <a href="{{ route('admin.layanan.index') }}" class="service-btn service-btn-light">
-            ← Kembali
-        </a>
-    </div>
+    </section>
 
     @if ($errors->any())
-        <div class="service-alert-error">
+        <div class="fm-notice" role="alert">
             <strong>Data belum bisa disimpan. Periksa kembali:</strong>
             <ul>
                 @foreach ($errors->all() as $error)
@@ -319,191 +92,130 @@
         </div>
     @endif
 
-    <div class="service-form-panel">
-        <div class="service-panel-heading">
-            <h2>Informasi Layanan</h2>
-            <p>Ubah data di bawah ini sesuai informasi layanan terbaru.</p>
+    <section class="panel">
+        <div class="panel-header">
+            <h2 class="panel-title">Informasi Layanan</h2>
+            <a href="{{ route('admin.layanan.index') }}" class="fm-btn fm-btn-secondary">← Kembali</a>
         </div>
 
-        <div class="service-form-body">
-            <form
-                action="{{ route('admin.layanan.update', $service->id) }}"
-                method="POST"
-            >
+        <div class="panel-body">
+            <form action="{{ route('admin.layanan.update', $service->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                <div class="service-form-grid">
+                <div class="fm-grid">
 
-                    <div class="service-field service-field-full">
-                        <label for="nama_servis">
-                            Nama layanan <span class="required">*</span>
-                        </label>
-
-                        <input
-                            id="nama_servis"
-                            name="nama_servis"
-                            type="text"
-                            class="service-input"
-                            value="{{ old('nama_servis', $service->nama_servis) }}"
-                            placeholder="Contoh: Ganti Oli Mesin"
-                            maxlength="255"
-                            required
-                        >
-
+                    <div class="fm-group full">
+                        <label for="nama_servis">Nama layanan <span class="required">*</span></label>
+                        <input id="nama_servis" name="nama_servis" type="text"
+                               class="fm-control @error('nama_servis') is-invalid @enderror"
+                               value="{{ old('nama_servis', $service->nama_servis) }}"
+                               placeholder="Contoh: Ganti Oli Mesin" maxlength="255" required>
                         @error('nama_servis')
-                            <small class="service-field-error">{{ $message }}</small>
+                            <small class="fm-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <div class="service-field service-field-full">
-                        <label for="deskripsi">
-                            Deskripsi layanan <span class="required">*</span>
-                        </label>
-
-                        <textarea
-                            id="deskripsi"
-                            name="deskripsi"
-                            class="service-textarea"
-                            placeholder="Jelaskan pekerjaan atau layanan yang diberikan..."
-                            required
-                        >{{ old('deskripsi', $service->deskripsi) }}</textarea>
-
+                    <div class="fm-group full">
+                        <label for="deskripsi">Deskripsi layanan <span class="required">*</span></label>
+                        <textarea id="deskripsi" name="deskripsi"
+                                  class="fm-control @error('deskripsi') is-invalid @enderror"
+                                  placeholder="Jelaskan pekerjaan atau layanan yang diberikan..."
+                                  required>{{ old('deskripsi', $service->deskripsi) }}</textarea>
                         @error('deskripsi')
-                            <small class="service-field-error">{{ $message }}</small>
+                            <small class="fm-error">{{ $message }}</small>
                         @enderror
                     </div>
 
-                    <h3 class="service-section-title">Rincian Harga</h3>
+                    <div class="fm-section">
+                        <h3 class="fm-section-title">Rincian Harga</h3>
+                        <p class="fm-section-desc">Ubah harga barang dan biaya jasa. Total akan dihitung otomatis.</p>
 
-                    <div class="service-field">
-                        <label for="harga_barang">
-                            Harga barang / suku cadang (Rp) <span class="required">*</span>
-                        </label>
+                        <div class="fm-grid">
+                            <div class="fm-group">
+                                <label for="harga_barang">Harga barang / suku cadang (Rp) <span class="required">*</span></label>
+                                <input id="harga_barang" name="harga_barang" type="number"
+                                       class="fm-control @error('harga_barang') is-invalid @enderror"
+                                       min="0" step="1"
+                                       value="{{ old('harga_barang', $service->harga_barang ?? 0) }}"
+                                       placeholder="0" required>
+                                <small class="fm-help">Masukkan harga barang atau suku cadang.</small>
+                                @error('harga_barang')
+                                    <small class="fm-error">{{ $message }}</small>
+                                @enderror
+                            </div>
 
-                        <input
-                            id="harga_barang"
-                            name="harga_barang"
-                            type="number"
-                            class="service-input"
-                            min="0"
-                            step="1"
-                            value="{{ old('harga_barang', $service->harga_barang ?? 0) }}"
-                            placeholder="0"
-                            required
-                        >
-
-                        <small>Masukkan harga barang atau suku cadang.</small>
-
-                        @error('harga_barang')
-                            <small class="service-field-error">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="service-field">
-                        <label for="biaya_jasa">
-                            Biaya jasa servis (Rp) <span class="required">*</span>
-                        </label>
-
-                        <input
-                            id="biaya_jasa"
-                            name="biaya_jasa"
-                            type="number"
-                            class="service-input"
-                            min="0"
-                            step="1"
-                            value="{{ old('biaya_jasa', $service->biaya_jasa ?? 0) }}"
-                            placeholder="0"
-                            required
-                        >
-
-                        <small>Masukkan biaya pengerjaan oleh mekanik.</small>
-
-                        @error('biaya_jasa')
-                            <small class="service-field-error">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="service-total-box">
-                        <div>
-                            <div class="service-total-label">Total Harga Layanan</div>
-                            <span class="service-total-note">
-                                Harga barang + biaya jasa servis
-                            </span>
+                            <div class="fm-group">
+                                <label for="biaya_jasa">Biaya jasa servis (Rp) <span class="required">*</span></label>
+                                <input id="biaya_jasa" name="biaya_jasa" type="number"
+                                       class="fm-control @error('biaya_jasa') is-invalid @enderror"
+                                       min="0" step="1"
+                                       value="{{ old('biaya_jasa', $service->biaya_jasa ?? 0) }}"
+                                       placeholder="0" required>
+                                <small class="fm-help">Masukkan biaya pengerjaan oleh mekanik.</small>
+                                @error('biaya_jasa')
+                                    <small class="fm-error">{{ $message }}</small>
+                                @enderror
+                            </div>
                         </div>
 
-                        <div id="totalHargaPreview" class="service-total-value">
-                            Rp0
+                        <div class="fm-total">
+                            <div>
+                                <div class="fm-total-label">Total Harga Layanan</div>
+                                <div class="fm-total-note">Harga barang + biaya jasa servis</div>
+                            </div>
+                            <div id="totalHargaPreview" class="fm-total-value">Rp0</div>
                         </div>
                     </div>
 
-                    <div class="service-field service-field-full">
-                        <label for="estimasi_waktu">
-                            Estimasi pengerjaan (menit) <span class="required">*</span>
-                        </label>
-
-                        <input
-                            id="estimasi_waktu"
-                            name="estimasi_waktu"
-                            type="number"
-                            class="service-input"
-                            min="1"
-                            step="1"
-                            value="{{ old('estimasi_waktu', $service->estimasi_waktu) }}"
-                            placeholder="Contoh: 30"
-                            required
-                        >
-
-                        <small>Perkiraan waktu pengerjaan layanan dalam menit.</small>
-
+                    <div class="fm-group full">
+                        <label for="estimasi_waktu">Estimasi pengerjaan (menit) <span class="required">*</span></label>
+                        <input id="estimasi_waktu" name="estimasi_waktu" type="number"
+                               class="fm-control @error('estimasi_waktu') is-invalid @enderror"
+                               min="1" step="1"
+                               value="{{ old('estimasi_waktu', $service->estimasi_waktu) }}"
+                               placeholder="Contoh: 30" required>
+                        <small class="fm-help">Perkiraan waktu pengerjaan layanan dalam menit.</small>
                         @error('estimasi_waktu')
-                            <small class="service-field-error">{{ $message }}</small>
+                            <small class="fm-error">{{ $message }}</small>
                         @enderror
                     </div>
 
                 </div>
 
-                <div class="service-form-actions">
-                    <a
-                        href="{{ route('admin.layanan.index') }}"
-                        class="service-btn service-btn-light"
-                    >
-                        Batal
-                    </a>
-
-                    <button type="submit" class="service-btn service-btn-primary">
-                        Simpan Perubahan
-                    </button>
+                <div class="fm-actions">
+                    <a href="{{ route('admin.layanan.index') }}" class="fm-btn fm-btn-secondary">Batal</a>
+                    <button type="submit" class="fm-btn fm-btn-primary">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
-    </div>
+    </section>
 </div>
 @endsection
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const barangInput = document.getElementById('harga_barang');
-        const jasaInput = document.getElementById('biaya_jasa');
-        const totalPreview = document.getElementById('totalHargaPreview');
+document.addEventListener('DOMContentLoaded', function () {
+    const barangInput = document.getElementById('harga_barang');
+    const jasaInput = document.getElementById('biaya_jasa');
+    const totalPreview = document.getElementById('totalHargaPreview');
 
-        if (!barangInput || !jasaInput || !totalPreview) {
-            return;
-        }
+    if (!barangInput || !jasaInput || !totalPreview) {
+        return;
+    }
 
-        function updateTotalHarga() {
-            const barang = Math.max(0, Number(barangInput.value) || 0);
-            const jasa = Math.max(0, Number(jasaInput.value) || 0);
-            const total = barang + jasa;
+    function updateTotalHarga() {
+        const barang = Math.max(0, Number(barangInput.value) || 0);
+        const jasa = Math.max(0, Number(jasaInput.value) || 0);
+        const total = barang + jasa;
 
-            totalPreview.textContent = 'Rp' + total.toLocaleString('id-ID');
-        }
+        totalPreview.textContent = 'Rp' + total.toLocaleString('id-ID');
+    }
 
-        barangInput.addEventListener('input', updateTotalHarga);
-        jasaInput.addEventListener('input', updateTotalHarga);
+    barangInput.addEventListener('input', updateTotalHarga);
+    jasaInput.addEventListener('input', updateTotalHarga);
 
-        updateTotalHarga();
-    });
+    updateTotalHarga();
+});
 </script>
 @endpush

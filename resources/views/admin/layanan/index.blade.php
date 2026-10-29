@@ -8,105 +8,113 @@
 <style>
     .dt-page,
     .dt-page * { box-sizing: border-box; }
-    .dt-page { color: #192740; }
+    .dt-page { color: #212529; }
 
-    .dt-page .panel { overflow: hidden; background: #fff; border: 1px solid #e3e9f2; border-radius: 18px; box-shadow: 0 5px 22px rgba(31,52,88,.045); margin-bottom: 18px; }
-    .dt-page .panel-header { padding: 21px 23px; background: linear-gradient(135deg, #fff, #f8faff); border-bottom: 1px solid #edf1f7; }
-    .dt-page .panel-header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-    .dt-page .panel-heading { display: flex; align-items: center; gap: 14px; }
-    .dt-page .panel-heading-icon { width: 45px; height: 45px; display: grid; place-items: center; flex-shrink: 0; border-radius: 14px; background: linear-gradient(145deg, #527fff, #3158cb); color: #fff; }
-    .dt-page .panel-title { margin: 0; color: #1a2943; font-size: 15px; font-weight: 800; }
-    .dt-page .panel-subtitle { margin-top: 5px; color: #8794a9; font-size: 12px; }
-    .dt-page .panel-tag { flex-shrink: 0; padding: 7px 10px; color: #3264d8; background: #edf3ff; border: 1px solid #dce7ff; border-radius: 7px; font-size: 11px; font-weight: 750; }
-    .dt-page .empty-state { padding: 44px 15px; color: #8a97ab; text-align: center; font-size: 13px; }
+    /* ===== CARD ===== */
+    .dt-page .panel { background: #fff; border: 1px solid #e9ecef; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 18px; overflow: hidden; }
+    .dt-page .panel-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 20px; background: #fff; border-bottom: 1px solid #e9ecef; }
+    .dt-page .panel-title { margin: 0; color: #212529; font-size: 16px; font-weight: 400; }
+    .dt-page .empty-state { padding: 44px 15px; color: #6c757d; text-align: center; font-size: 13px; }
 
-    .dt-page .dt-notice { padding: 13px 16px; margin-bottom: 16px; border: 1px solid transparent; border-radius: 10px; font-size: 13px; line-height: 1.6; }
+    .dt-page .dt-notice { padding: 13px 16px; margin-bottom: 16px; border: 1px solid transparent; border-radius: 6px; font-size: 13px; line-height: 1.6; }
     .dt-page .dt-notice ul { padding-left: 20px; margin: 6px 0 0; }
-    .dt-page .dt-notice-success { color: #087647; background: #e1f8eb; border-color: #bcebd0; }
-    .dt-page .dt-notice-error { color: #bb2942; background: #ffedf0; border-color: #ffd0d8; }
+    .dt-page .dt-notice-success { color: #155724; background: #d4edda; border-color: #c3e6cb; }
+    .dt-page .dt-notice-error { color: #721c24; background: #f8d7da; border-color: #f5c6cb; }
 
-    .dt-page .table-wrapper { width: 100%; padding: 18px 22px 20px; }
-    .dt-page .dt-strong { color: #14213d; font-size: 13px; font-weight: 750; line-height: 1.6; overflow-wrap: anywhere; }
-    .dt-page .dt-small { margin-top: 4px; color: #8491a8; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+    /* ===== TOMBOL ===== */
+    .dt-page .dt-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 9px; border: 1px solid transparent; border-radius: 4px; font-family: inherit; font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap; text-decoration: none; cursor: pointer; transition: filter .15s ease; }
+    .dt-page .dt-btn:hover { filter: brightness(.92); }
+    .dt-page .dt-btn-add { padding: 6px 12px; color: #fff; background: #007bff; border-color: #007bff; }
+    .dt-page .dt-btn-detail { color: #fff; background: #17a2b8; border-color: #17a2b8; }
+    .dt-page .dt-btn-edit { color: #212529; background: #ffc107; border-color: #ffc107; }
+    .dt-page .dt-btn-delete { color: #fff; background: #dc3545; border-color: #dc3545; }
 
-    .dt-page table.dt-table { width: 100%; border-collapse: collapse; border-spacing: 0; border: 1px solid #e2e9f3; text-align: left; background: #fff; }
-    .dt-page table.dt-table thead th { padding: 15px 14px; color: #60708a; background: #f5f8fd; border-bottom: 1px solid #e2e9f3; border-right: 1px solid #e2e9f3; font-size: 11px; font-weight: 800; letter-spacing: .35px; text-transform: uppercase; white-space: nowrap; }
-    .dt-page table.dt-table tbody td { padding: 11px 14px; color: #52647b; border-bottom: 1px solid #e2e9f3; border-right: 1px solid #e2e9f3; font-size: 12px; line-height: 1.7; vertical-align: middle; white-space: nowrap; }
+    /* ===== TABEL ===== */
+    .dt-page .table-wrapper { width: 100%; padding: 20px; overflow-x: auto; }
+    .dt-page .dt-strong { color: #212529; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+    .dt-page .dt-small { margin-top: 2px; color: #6c757d; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+
+    .dt-page table.dt-table { width: 100% !important; margin: 0 !important; border-collapse: collapse; border: 1px solid #dee2e6; background: #fff; }
+    .dt-page table.dt-table thead th,
+    .dt-page table.dt-table tfoot th { padding: 14px 12px; color: #212529; background: #fff; border: 1px solid #dee2e6; font-size: 14px; font-weight: 700; text-align: left; white-space: nowrap; }
+    .dt-page table.dt-table thead th { border-bottom: 2px solid #dee2e6; }
+    .dt-page table.dt-table tfoot th { border-top: 2px solid #dee2e6; }
+    .dt-page table.dt-table tbody td { padding: 14px 12px; color: #212529; border: 1px solid #dee2e6; font-size: 14px; vertical-align: middle; white-space: nowrap; }
     .dt-page table.dt-table tbody td.col-wrap { white-space: normal; }
-    .dt-page table.dt-table tbody td.t-center { text-align: center; }
-    .dt-page table.dt-table thead th:last-child,
-    .dt-page table.dt-table tbody td:last-child { border-right: none; }
-    .dt-page table.dt-table tbody tr:nth-child(even) { background: #fbfcff; }
-    .dt-page table.dt-table tbody tr:hover { background: #f2f6ff; }
-    .dt-page table.dataTable.no-footer { border-bottom: 1px solid #e2e9f3; }
+    .dt-page table.dt-table tbody td.t-center,
+    .dt-page table.dt-table thead th.t-center,
+    .dt-page table.dt-table tfoot th.t-center { text-align: center; }
+    .dt-page table.dt-table tbody tr:hover { background: #f1f1f1; }
+    .dt-page table.dataTable.no-footer { border-bottom: 1px solid #dee2e6; }
 
-    .dt-page .dataTables_wrapper { font-size: 12px; color: #52647b; }
+    /* ===== DATATABLES (toolbar, search, pagination) ===== */
+    .dt-page .dataTables_wrapper { font-size: 14px; color: #212529; }
     .dt-page .dt-top, .dt-page .dt-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
     .dt-page .dt-top { margin-bottom: 14px; }
     .dt-page .dt-bottom { margin-top: 14px; }
-    .dt-page .dt-buttons { display: flex; flex-wrap: wrap; gap: 0; float: none; margin: 0; }
-    .dt-page .dt-button { margin: 0 !important; padding: 8px 15px !important; color: #fff !important; background: #3b4752 !important; background-image: none !important; border: 1px solid #2f3a45 !important; border-radius: 0 !important; font-size: 12px !important; font-weight: 700 !important; box-shadow: none !important; }
-    .dt-page .dt-button:first-child { border-radius: 7px 0 0 7px !important; }
-    .dt-page .dt-button:last-child { border-radius: 0 7px 7px 0 !important; }
-    .dt-page .dt-button:only-child { border-radius: 7px !important; }
-    .dt-page .dt-button:hover { background: #2b343d !important; background-image: none !important; }
-    .dt-page .dataTables_filter, .dt-page .dataTables_length { float: none; margin: 0; }
-    .dt-page .dataTables_filter input, .dt-page .dataTables_length select { padding: 7px 10px; color: #14213d; border: 1px solid #d3dcea; border-radius: 7px; font-size: 12px; outline: none; }
-    .dt-page .dataTables_filter input:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
-    .dt-page .dataTables_info { float: none; padding: 0; color: #7182a3; }
+
+    .dt-page .dt-buttons { display: flex; flex-wrap: wrap; float: none; margin: 0; }
+    .dt-page .dt-button { margin: 0 !important; padding: 8px 12px !important; color: #fff !important; background: #6c757d !important; background-image: none !important; border: none !important; border-radius: 0 !important; font-size: 14px !important; box-shadow: none !important; }
+    .dt-page .dt-button:first-child { border-radius: 4px 0 0 4px !important; }
+    .dt-page .dt-button:last-child { border-radius: 0 4px 4px 0 !important; }
+    .dt-page .dt-button:only-child { border-radius: 4px !important; }
+    .dt-page .dt-button:hover { background: #5a6268 !important; background-image: none !important; }
+
+    .dt-page .dataTables_filter { float: none; margin: 0; }
+    .dt-page .dataTables_filter input { margin-left: 6px; width: 180px; padding: 6px 10px; color: #495057; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; outline: none; }
+    .dt-page .dataTables_filter input:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
+    .dt-page .dataTables_info { float: none; padding: 0; color: #212529; }
     .dt-page .dataTables_paginate { float: none; padding: 0; }
-    .dt-page .dataTables_paginate .paginate_button { padding: 6px 12px !important; margin: 0 0 0 -1px !important; color: #52647b !important; background: #fff !important; background-image: none !important; border: 1px solid #d3dcea !important; border-radius: 0 !important; box-shadow: none !important; }
-    .dt-page .dataTables_paginate .paginate_button:first-child { border-radius: 7px 0 0 7px !important; }
-    .dt-page .dataTables_paginate .paginate_button:last-child { border-radius: 0 7px 7px 0 !important; }
-    .dt-page .dataTables_paginate .paginate_button.current { color: #fff !important; background: #3264d8 !important; border-color: #3264d8 !important; }
-    .dt-page .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) { background: #eef3fc !important; }
-    .dt-page .dataTables_paginate .paginate_button.disabled { color: #a7b2c4 !important; }
+    .dt-page .dataTables_paginate .paginate_button { padding: 6px 12px !important; margin: 0 0 0 -1px !important; color: #6c757d !important; background: #fff !important; background-image: none !important; border: 1px solid #dee2e6 !important; border-radius: 0 !important; box-shadow: none !important; }
+    .dt-page .dataTables_paginate .paginate_button:first-child { border-radius: 4px 0 0 4px !important; }
+    .dt-page .dataTables_paginate .paginate_button:last-child { border-radius: 0 4px 4px 0 !important; }
+    .dt-page .dataTables_paginate .paginate_button.current { color: #fff !important; background: #007bff !important; border-color: #007bff !important; }
+    .dt-page .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) { color: #0056b3 !important; background: #e9ecef !important; }
+    .dt-page .dataTables_paginate .paginate_button.disabled { color: #adb5bd !important; cursor: default; }
+
     div.dt-button-background { background: transparent !important; }
-    div.dt-button-collection { padding: 6px 0; border: 1px solid #dce5f1; border-radius: 8px; box-shadow: 0 8px 24px rgba(39,61,99,.15); }
-    div.dt-button-collection .dt-button { display: block; width: 100%; color: #14213d !important; background: #fff !important; border: none !important; border-radius: 0 !important; text-align: left; }
-    div.dt-button-collection .dt-button.active, div.dt-button-collection .dt-button.dt-button-active { color: #fff !important; background: #3264d8 !important; }
+    div.dt-button-collection { padding: 6px 0; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+    div.dt-button-collection .dt-button { display: block; width: 100%; color: #212529 !important; background: #fff !important; border: none !important; border-radius: 0 !important; text-align: left; }
+    div.dt-button-collection .dt-button.active, div.dt-button-collection .dt-button.dt-button-active { color: #fff !important; background: #007bff !important; }
 
-    .dt-page .status { display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px; border: 1px solid transparent; border-radius: 7px; font-size: 10px; font-weight: 800; line-height: 1.5; white-space: nowrap; }
-    .dt-page .status.active   { color: #087647; background: #e1f8eb; border-color: #bcebd0; }
-    .dt-page .status.inactive { color: #bb2942; background: #ffedf0; border-color: #ffd0d8; }
-    .dt-page .status.info     { color: #2457bd; background: #e7efff; border-color: #cbdcff; }
-    .dt-page .dt-total { color: #3264d8; font-size: 13px; font-weight: 800; white-space: nowrap; }
+    /* ===== STATUS & TOTAL ===== */
+    .dt-page .status { display: inline-flex; align-items: center; justify-content: center; padding: 5px 9px; border: 1px solid transparent; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.5; white-space: nowrap; }
+    .dt-page .status.info { color: #0c5460; background: #d1ecf1; border-color: #bee5eb; }
+    .dt-page .dt-total { color: #007bff; font-size: 14px; font-weight: 700; white-space: nowrap; }
 
-    .dt-page .dt-actions { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+    .dt-page .dt-actions { display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: nowrap; }
     .dt-page .dt-actions form { display: inline-flex; margin: 0; padding: 0; }
-    .dt-page .dt-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; min-width: 52px; padding: 7px 12px; border: 1px solid transparent; border-radius: 7px; font-family: inherit; font-size: 10px; font-weight: 800; white-space: nowrap; text-decoration: none; cursor: pointer; transition: .2s ease; }
-    .dt-page .dt-btn:hover { transform: translateY(-1px); }
-    .dt-page .dt-btn-detail { color: #1854b4; background: #eaf2ff; border-color: #d2e2ff; }
-    .dt-page .dt-btn-edit { color: #956000; background: #fff5dc; border-color: #ffe3a0; }
-    .dt-page .dt-btn-delete { color: #bb2942; background: #ffedf0; border-color: #ffd0d8; }
 
+    /* ===== KARTU MOBILE ===== */
     .dt-page .dt-mobile { display: none; padding: 14px; }
-    .dt-page .dt-card { padding: 15px; margin-bottom: 12px; background: #fff; border: 1px solid #dce5f1; border-left: 3px solid #3264d8; border-radius: 11px; box-shadow: 0 3px 10px rgba(39,61,99,.035); }
-    .dt-page .dt-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-    .dt-page .dt-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #e8edf5; }
-    .dt-page .dt-card-grid .full { grid-column: 1 / -1; }
-    .dt-page .dt-card-label { color: #8491a8; font-size: 11px; line-height: 1.5; }
-    .dt-page .dt-card-value { margin-top: 5px; color: #263752; font-size: 12px; font-weight: 700; line-height: 1.7; overflow-wrap: anywhere; }
-    .dt-page .dt-card-actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 13px; border-top: 1px solid #e8edf5; }
+    .dt-page .dt-card { padding: 15px; margin-bottom: 12px; background: #fff; border: 1px solid #ced4da; border-left: 3px solid #007bff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .dt-page .dt-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #ced4da; }
+    .dt-page .dt-card-grid { display: block; margin-top: 2px; }
+    .dt-page .dt-card-grid > div { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid #e9ecef; }
+    .dt-page .dt-card-grid > div:last-child { border-bottom: none; }
+    .dt-page .dt-card-grid > div.full { flex-direction: column; gap: 4px; }
+    .dt-page .dt-card-grid > div.full .dt-card-value { text-align: left; }
+    .dt-page .dt-card-label { flex: 0 0 auto; color: #6c757d; font-size: 12px; line-height: 1.6; }
+    .dt-page .dt-card-value { min-width: 0; margin-top: 0; color: #212529; font-size: 13px; font-weight: 600; line-height: 1.6; text-align: right; overflow-wrap: anywhere; }
+    .dt-page .dt-card-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 0; padding: 12px 0; border-top: 1px solid #ced4da; border-bottom: 1px solid #e9ecef; }
+    .dt-page .dt-card-total span:first-child { color: #212529; font-size: 13px; font-weight: 700; }
+    .dt-page .dt-card-total .dt-total { font-size: 16px; }
+    .dt-page .dt-card-actions { display: flex; gap: 8px; margin-top: 4px; padding-top: 14px; border-top: 1px solid #ced4da; }
     .dt-page .dt-card-actions > a, .dt-page .dt-card-actions > form { flex: 1; margin: 0; }
-    .dt-page .dt-card-actions .dt-btn { width: 100%; min-height: 40px; font-size: 12px; }
-    .dt-page .dt-card-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding-top: 13px; border-top: 1px dashed #d3dcea; }
-    .dt-page .dt-card-total span:first-child { color: #14213d; font-size: 12px; font-weight: 800; }
-    .dt-page .dt-card-total .dt-total { font-size: 15px; }
-    .dt-page .dt-m-search { width: 100%; margin-bottom: 12px; padding: 11px 13px; color: #14213d; background: #fff; border: 1px solid #d3dcea; border-radius: 9px; font-family: inherit; font-size: 16px; outline: none; }
-    .dt-page .dt-m-search:focus { border-color: #3264d8; box-shadow: 0 0 0 3px rgba(50,100,216,.12); }
-    .dt-page .dt-m-more { display: none; width: 100%; min-height: 44px; margin-top: 12px; color: #3264d8; background: #edf3ff; border: 1px solid #dce7ff; border-radius: 9px; font-family: inherit; font-size: 13px; font-weight: 750; cursor: pointer; }
-    .dt-page .dt-m-empty { display: none; padding: 22px 10px; color: #7182a3; font-size: 13px; text-align: center; }
+    .dt-page .dt-card-actions .dt-btn { width: 100%; min-height: 40px; font-size: 13px; }
+    .dt-page .dt-m-search { width: 100%; margin-bottom: 12px; padding: 10px 12px; color: #495057; background: #fff; border: 1px solid #ced4da; border-radius: 4px; font-family: inherit; font-size: 16px; outline: none; }
+    .dt-page .dt-m-search:focus { border-color: #80bdff; box-shadow: 0 0 0 3px rgba(0,123,255,.2); }
+    .dt-page .dt-m-more { display: none; width: 100%; min-height: 44px; margin-top: 12px; color: #fff; background: #007bff; border: 1px solid #007bff; border-radius: 4px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .dt-page .dt-m-empty { display: none; padding: 22px 10px; color: #6c757d; font-size: 13px; text-align: center; }
 
     @media (max-width: 800px) {
         .dt-page .table-wrapper { display: none; }
         .dt-page .dt-mobile { display: block; }
     }
     @media (max-width: 650px) {
-        .dt-page .panel-header { padding: 16px; }
-        .dt-page .panel-tag { display: none; }
+        .dt-page .panel-header { padding: 12px 14px; }
         .dt-page .dt-mobile { padding: 10px; }
-        .dt-page .dt-card { padding: 13px; }
+    .dt-page .dt-card { padding: 13px; }
     }
 </style>
 @endpush
@@ -129,7 +137,6 @@
             <h1 class="page-title">Kelola Layanan &amp; Harga</h1>
             <p class="page-description">Atur daftar servis dan rincian harga layanan Bengkel Royal Motor.</p>
         </div>
-        <a href="{{ route('admin.layanan.create') }}" class="btn btn-primary">+ Tambah Layanan</a>
     </section>
 
     @if (session('success'))
@@ -151,21 +158,13 @@
 
     <section class="panel">
         <div class="panel-header">
-            <div class="panel-header-top">
-                <div class="panel-heading">
-                    <div class="panel-heading-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <rect x="4" y="3" width="16" height="18" rx="2"/>
-                            <path d="M8 7h8M8 11h8M8 15h5"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="panel-title">Daftar Layanan</div>
-                        <div class="panel-subtitle">Total {{ $totalData }} layanan terdaftar.</div>
-                    </div>
-                </div>
-                <span class="panel-tag">{{ $totalData }} Layanan</span>
-            </div>
+            <h2 class="panel-title">Tabel Data Seluruh Layanan</h2>
+            <a href="{{ route('admin.layanan.create') }}" class="dt-btn dt-btn-add">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Tambah Layanan
+            </a>
         </div>
 
         @if ($items->isEmpty())
@@ -177,20 +176,20 @@
                 <table id="tabelLayanan" class="dt-table display">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th class="t-center">No</th>
                             <th>Nama Layanan</th>
                             <th>Deskripsi</th>
                             <th>Harga Barang</th>
                             <th>Biaya Jasa</th>
                             <th>Total Harga</th>
-                            <th>Estimasi</th>
-                            <th>Aksi</th>
+                            <th class="t-center">Estimasi</th>
+                            <th class="t-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($items as $service)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td class="t-center">{{ $loop->iteration }}</td>
                                 <td class="col-wrap" style="min-width:180px">
                                     <div class="dt-strong">{{ $service->nama_servis }}</div>
                                     <div class="dt-small">ID Layanan: #{{ $service->id }}</div>
@@ -199,7 +198,7 @@
                                 <td data-order="{{ (float) ($service->harga_barang ?? 0) }}">{{ $rp($service->harga_barang ?? 0) }}</td>
                                 <td data-order="{{ (float) ($service->biaya_jasa ?? 0) }}">{{ $rp($service->biaya_jasa ?? 0) }}</td>
                                 <td data-order="{{ $totalOf($service) }}"><span class="dt-total">{{ $rp($totalOf($service)) }}</span></td>
-                                <td data-order="{{ (int) $service->estimasi_waktu }}"><span class="status info">{{ $service->estimasi_waktu }} menit</span></td>
+                                <td class="t-center" data-order="{{ (int) $service->estimasi_waktu }}"><span class="status info">{{ $service->estimasi_waktu }} menit</span></td>
                                 <td>
                                     <div class="dt-actions">
                                         <a href="{{ route('admin.layanan.show', $service->id) }}" class="dt-btn dt-btn-detail">Detail</a>
@@ -215,6 +214,18 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="t-center">No</th>
+                            <th>Nama Layanan</th>
+                            <th>Deskripsi</th>
+                            <th>Harga Barang</th>
+                            <th>Biaya Jasa</th>
+                            <th>Total Harga</th>
+                            <th class="t-center">Estimasi</th>
+                            <th class="t-center">Aksi</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
 
@@ -311,44 +322,48 @@ var CFG = { table: { table: '#tabelLayanan', hasActions: true }, cards: { cards:
         render();
     }
 
-    // Tabel desktop: Copy, Column visibility, cari, urutkan, pagination
+    // Tabel desktop: Copy, PDF, Column visibility, cari, urutkan, pagination
     function initTable(o) {
         if (!document.querySelector(o.table)) return;
         var hasAct = o.hasActions !== false;
+        var exportCols = { columns: hasAct ? ':visible:not(:last-child)' : ':visible' };
 
-        var copyBtn = { extend: 'copy', text: 'Copy', exportOptions: { columns: hasAct ? ':visible:not(:last-child)' : ':visible' } };
         var colBtn = { extend: 'colvis', text: 'Column visibility', background: false };
         if (hasAct) colBtn.columns = ':not(:last-child)';
 
         var defs = [{ targets: 0, width: '40px' }];
         if (hasAct) defs.push({ targets: -1, orderable: false, searchable: false });
 
-        var table = jQuery(o.table).DataTable({
-            dom: "<'dt-top'<'dt-btns'B><'dt-search'f>>rt<'dt-bottom'<'dt-info'i><'dt-page'p>>",
+        jQuery(o.table).DataTable({
+            dom: "<'dt-top'<'dt-btns'B><'dt-search'f>>rt<'dt-bottom'<'dt-info'i><'dt-paging'p>>",
             stateSave: true,
             pageLength: 10,
             order: [],
             autoWidth: false,
-            scrollX: true,
-            buttons: [copyBtn, colBtn],
+            buttons: [
+                { extend: 'copy', text: 'Copy', exportOptions: exportCols },
+                { extend: 'pdf',  text: 'PDF',  title: 'Data Layanan & Harga', orientation: 'landscape', pageSize: 'A4', exportOptions: exportCols },
+                colBtn
+            ],
             columnDefs: defs,
             language: {
-                search: 'Cari :',
+                search: 'Search:',
                 info: 'Showing _START_ to _END_ of _TOTAL_ entries',
                 infoEmpty: 'Tidak ada data',
                 infoFiltered: '(dari _MAX_ data)',
                 zeroRecords: 'Tidak ada data yang cocok',
-                paginate: { previous: 'Sebelumnya', next: 'Berikutnya' },
+                paginate: { previous: 'Previous', next: 'Next' },
                 buttons: { copyTitle: 'Tersalin', copySuccess: { _: '%d baris tersalin' } }
             }
         });
-        jQuery(window).on('resize', function () { table.columns.adjust(); });
     }
 
     function start() {
         chain([
             'https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js',
             'https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js',
             'https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js',
             'https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js'
         ], function () { initTable(CFG.table); });
